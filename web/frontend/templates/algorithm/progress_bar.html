@@ -1,0 +1,22 @@
+<div class="row mb-4">
+    <div class="col-12">
+        setup progress
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped bg-info" role="progressbar"
+                    {% if not algorithm_selected and not algorithm_trained and not algorithm_evaluated %}
+                 style="width: 0%"
+                    {% endif %}
+                    {% if  algorithm_selected and not algorithm_trained and not algorithm_evaluated %}
+                 style="width: 33%"
+                    {% endif %}
+                    {% if  algorithm_selected and algorithm_trained and not algorithm_evaluated %}
+                 style="width: 66%"
+                    {% endif %}
+                    {% if  algorithm_selected and algorithm_trained and algorithm_evaluated %}
+                 style="width: 100%"
+                    {% endif %}
+                 aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+            </div>
+        </div>
+    </div>
+</div>

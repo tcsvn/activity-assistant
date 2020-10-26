@@ -1,0 +1,223 @@
+{% extends "base_bootstrap.html" %}
+{% load static %}
+
+{% block head %}
+    {% if not setup_complete %}
+        <link rel="stylesheet" href="{% static 'stepper.css' %}">
+        <script src="{% static 'stepper.js' %}"></script>
+    {% else %}
+        <script src="{% static 'Chart.bundle.min.js' %}"></script>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+    {% if not setup_complete %}
+        {% include 'dashboard/setup_guide.html' %}
+    {% else %}
+
+        <div class="container mb-3">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ count_person }}</h5>
+                            <p class="card-text">Persons registered</p>
+                        </div>
+                        <div class="card-footer bg-primary ">
+                            <a href="{% url 'create_person' %}" class="text-white">more info</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ count_models }}</h5>
+                            <p class="card-text">Models were trained</p>
+                        </div>
+                        <div class="card-footer bg-primary ">
+                            <a href="{% url 'model_selection' %}" class="text-white">more info</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ count_activity }}</h5>
+                            <p class="card-text"> Activities registered</p>
+                        </div>
+                        <div class="card-footer bg-primary ">
+                            <a href="{% url 'activity' %}" class="text-white">more info</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ count_location }}</h5>
+                            <p class="card-text"> Locations registered</p>
+                        </div>
+                        <div class="card-footer bg-primary">
+                            <a href="{% url 'map' %}" class="text-white">more info</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row col-12">
+                <div class="card">
+                    <div class="card-header">
+                        HB Real-time Activity Inference Node
+                    </div>
+                    <div class="card-body">
+                        {% if rt_node_running %}
+                            <form class="form-inline" action="{% url 'dashboard' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="intent" value="stop">
+                                <div class="form-group mb-2">
+                                    <label for="staticEmail2" class="sr-only">Email</label>
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail2"
+                                           value="Model to run predictions:">
+                                </div>
+                                <fieldset disabled>
+                                    <select id="disabledSelect" class="form-control">
+                                        <option> {{ rt_node.model.algorithm.name }} with
+                                            person {{ rt_node.model.person.name }}</option>
+                                    </select>
+                                </fieldset>
+                                <button type="submit" class="btn btn-outline-warning ml-2"> stop</button>
+                            </form>
+                        {% else %}
+                            <form class="form-row align-items-center" action="{% url 'dashboard' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="intent" value="run">
+                                <div class="col-auto my-1">
+                                    Model running predictions:
+                                </div>
+                                <div class="col-auto my-1">
+                                    <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
+                                    <select class="form-control mr-sm-2" id="inlineFormCustomSelect"
+                                            name="model_select">
+                                        {% for model in model_list %}
+                                            {% if model.dataset.name == "homeassistant" %}
+                                                {% if foorloop.first %}
+                                                    <option selected value="{{ model.pk }}">
+                                                        {% else %}
+                                                    <option value="{{ model.pk }}">
+                                                {% endif %}
+                                            {{ model.algorithm.name }} with
+                                            person {{ model.person.name }} </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-auto my-1 ml-2">
+                                    <button type="submit" class="btn btn-outline-primary">Run</button>
+                                </div>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if rt_node_running %}
+            {% for person in person_list %}
+                {% if person.prediction %}
+                    {% include 'person/activity_prediction.html' %}
+                {% endif %}
+            {% endfor %}
+
+                {% include 'dashboard/rt_node.html' %}
+        {% endif %}
+
+
+<!--
+        <div class="container mt-2">
+            <div class="row">
+                <div class="col">
+                    <div class="card" style="width: 12rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Algorithms</h5>
+                            <p class="card-text">there are a number of algorithms covering sequence prediction, hidden
+                                markov models and other stuff</p>
+                            <form>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox" checked>
+                                        WIFI-MODEL
+                                    </label>
+                                </div>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox">
+                                        HMM
+                                    </label>
+                                </div>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox" disabled>
+                                        LSTM
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-body">
+                            <a href="#" class="card-link">check out all</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Status</h5>
+                            <p class="card-text">everything is setup</p>
+                            <ul>
+                                <li>
+                                    devices currently logging: 0
+                                </li>
+                                <li>
+                                    connected to jupyter: online
+                                </li>
+                                <li>
+                                    connected to homeassistant joyner: online
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <a href="#" class="card-link">check out all</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Further Links</h5>
+                            <p class="card-text">some links to explore more content</p>
+                            <ul>
+                                <li>
+                                    Browsable REST api <a class="right" href="http://localhost:8000/api/v1">api</a>
+                                </li>
+                                <li>
+                                    Develop your own Algorithms <a class="right" href="https://jupyter.com">Jupyter
+                                    Notebook</a>
+                                </li>
+                                <li>
+                                    Documentation <a class="right" href="https://jupyter.com">Jupyter Notebook</a>
+                                </li>
+                                <li>
+                                    Githup Repo <a class="right" href="https://jupyter.com">Jupyter Notebook</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <a href="#" class="card-link">check out all</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+-->
+    {% endif %}
+{% endblock %}

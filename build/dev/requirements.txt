@@ -1,0 +1,13 @@
+# django and rest framework
+django
+django-qr-code
+djangorestframework
+pygments
+coreapi
+Pillow
+
+# rt_node and data science stuff
+asyncws
+
+# webserver (production)
+#gunicorn

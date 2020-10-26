@@ -1,0 +1,348 @@
+
+<!--
+<div class="row col-12">
+    <div class="card col-12">
+        <div class="card-body">
+            <h5 class="card-title">Compare algorithms</h5>
+            <p class="card-text">Select a dataset and compare the different models</p>
+            <form class="form-inline" action="{% url 'algorithms' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="intent" value="select_dataset">
+                <div class="form-group mb-2">
+                    <label for="staticEmail2" class="sr-only">Email</label>
+                    <input type="text" readonly class="form-control-plaintext" id="staticEmail2"
+                           value="Dataset">
+                </div>
+                <div class="form-group">
+                    <select id="exampleFormControlSelect3" class="form-control" name="dataset_select">
+                        {% for dataset in dataset_list %}
+                            {% if foorloop.first %}
+                                <option selected value="{{ dataset.name }}">
+                                    {% else %}
+                                <option value="{{ dataset.name }}">
+                            {% endif %}
+                        {{ dataset.name }} </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">select</button>
+            </form>
+        </div>
+    </div>
+</div>
+-->
+<div class="row mb-2">
+    <div class="accordion col-12" id="accordionExample">
+<!--        <div class="card">
+            <div class="card-header" id="headingOne"> -->
+                <h5 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse"
+                            data-target="#collapseOne"
+                            aria-expanded="true" aria-controls="collapseOne">
+                        Feature Comparision
+                    </button>
+                </h5>
+        <!--
+            </div>
+-->
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                 data-parent="#accordionExample">
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th scope="col">Model</th>
+                            <th scope="col">Multiple persons</th>
+                            <th scope="col">Unsupervised</th>
+                            <th scope="col">Location</th>
+                            <th scope="col">Synthetic Activities</th>
+                            <th scope="col">Duration</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for algorithm in algorithm_list %}
+                            <tr>
+                                <th scope="row">{{ algorithm.name }}</th>
+                                <td><i class="material-icons
+                                {% if algorithm.multiple_person %}
+                                    text-success">check_circle
+                                {% else %}
+                                    text-warning">block
+                                {% endif %}
+                                </i></td>
+
+                                <td><i class="material-icons
+                                {% if algorithm.unsupervised %}
+                                    text-success">check_circle
+                                {% else %}
+                                    text-warning">block
+                                {% endif %}
+                                </i></td>
+
+                                <td><i class="material-icons
+                                {% if algorithm.location %}
+                                    text-success">check_circle
+                                {% else %}
+                                    text-warning">block
+                                {% endif %}
+                                </i></td>
+
+                                <td><i class="material-icons
+                                 {% if algorithm.synthetic_activities %}
+                                    text-success">check_circle
+                                {% else %}
+                                    text-warning">block
+                                {% endif %}
+                                </i></td>
+
+                                <td><i class="material-icons
+                                 {% if algorithm.duration %}
+                                    text-success">check_circle
+                                {% else %}
+                                    text-warning">block
+                                {% endif %}
+                                </i></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+<!--        </div> -->
+        <!--
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                            data-target="#collapseTwo" aria-expanded="false"
+                            aria-controls="collapseTwo">
+                        Training rates
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+                 data-parent="#accordionExample">
+                <div class="card-body">
+                    <canvas id="lineChart"></canvas>
+
+                    <script>
+                        //line
+                        var ctxL = document.getElementById("lineChart").getContext('2d');
+                        var myLineChart = new Chart(ctxL, {
+                            type: 'line',
+                            data: {
+                                labels: [10, 20, 30, 40, 50, 60, 70],
+                                datasets: [
+                                    {
+                                    label: "My First dataset",
+                                    data: [100, 90, 75, 70, 60, 55, 50],
+                                    backgroundColor: [
+                                        'rgba(3,218,198, .2)',
+                                    ],
+                                    borderColor: [
+                                        'rgba(1, 135, 134, 1)',
+                                    ],
+                                    borderWidth: 2
+                                },
+                                    {
+                                        label: "My Second dataset",
+                                        data: [90, 60, 30, 20, 15, 13, 10],
+                                        backgroundColor: [
+                                            'rgba(255, 2, 102, .2)',
+                                        ],
+                                        borderColor: [
+                                            'rgba(1, 135, 134, 1)',
+                                        ],
+                                        borderWidth: 2
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true
+                            }
+                        });
+
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                            data-target="#collapseThree" aria-expanded="false"
+                            aria-controls="collapseThree">
+                        Metrics
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                 data-parent="#accordionExample">
+                <div class="card-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
+                    <canvas id="myChart" width="400" height="150"></canvas>
+                    <script>
+                        var ctx = document.getElementById('myChart');
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: [
+                                    {% for model in bench_model_list %}
+                                        {% if not forloop.last %}
+                                            '{{ model.name }}',
+                                        {% else %}
+                                            '{{ model.name }}'
+                                        {% endif %}
+                                    {% endfor %}
+                                ],
+                                datasets: [{
+                                    label: 'Accuracy',
+                                    data: [
+                                        {% for model in bench_model_list %}
+                                            {% if not forloop.last %}
+                                                {{ model.acc }},
+                                            {% else %}
+                                                {{ model.acc }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    ],
+                                    backgroundColor: [
+                                        {% for model in bench_model_list %}
+                                            {% if not forloop.last %}
+                                                'rgba(255, 99, 132, 0.2)',
+                                            {% else %}
+                                                'rgba(255, 99, 132, 0.2)'
+                                            {% endif %}
+                                        {% endfor %}
+                                    ],
+                                    borderColor: [
+                                        {% for model in bench_model_list %}
+                                            {% if not forloop.last %}
+                                                'rgba(255, 99, 132, 1)',
+                                            {% else %}
+                                                'rgba(255, 99, 132, 1)'
+                                            {% endif %}
+                                        {% endfor %}
+                                    ],
+                                    borderWidth: 1
+                                },
+                                    {
+                                        label: 'precision',
+                                        data: [
+                                            {% for model in bench_model_list %}
+                                                {% if not forloop.last %}
+                                                    {{ model.prec }},
+                                                {% else %}
+                                                    {{ model.prec }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        ],
+                                        backgroundColor: [
+                                            {% for model in bench_model_list %}
+                                                {% if not forloop.last %}
+                                                    'rgba(54, 162, 235, 0.2)',
+                                                {% else %}
+                                                    'rgba(54, 162, 235, 0.2)'
+                                                {% endif %}
+                                            {% endfor %}
+                                        ],
+                                        borderColor: [
+                                            {% for model in bench_model_list %}
+                                                {% if not forloop.last %}
+                                                    'rgba(54, 162, 235, 1)',
+                                                {% else %}
+                                                    'rgba(54, 162, 235, 1)'
+                                                {% endif %}
+                                            {% endfor %}
+
+                                        ],
+                                        borderWidth: 1
+                                    },
+                                    {
+                                        label: 'Recall',
+                                        data: [
+                                            {% for model in bench_model_list %}
+                                                {% if not forloop.last %}
+                                                    {{ model.rec }},
+                                                {% else %}
+                                                    {{ model.rec }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        ],
+                                        backgroundColor: [
+                                            {% for model in bench_model_list %}
+                                                {% if not forloop.last %}
+                                                    'rgba(255, 206, 86, 0.2)',
+                                                {% else %}
+                                                    'rgba(255, 206, 86, 0.2)'
+                                                {% endif %}
+                                            {% endfor %}
+                                        ],
+                                        borderColor: [
+                                            {% for model in bench_model_list %}
+                                                {% if not forloop.last %}
+                                                    'rgba(255, 206, 86, 1)',
+                                                {% else %}
+                                                    'rgba(255, 206, 86, 1)'
+                                                {% endif %}
+                                            {% endfor %}
+
+                                        ],
+                                        borderWidth: 1
+                                    },
+                                    {
+                                        label: 'f1',
+                                        data: [
+                                            {% for model in bench_model_list %}
+                                                {% if not forloop.last %}
+                                                    {{ model.f1 }},
+                                                {% else %}
+                                                    {{ model.f1 }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        ],
+                                        backgroundColor: [
+                                            {% for model in bench_model_list %}
+                                                {% if not forloop.last %}
+                                                    'rgba(75, 192, 192, 0.2)',
+                                                {% else %}
+                                                    'rgba(75, 192, 192, 0.2)'
+                                                {% endif %}
+                                            {% endfor %}
+                                        ],
+                                        borderColor: [
+                                            {% for model in bench_model_list %}
+                                                {% if not forloop.last %}
+                                                    'rgba(75, 192, 192, 1)',
+                                                {% else %}
+                                                    'rgba(75, 192, 192, 1)'
+                                                {% endif %}
+                                            {% endfor %}
+
+                                        ],
+                                        borderWidth: 1
+                                    },
+
+
+                                ]
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                }
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+        -->
+    </div>
+</div>

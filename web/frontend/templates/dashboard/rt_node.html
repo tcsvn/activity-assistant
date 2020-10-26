@@ -1,0 +1,23 @@
+<div class="container mb-3">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title"> Device Predictions </h5>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Probability</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for pred_dev in rt_node.predicted_devices.all %}
+                    <tr>
+                        <td>{{ pred_dev.predicted_state.name }}</td>
+                        <td>{{ pred_dev.score }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

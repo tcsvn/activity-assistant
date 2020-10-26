@@ -1,0 +1,121 @@
+@import './_imports/_variables';
+
+[class^="btn"] {
+	transition: all 0.3s $cubic;
+	box-shadow: $box-shadow-float;
+	position: relative;
+	cursor: pointer;
+	text-transform: uppercase;
+	margin-bottom: $space-small;
+	background-image: none;
+	background-size: 0;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	transition: background-color 0.3s $cubic, box-shadow 0.3s $cubic;
+	will-change: background-size, background-image;
+	padding: $space-small $space-med;
+	display: inline-block;
+	font-family: Roboto;
+	border: 0;
+	&:after {
+		position: absolute;
+		content: '';
+		transition: none;
+		background: radial-gradient(circle, white 95%, rgba(0,0,0,0) 95%);
+		background-size: 0.7%;
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+	}
+	&:focus {
+		outline: none;
+		background-size: 1000%;
+    	transition: all 1s $cubic;
+	}
+}
+
+@mixin btn-gradient($c) {
+	background-image: radial-gradient(circle, $c 1%, lighten($c, 15%) 15%, rgba(0,0,0,0) 30%);
+	background-color: $c;
+}
+
+.btn--float {
+	border-radius: 50%;
+	width: 50px;
+	height: 50px;
+	@include btn-gradient($accent);
+	will-change: box-shadow, background-color;
+	font-size: $font-big;
+	padding: 0;
+	&:hover {
+		box-shadow: $box-shadow-float-hover;
+		background-color: lighten($accent, 5%);
+	}
+}
+
+.btn--raised {
+	border-radius: $border-radius-small*0.66;
+	box-shadow: $box-shadow-raised;
+	@include btn-gradient($river);
+	will-change: box-shadow, background-color;
+	color: white;
+	&:hover {
+		box-shadow: $box-shadow-raised-hover;
+		background-color: lighten($river, 5%);
+	}
+}
+
+.btn--flat {
+	@include btn-gradient($secondary);
+	background-color: $body-background;
+	box-shadow: none;
+}
+
+.btn--primary {
+	@include btn-gradient($primary);
+	&:hover {
+		background-color: lighten($primary, 5%);
+	}
+}
+
+.btn--secondary {
+	@include btn-gradient($secondary);
+	&:hover {
+		background-color: lighten($secondary, 5%);
+	}
+}
+
+.btn--accent {
+	@include btn-gradient($accent);
+	&:hover {
+		background-color: lighten($accent, 5%);
+	}
+}
+
+.btn--red {
+	@include btn-gradient($alizarin);
+	&:hover {
+		background-color: lighten($alizarin, 5%);
+	}
+}
+
+.btn--yellow {
+	@include btn-gradient($sunflower);
+	&:hover {
+		background-color: lighten($sunflower, 5%);
+	}
+}
+
+.btn--green {
+	@include btn-gradient($green);
+	&:hover {
+		background-color: lighten($green, 5%);
+	}
+}
+
+.btn--blue {
+	@include btn-gradient($blue);
+	&:hover {
+		background-color: lighten($blue, 5%);
+	}
+}
+

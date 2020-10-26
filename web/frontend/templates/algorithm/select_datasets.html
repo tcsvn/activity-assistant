@@ -1,0 +1,127 @@
+<div class="row">
+    <div class="col-4">
+        <div class="list-group" id="list-tab" role="tablist">
+            <a class="list-group-item list-group-item-action active" id="list-ex-list" data-toggle="list"
+               href="#list-ex"
+               role="tab" aria-controls="ex">select existing model</a>
+            <a class="list-group-item list-group-item-action" id="list-own-list" data-toggle="list"
+               href="#list-own"
+               role="tab" aria-controls="own">load custom model</a>
+            <a class="list-group-item list-group-item-action" id="list-preset-list"
+               data-toggle="list"
+               href="#list-preset" role="tab" aria-controls="preset">train model on person</a>
+            <a class="list-group-item list-group-item-action" id="list-data-list"
+               data-toggle="list"
+               href="#list-data" role="tab" aria-controls="preset">train model on dataset</a>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="tab-content" id="nav-tabContent">
+
+            <div class="tab-pane fade show active" id="list-ex" role="tabpanel" aria-labelledby="list-ex-list">
+                <form action="{% url 'algorithms' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect2">Select model</label>
+                        <select id="exampleFormControlSelect2" class="form-control" name="model_select">
+                            {% for model in model_list %}
+                                {% if selected_algorithm.name == model.algorithm.name %}
+                                    {% if foorloop.first %}
+                                        <option selected value="{{ model.pk }}">
+                                            {% else %}
+                                        <option value="{{ model.pk }}">
+                                    {% endif %}
+                                {{ model.algorithm.name }}
+                                    {% if model.dataset.name == "homeassistant" %}
+                                    (Person: {{ model.person.name }},
+                                        {% else %}
+                                        (
+                                        {% endif %}
+                                Dataset: {{ model.dataset.name }}) </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="hidden" name="intent" value="select_model">
+                    <button type="submit" class="btn btn-primary">select</button>
+                </form>
+            </div>
+
+            <div class="tab-pane fade" id="list-preset" role="tabpanel"
+                 aria-labelledby="list-preset-list">
+                <form action="{% url 'algorithms' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="intent" value="refresh_token">
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect2">Select person the model should be
+                            trained upon in combination with the actual homeassistant instance</label>
+                        <select id="exampleFormControlSelect2" class="form-control" name="person_select">
+                            {% for person in person_list %}
+                                {% if foorloop.first %}
+                                    <option selected> {{ person.name }}</option>
+                                {% endif %}
+                                <option> {{ person.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="hidden" name="intent" value="train_algorithm">
+                    <button type="submit" class="btn btn-primary">train</button>
+                </form>
+            </div>
+
+            <div class="tab-pane fade" id="list-own" role="tabpanel" aria-labelledby="list-own-list">
+                <form action="{% url 'algorithms' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect2">Select person the model was trained
+                            upon</label>
+                        <select id="exampleFormControlSelect2" class="form-control" name="person_select">
+                            {% for person in person_list %}
+                                {% if foorloop.first %}
+                                    <option selected> {{ person.name }}</option>
+                                {% endif %}
+                                <option> {{ person.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <!-- <label for="exampleFormControlFile1"> {{ form.modelfile.label_tag }} </label> -->
+                        <!--<input name="filestuff" type="file" class="form-control-file" id="exampleFormControlFile1"> -->
+                        <p> {{ form.non_field_errors }}</p>
+                        <p> {{ form.modelfile.label_tag }} {{ form.docfile.help_text }}</p>
+                        <p>
+                            {{ form.modelfile.errors }}
+                            {{ form.modelfile }}
+                        </p>
+                    </div>
+                    <input type="hidden" name="intent" value="upload_model">
+                    <button type="submit" class="btn btn-primary">upload model</button>
+                </form>
+            </div>
+
+
+            <div class="tab-pane fade show" id="list-data" role="tabpanel"
+                 aria-labelledby="list-data-list">
+                <form action="{% url 'algorithms' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect4">Select the dataset the model should be
+                            trained upon</label>
+                        <select class="form-control" name="dataset_select" id="exampleFormControlSelect4">
+                            <!-- only show the datasets that the model can be trained upon -->
+                            {% for dataset in dataset_list %}
+                                {% if dataset in selected_algorithm.compatible_dataset.all and dataset.name != "homeassistant" %}
+                                    <option> {{ dataset.name }} </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="hidden" name="intent" value="train_algo_on_preset_dataset">
+                    <button type="submit" class="btn btn-primary">train</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

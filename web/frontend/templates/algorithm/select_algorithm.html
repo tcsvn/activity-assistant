@@ -1,0 +1,47 @@
+<div class="row mb-4">
+    <div class="col-12">
+        Select desired algorithm
+        <div class="row">
+            <div class="col-2">
+                <div class="list-group" id="list-tab" role="tablist">
+                    {% for algorithm in algorithm_list %}
+
+                        <a class="list-group-item list-group-item-action
+                                    {% if forloop.first %} active{% endif %}
+                                        " id="list-{{ algorithm.name|cut:" " }}-list"
+                           data-toggle="list" href="#list-{{ algorithm.name|cut:" " }}" role="tab"
+                           aria-controls="{{ algorithm.name }}">{{ algorithm.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-10">
+                <div class="tab-content" id="nav-tabContent">
+                    {% for algorithm in algorithm_list %}
+                        <div class="tab-pane fade
+                                    {% if forloop.first %}show active{% endif %}
+                                        " id="list-{{ algorithm.name|cut:" " }}" role="tabpanel"
+                             aria-labelledby="list-{{ algorithm.name|cut:" " }}-list">
+                            <div class="row mb-1 mt-1">
+                                {{ algorithm.description }}
+                                <div class="col-6"></div>
+                                <div class="col-4">
+                                    <form class="form-row" action="{% url 'algorithms' %}" method="post"
+                                          name="select algorithm">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="intent" value="select_algorithm">
+                                        <input type="hidden" name="algorithm" value="{{ algorithm.name }}">
+                                        <div class="form-group col-md-4">
+                                            <button type="submit" class="btn btn-primary">Select algorithm
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

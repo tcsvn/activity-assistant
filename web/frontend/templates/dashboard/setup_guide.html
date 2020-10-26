@@ -1,0 +1,114 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            Setup HassBrain in 6 simple steps
+        </div>
+        <div class="card-body">
+            <div id="stepper-example" class="bs-stepper">
+                <div class="bs-stepper-header">
+                    <div class="step" data-target="#test-l-1">
+                        <a href="#">
+                            <span class="bs-stepper-circle">1</span>
+                        </a>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#test-l-2">
+                        <a href="#">
+                            <span class="bs-stepper-circle">2</span>
+                        </a>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#test-l-3">
+                        <a href="#">
+                            <span class="bs-stepper-circle">3</span>
+                        </a>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#test-l-4">
+                        <a href="#">
+                            <span class="bs-stepper-circle">4</span>
+                        </a>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#test-l-5">
+                        <a href="#">
+                            <span class="bs-stepper-circle">5</span>
+                        </a>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#test-l-6">
+                        <a href="#">
+                            <span class="bs-stepper-circle">6</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="bs-stepper-content">
+                    <div id="test-l-1" class="content">
+                        <p class="">First you have to set up the server address.
+                            <a href="{% url 'basic_config'%}"> visit config </a>
+                        </p>
+                        <button class="btn btn-primary" onclick="myStepper.next()">Next</button>
+                    </div>
+                    <div id="test-l-2" class="content">
+                        <p class=""> connect to your Home assistant instance.
+                            <a href="{% url 'basic_config'%}"> visit config </a>
+                        </p>
+                        <button class="btn btn-primary" onclick="myStepper.previous()">Previous</button>
+                        <button class="btn btn-primary" onclick="myStepper.next()">Next</button>
+                    </div>
+                    <div id="test-l-3" class="content">
+                        <p class=""> create a user
+                            <a href="{% url 'create_person' %}"> visit config </a>
+                        </p>
+                        <button class="btn btn-primary" onclick="myStepper.previous()">Previous</button>
+                        <button class="btn btn-primary" onclick="myStepper.next()">Next</button>
+                    </div>
+                    <div id="test-l-4" class="content">
+                        <p class=""> create activities
+                            <a href="{% url 'activity' %}"> visit config </a>
+                        </p>
+                        <button class="btn btn-primary" onclick="myStepper.previous()">Previous</button>
+                        <button class="btn btn-primary" onclick="myStepper.next()">Next</button>
+                    </div>
+                    <div id="test-l-5" class="content">
+                        <p class=""> create a graph based model of your house
+                            <a href="{% url 'map' %}"> visit config </a>
+                        </p>
+                        <button class="btn btn-primary" onclick="myStepper.previous()">Previous</button>
+                        <button class="btn btn-primary" onclick="myStepper.next()">Next</button>
+                    </div>
+                    <div id="test-l-6" class="content">
+                        <p class=""> assign sensors to rooms of your house
+                            <a href="{% url 'assign_sensors' %}"> visit config </a>
+                        </p>
+                        <button class="btn btn-primary" onclick="myStepper.previous()">Previous</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Vanilla JavaScript
+    document.addEventListener('DOMContentLoaded', function () {
+        myStepper = new Stepper(document.querySelector('#stepper-example'))
+        {% for i in count_setup_progress %}
+            myStepper.next();
+        {% endfor %}
+    })
+</script>
+
+<div class="container">
+    <h6>First Steps: </h6>
+    <ol>
+        <li> create users</li>
+        <li> create a graph based model of your house</li>
+        <li> create activities</li>
+        <li> match sensors from home assistant with map</li>
+        <li> select prediction algorithm</li>
+        <li> connect the node to home assistant</li>
+        <li> (optional) connect smartphone and logging </li>
+        <li> (optional) have fun with your data on jupyter </li>
+    </ol>
+</div>

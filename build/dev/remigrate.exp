@@ -1,0 +1,26 @@
+#!/usr/bin/expect
+
+set timeout 30
+
+spawn /bin/ash remigrate.sh
+
+expect "Password:"
+send "asdf\n"
+
+expect "Password (again): " 
+send "asdf\n"
+
+#expect -re "/Bypass password validation and create user anyway\? \[y\/N\]:/g"
+expect ":"
+send "y\n"
+
+
+expect "Password:" 
+send "asdf\n"
+expect "Password (again):" 
+send "asdf\n"
+
+#expect "Bypass password validation and create user anyway? [y/N]:" 
+expect ":"
+send "y\n"
+

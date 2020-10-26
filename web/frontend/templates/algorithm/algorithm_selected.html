@@ -1,0 +1,83 @@
+{% load static %}
+<div class="row mb-4">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ selected_algorithm.name }}</h5>
+                <ul class="list-group">
+                    <a class="list-group-item">
+                        <i class="material-icons text-success">done</i>
+                        Select model
+                    </a>
+                    <a class="list-group-item">
+                        {% if algorithm_trained %}
+                            <i class="material-icons text-success">done</i>
+                            Train model on dataset
+                        {% else %}
+                            <i class="material-icons text-warning">clear</i>
+                            Train model on dataset
+                        {% endif %}
+                    </a>
+                    <a class="list-group-item">
+                        {% if algorithm_evaluated %}
+                            <i class="material-icons text-success">done</i>
+                            Evaluate model
+                        {% else %}
+                            <i class="material-icons text-warning">clear</i>
+                            Evaluate model
+                        {% endif %}
+                    </a>
+                </ul>
+            </div>
+            <div class="card-footer">
+                <div class="col-12 btn-group" role="group" aria-label="Basic example">
+                <!--
+                    {% if algorithm_selected and algorithm_trained and model_is_hass_compatible %}
+                        {% if rt_node_running %}
+                            <form class="mr-2" action="{% url 'algorithms' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="intent" value="stop">
+                                <button type="submit" class="btn btn-outline-danger"> stop</button>
+                            </form>
+                        {% else %}
+                            <form class="mr-2" action="{% url 'algorithms' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="intent" value="run">
+                                <button type="submit" class="btn btn-outline-primary">run</button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                    -->
+                    {% if algorithm_selected %}
+                        <form class="mr-2" action="{% url 'algorithms' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="intent" value="deselect_model">
+                            <button type="submit" class="btn btn-outline-secondary">deselect Model</button>
+                        </form>
+                    {% endif %}
+
+                    {% if algorithm_selected and algorithm_trained %}
+                        <form class="mr-2" action="{% url 'algorithms' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="intent" value="delete_model">
+                            <button type="submit" class="btn btn-outline-danger">delete model</button>
+                        </form>
+                    {% endif %}
+                    <!--
+                    <form class="mr-2" action="{% url 'algorithms' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="intent" value="debug">
+                        <button type="submit" class="btn btn-outline-danger">debug</button>
+                    </form>
+                    -->
+                    {% if algorithm_trained %}
+                        <!-- download -->
+                        {% get_media_prefix as MEDIA_PREFIX %}
+                        <a class="material-icons" href="{{ MEDIA_PREFIX }}{{ model.file }}">
+                            vertical_align_bottom </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

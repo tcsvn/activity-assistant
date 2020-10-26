@@ -1,0 +1,435 @@
+{% extends "base_bootstrap.html" %}
+
+{% load qr_code %}
+{% load static %}
+{% block head %}
+    <meta charset='utf-8'/>
+    <script src="{% static 'js.cookie.js' %}"></script>
+
+    <link href="{% static 'fullcalendar/packages/core/main.css' %}" rel='stylesheet'/>
+    <link href="{% static 'fullcalendar/packages/daygrid/main.css' %}" rel='stylesheet'/>
+    <link href="{% static 'fullcalendar/packages/timegrid/main.css' %}" rel='stylesheet'/>
+    <link href="{% static 'fullcalendar/packages/list/main.css' %}" rel='stylesheet'/>
+    <link href="{% static 'fullcalendar/packages/bootstrap/main.css' %}" rel='stylesheet'/>
+
+    <script src="{% static 'fullcalendar/packages/core/main.js' %}"></script>
+    <script src="{% static 'fullcalendar/packages/daygrid/main.js' %}"></script>
+    <script src="{% static 'fullcalendar/packages/timegrid/main.js' %}"></script>
+    <script src="{% static 'fullcalendar/packages/list/main.js' %}"></script>
+    <script src="{% static 'fullcalendar/packages/interaction/main.js' %}"></script>
+    <script src="{% static 'fullcalendar/packages/bootstrap/main.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var Calendar = FullCalendar.Calendar;
+            var Draggable = FullCalendarInteraction.Draggable
+
+            /* initialize the external events
+            -----------------------------------------------------------------*/
+
+            var containerEl = document.getElementById('external-events-list');
+            new Draggable(containerEl, {
+                itemSelector: '.fc-event',
+                eventData: function (eventEl) {
+                    return {
+                        title: eventEl.innerText.trim(),
+                        overlap: false,
+                        backgroundColor: '#009688',
+
+                    }
+                }
+            });
+
+            //// the individual way to do it // var containerEl = document.getElementById('external-events-list');
+            // var eventEls = Array.prototype.slice.call(
+            //   containerEl.querySelectorAll('.fc-event')
+            // );
+            // eventEls.forEach(function(eventEl) {
+            //   new Draggable(eventEl, {
+            //     eventData: {
+            //       title: eventEl.innerText.trim(),
+            //     }
+            //   });
+            // });
+
+            /* initialize the calendar
+            -----------------------------------------------------------------*/
+
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new Calendar(calendarEl, {
+                plugins: ['interaction', 'dayGrid', 'timeGrid', 'bootstrap'],
+                themeSystem: 'bootstrap',
+                defaultView: 'timeGridWeek',
+                header: {
+                    left: '',
+                    right: ''
+                },
+                columnHeader: true,
+                columnHeaderFormat: {weekday: 'short'},
+
+                editable: true,
+                droppable: true, // this allows things to be dropped onto the calendar
+                snapDuration: '00:15:00',
+                // this is a week where numbers from 0 to 9 map on the days (siehe mapDateToweek)
+                defaultDate: '2019-12-01',
+                allDaySlot: false,
+                slotDuration: '00:30:00',
+                forceEventDuration: true, // every event should have an end
+                slotEventOverlap: false,
+                height: 500,
+                nowIndicator: true,
+
+                // function to delete events
+                eventClick: function (info) {
+                    if (info.jsEvent.altKey) {
+                        delete_sync_act(info);
+                    }
+                },
+                eventReceive: function (info) {
+                    create_sync_act(info);
+                },
+                eventDrop: function (info) {
+                    update_sync_act(info);
+                },
+                eventResize: function (info) {
+                    update_sync_act(info);
+                },
+
+                events: [
+                    {% for syn_act in synthetic_activity_list  %}
+                        {
+                            id: {{ syn_act.id }},
+                            title: '{{ syn_act.synthetic_activity.name }}',
+                            start: '2019-12-0' + mapDayOfWeekToCal({{ syn_act.day_of_week }})
+                                + 'T' + '{{ syn_act.start.isoformat }}',
+                            end: '2019-12-0' + mapDayOfWeekToCal({{ syn_act.day_of_week }})
+                                + 'T' + '{{ syn_act.end.isoformat }}',
+                            overlap: false,
+                            backgroundColor: '#009688',
+                        },
+                    {% endfor %}
+                ],
+            });
+            calendar.render();
+
+        });
+
+        function update_sync_act(info){
+            var params = event2params(info.event);
+            params['intent'] = 'update_syn_act';
+            params['pk'] = info.event.id;
+            var path = '/person/{{ person.id }}';
+            post(path, params);
+        }
+
+        function create_sync_act(info){
+            var params = event2params(info.event);
+            params['intent'] = 'create_syn_act';
+            var path = '/person/{{ person.id }}';
+            post(path, params);
+            reload_page();
+        }
+
+        function delete_sync_act(info){
+            var params = event2params(info.event);
+            params['intent'] = 'delete_syn_act';
+            params['pk'] = info.event.id;
+            var path = '/person/{{ person.id }}';
+            post(path, params);
+            info.event.remove();
+        }
+
+        function mapDayOfWeekToCal(day_of_week){
+            return String(parseInt(day_of_week) + 1);
+        }
+
+        function event2params(event){
+            var params = {
+                activity_name: event.title,
+                // return day of the week (0-6)
+                day_of_week: event.start.getDay(),
+                // in form 14:10:01
+                start : event.start.toTimeString().slice(0, 8),
+                end : event.end.toTimeString().slice(0, 8),
+            };
+            return params;
+        }
+
+        function pad(n) {
+            return n<10 ? '0'+n : n
+        }
+
+        function reload_page(){
+            setTimeout(reload_page_helper, 200);
+        }
+        function reload_page_helper(){
+            location.reload();
+        }
+
+        function post(path, params) {
+            var data = new FormData();
+            data.append('csrfmiddlewaretoken', Cookies.get('csrftoken'));
+            for (var key in params) {
+                data.append(key, params[key]);
+            }
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', path, true);
+            xhr.onload = function () {
+                // do something to response
+                console.log(this.responseText);
+            };
+            xhr.send(data);
+        }
+    </script>
+    <style>
+
+        body {
+            margin-top: 40px;
+            font-size: 14px;
+            font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+        }
+
+        #external-events {
+            float: left;
+            width: 150px;
+            padding: 0 10px;
+            border: 0px solid #ccc;
+            background: #FFFFFF;
+            text-align: left;
+        }
+
+        #external-events h4 {
+            font-size: 16px;
+            margin-top: 0;
+            padding-top: 1em;
+        }
+
+        #external-events .fc-event {
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        #external-events p {
+            margin: 1.5em 0;
+            font-size: 11px;
+            color: #009688;
+        }
+
+        #external-events p input {
+            margin: 0;
+            vertical-align: middle;
+        }
+
+        #calendar {
+            float: left;
+            width: 600px;
+        <!-- width: parents;
+        -->
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-header">Status {{ person.name }}</h5>
+                <div class="d-flex flex-column col-6">
+                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                        <div class="p-2"> real-time prediction</div>
+                        <div class="p-2">
+                            {% if person.prediction %}
+                                <p class="text-success mb-0">
+                                    running
+                                    {% else %}
+                                <p class="text-secondary mb-0">
+                                offline
+                            {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                        <div class="p-2"> smartphone logging:</div>
+                        <div class="p-2">
+                            {% if smartphone %}
+                                <p class="text-primary mb-0">
+                                    registered
+                                    {% else %}
+                                <p class="text-secondary mb-0">
+                                unconfigured
+                            {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    {% if smartphone and not smartphone.logging %}
+                        <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                            <div class="p-2"> logging:</div>
+                            <div class="p-2">
+                                <p class="text-secondary mb-0">
+                                    disabled
+                                </p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="col-12 btn-group" role="group" aria-label="Basic example">
+                    {% if smartphone %}
+                        <form class="mr-2" action="{% url 'person' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="intent" value="decouple_smartphone">
+                            <input type="hidden" name="pk" value="{{ person.id }}">
+                            <button type="submit" class="btn btn-outline-secondary">decouple smartphone</button>
+                        </form>
+                    {% endif %}
+                    <form class="mr-2" action="{% url 'person' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="intent" value="export_data">
+                            <input type="hidden" name="pk" value="{{ person.id }}">
+                            <button type="submit" class="btn"> export data </button>
+                    </form>
+                <!--
+                    {% if person.prediction %}
+                        <form class="mr-2" action="{% url 'person' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="intent" value="dis_rt_pred">
+                            <button type="submit" class="btn btn-outline-secondary">disable rt prediction</button>
+                        </form>
+                    {% else %}
+                        <form class="mr-2" action="{% url 'person' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="intent" value="en_rt_pred">
+                            <button type="submit" class="btn btn-outline-secondary">enable rt prediction</button>
+                        </form>
+                    {% endif %}
+                    -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% if person.prediction %}
+        {% include 'person/activity_prediction.html' %}
+    {% endif %}
+
+    {% if smartphone and smartphone.logging %}
+        <div class="container mb-3">
+            <div class="card">
+                <h5 class="card-header list-group">
+                    <div class="list-group-item">
+                        <i class="material-icons">smartphone</i>
+                        {{ smartphone.name }}
+                    </div>
+                </h5>
+                <div class="card-body">
+                    <div class="d-flex flex-column col-6">
+                        <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                            <div class="p-2">logged activity:</div>
+                            <div class="p-2">
+                                <p class="text-primary mb-0">
+                                    {{ smartphone.logged_activity.name }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                            <div class="p-2">logged location:</div>
+                            <div class="p-2">
+                                <p class="text-primary mb-0">
+                                    {{ smartphone.logged_location.name }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+
+    <div class="container mb-3 ">
+        <div class="card pb-5">
+            <div class="card-body" style="height: 500px;">
+
+                    <div id='external-events'>
+                        <h4>Draggable Activities</h4>
+
+                        <div id='external-events-list'>
+                            {% for activity in activity_list %}
+                                <div class='fc-event'>{{ activity.name }}</div>
+                            {% endfor %}
+                        </div>
+
+
+                    </div>
+
+                    <div id='calendar'></div>
+
+                    <div style='clear:both'></div>
+
+            </div>
+        </div>
+    </div>
+
+
+        {% if not smartphone %}
+        <div class="container">
+            <div class="card text-center">
+                <div class="card-header">
+                    Smartphone
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Connect to Logger</h5>
+                    <p class="card-text">Give more power to certain algorithms by creating labeled training or test
+                        data, covering activitys of daily living (ADL).</p>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="list-group" id="list-tab" role="tablist">
+                                <a class="list-group-item list-group-item-action active" id="list-home-list"
+                                   data-toggle="list" href="#list-home" role="tab" aria-controls="home">Get the app</a>
+                                <a class="list-group-item list-group-item-action" id="list-profile-list"
+                                   data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">register
+                                    smartphone</a>
+                                <a class="list-group-item list-group-item-action" id="list-messages-list"
+                                   data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">further
+                                    info</a>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="tab-content" id="nav-tabContent">
+                                <div class="tab-pane fade show active" id="list-home" role="tabpanel"
+                                     aria-labelledby="list-home-list">
+                                    <div class="col-5">
+                                        <a href='https://play.google.com/store/apps/details?id=com.whatsapp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img
+                                                class="img-fluid" alt='Get it on Google Play'
+                                                src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="list-profile" role="tabpanel"
+                                     aria-labelledby="list-profile-list">
+                                    {% qr_from_text qr_code_data size=8 version=8 error_correction=L %}
+
+                                </div>
+                                <div class="tab-pane fade" id="list-messages" role="tabpanel"
+                                     aria-labelledby="list-messages-list">
+                                    <ul>
+                                        <li> try to use all l</li>
+                                        <li> try to use all l</li>
+                                        <li> try to use all l</li>
+                                        <li> try to use all l</li>
+                                        <li> try to use all l</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+{% endblock %}

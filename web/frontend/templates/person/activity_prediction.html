@@ -1,0 +1,24 @@
+    <div class="container mb-3">
+        <div class="card">
+        <div class="card-header">{{ person.name }}</div>
+            <div class="card-body">
+                <h5 class="card-title"> Predicted activities </h5>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Probability</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for pred_act in person.predicted_activities.all %}
+                        <tr>
+                            <td>{{ pred_act.predicted_activity.name }}</td>
+                            <td>{{ pred_act.score }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

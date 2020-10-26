@@ -1,0 +1,53 @@
+// Floats
+.right {
+	float: right;
+}
+
+.left {
+	float: left;
+}
+
+.clear {
+	clear: both;
+}
+
+// Display
+.inline {
+	display: inline;
+}
+
+.inline-block {
+	display: inline-block;
+}
+
+.block {
+	display: block;
+}
+
+.fixed {
+	display: fixed;
+}
+
+
+// Margin and Padding
+.no-pad {
+	padding: 0;
+}
+
+.no-margin-vertical {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.no-margin {
+	margin: 0;
+}
+
+// Center
+.center {
+	margin: 0 auto;
+}
+
+.text-center {
+	text-align: center;
+}

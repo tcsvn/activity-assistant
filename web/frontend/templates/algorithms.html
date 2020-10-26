@@ -1,0 +1,48 @@
+{% extends "base_bootstrap.html" %}
+{% load static %}
+
+{% block head %}
+    <script src="{% static 'js.cookie.js' %}"></script>
+    <script src="{% static 'Chart.bundle.min.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        {% if not algorithm_selected or not algorithm_trained or not algorithm_evaluated %}
+            {% include 'algorithm/progress_bar.html' %}
+        {% endif %}
+
+        {% if not algorithm_selected %}
+            {% include 'algorithm/select_algorithm.html' %}
+            {% include 'algorithm/comparision.html' %}
+
+            <div class="col-10">
+                <div class="row">
+                    <div class="col-1"></div>
+                </div>
+            </div>
+
+        {% else %}
+            {% include 'algorithm/algorithm_selected.html' %}
+        {% endif %}
+
+
+
+        {% if algorithm_selected and not algorithm_trained %}
+            {% include 'algorithm/select_datasets.html' %}
+        {% endif %}
+
+        {% if algorithm_selected and algorithm_trained and not algorithm_evaluated %}
+            <div class="row">
+                <div class="col-4">
+                    <form class="mr-2" action="{% url 'algorithms' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="intent" value="evaluate_algorithm">
+                        <button type="submit" class="btn btn-primary">Benchmark</button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

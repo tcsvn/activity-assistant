@@ -1,0 +1,27 @@
+{% extends "base_bootstrap.html" %}
+{% load static %}
+
+{% block head %}
+{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="d-flex flex-column col-8">
+    {% for model in model_list %}
+      <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+          <a href="../model/{{ model.id }}">
+              <div class="p-2">{{ model.algorithm.name }} | {{ model.person.name }} | {{ model.dataset.name }} </div>
+          </a>
+        <div class="p-2">
+          <form action="{% url 'model_selection' %}" method="POST" class="mb-0">
+	          <input type="hidden" name="pk" value="{{model.id }}">
+	          <input type="hidden" name="intent" value="delete">
+	          {% csrf_token %}
+	          {{ form }}
+	          <button type="submit" class="btn btn-outline-danger">Delete</button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

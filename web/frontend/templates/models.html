@@ -1,0 +1,77 @@
+{% extends "base_bootstrap.html" %}
+{% load static %}
+
+{% block head %}
+    <script src="{% static 'js.cookie.js' %}"></script>
+    <script src="{% static 'Chart.bundle.min.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="card mb-2">
+            <div class="card-body">
+                <h5 class="card-title">{{ model.algorithm.name }}</h5>
+                <table class="table table-borderless">
+                    <!--
+                    <thead>
+                    <tr>
+                        <th scope="col">First</th>
+                        <th scope="col">Last</th>
+                    </tr>
+                    </thead>
+                    -->
+                    <tbody>
+                    <tr>
+                        <td>Data representation</td>
+                        <td>{{ model.datainstance.data_rep }}</td>
+                    </tr>
+                    <tr>
+                        <td>Timeslice length</td>
+                        <td>{{ model.datainstance.timeslicelength }}</td>
+                    </tr>
+                     <tr>
+                        <td>Test selection</td>
+                        <td>{{ model.datainstance.test_sel }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            <h6>Trainloss</h6>
+                {% if model.visualization %}
+                    <a href="{{ model.visualization.url }}"><img class="img-fluid" src="{{ model.visualization.url }}"/></a>
+                {% endif %}
+                <img class="img-fluid" src="{{ model.train_loss_graph.url }}"/>
+            </div>
+        </div>
+        {% if benchmark %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Benchmark</h5>
+                    <figure class="figure">
+                        <img class="figure-img img-fluid" src="{{ benchmark.img_feature_importance.url }}"/>
+                    </figure>
+                    <img class="img-fluid" src="{{ benchmark.img_act_dur_dists.url }}"/>
+                    <img class="img-fluid" src="{{ benchmark.img_inf_states.url }}"/>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Confusion matrix</h5>
+                    {{ conf_mat_html | safe }}
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Class accuracies</h5>
+                    {{ class_accs_html | safe }}
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Metrics</h5>
+                    {{ metrics_html | safe }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
