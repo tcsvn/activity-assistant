@@ -1,0 +1,26 @@
+{
+  "name": "Activity-assistant",
+  "version": "0.0.5-dev-alpha",
+  "slug": "act_assist",
+  "description": "Record, evaluate and predict Activities of Daily living (ADL)",
+  "arch": ["amd64", "i386"],
+  "url": "http://www.google.de",
+  "startup": "application",
+  "webui":"http://[HOST]:[PORT:8000]",
+  "boot": "auto",
+  "schema":{},
+  "options":{},
+  "homeassistant_api":true,
+  "hassio_api":true,
+  "host_network":true,
+  "ingress":true,
+  "ingress_port":8000,
+  "panel_icon":"mdi:account-reactivate",
+  "ports": {
+    "8000/tcp": 8000
+  },
+  "map":["addons:rw"],
+  "ports_description":{
+    "8000/tcp": "Required for API access of mobile devices"
+  }
+}

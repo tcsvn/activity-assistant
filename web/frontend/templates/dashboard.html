@@ -11,11 +11,6 @@
 {% endblock %}
 
 {% block content %}
-
-    {% if not setup_complete %}
-        {% include 'dashboard/setup_guide.html' %}
-    {% else %}
-
         <div class="container mb-3">
             <div class="row">
                 <div class="col-sm">
@@ -25,7 +20,7 @@
                             <p class="card-text">Persons registered</p>
                         </div>
                         <div class="card-footer bg-primary ">
-                            <a href="{% url 'create_person' %}" class="text-white">more info</a>
+                            <a href="{% url 'basic_config' %}" class="text-white">more info</a>
                         </div>
                     </div>
                 </div>
@@ -33,7 +28,7 @@
                     <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
                         <div class="card-body">
                             <h5 class="card-title">{{ count_models }}</h5>
-                            <p class="card-text">Models were trained</p>
+                            <p class="card-text">Models present</p>
                         </div>
                         <div class="card-footer bg-primary ">
                             <a href="{% url 'model_selection' %}" class="text-white">more info</a>
@@ -219,5 +214,4 @@
         </div>
 
 -->
-    {% endif %}
 {% endblock %}

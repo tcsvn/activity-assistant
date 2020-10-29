@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title> HB </title>
+    <title> Activity-assistant </title>
     <!-- include bootstrap -->
     <link rel="stylesheet"
           href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
@@ -19,7 +19,7 @@
 <body>
 {% block navbar %}
     <nav class="navbar navbar-expand-lg navbar-light bg-primary mb-3">
-        <a class="navbar-brand" href="{% url 'dashboard' %}">HB</a>
+        <a class="navbar-brand" href="{% url 'dashboard' %}">Activity-assistant</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -32,7 +32,11 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="../model_selection/">Models</a>
+                    <a class="nav-link" href="../models/">Models</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="../dataset/">Dataset</a>
                 </li>
 
                 <li class="nav-item dropdown">
@@ -54,12 +58,9 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="../basic">basic</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="../create_person">create persons</a>
-                        <a class="dropdown-item" href="../activities">create activities</a>
-                        <a class="dropdown-item" href="../map_editor">create locations</a>
-                        <a class="dropdown-item" href="../assign_sensors">assign devices</a>
-                        <a class="dropdown-item" href="../assign_activities_to_locations">assign activities</a>
-                        <a class="dropdown-item" href="../algorithms/">generate models</a>
+                        <a class="dropdown-item" href="../map_editor">connect locations</a>
+                        <a class="dropdown-item" href="../assign_activities_to_locations">assign activities to locations</a>
+                        <a class="dropdown-item" href="../algorithms/">create models</a>
                     </div>
                 </li>
             </ul>

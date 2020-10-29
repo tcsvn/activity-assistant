@@ -1,3 +1,8 @@
+# Activity Assistant
+
+
+# Installation
+
 # Maintenance
 
 * activate the virtual env for python type 'source django-test/bin/activate'

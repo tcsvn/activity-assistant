@@ -34,15 +34,6 @@ class ServerViewSet(viewsets.ModelViewSet):
     #def perform_create(self, serializer):
     #    serializer.save(owner=self.request.user)
 
-class DataInstanceViewSet(viewsets.ModelViewSet):
-    """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
-    Additionally we also provide an extra `highlight` action.
-    """
-    queryset = DataInstance.objects.all()
-    serializer_class = DataInstanceSerializer
-
 class SyntheticActivityViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
@@ -60,16 +51,6 @@ class ActivityPredictionViewSet(viewsets.ModelViewSet):
     """
     queryset = ActivityPrediction.objects.all()
     serializer_class = ActivityPredictionSerializer
-
-
-class DeviceComponentViewSet(viewsets.ModelViewSet):
-    """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
-    Additionally we also provide an extra `highlight` action.
-    """
-    queryset = DeviceComponent.objects.all()
-    serializer_class = DeviceComponentSerializer
 
 
 class DevicePredictionViewSet(viewsets.ModelViewSet):
@@ -110,26 +91,6 @@ class DatasetViewSet(viewsets.ModelViewSet):
     #def perform_create(self, serializer):
     #    serializer.save(owner=self.request.user)
 
-class BenchmarkViewSet(viewsets.ModelViewSet):
-    """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
-    Additionally we also provide an extra `highlight` action.
-    """
-    queryset = Benchmark.objects.all()
-    serializer_class = BenchmarkSerializer
-    #permission_classes = (
-    #    permissions.IsAuthenticatedOrReadOnly,
-    #    IsOwnerOrReadOnly, )
-
-    #def perform_destroy(self, instance):
-    #    instance.delete()
-
-
-    #def perform_create(self, serializer):
-    #    serializer.save(owner=self.request.user)
-
-
 class ModelViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
@@ -148,7 +109,6 @@ class ModelViewSet(viewsets.ModelViewSet):
         :param instance:
         :return:
         """
-        print('lululu'*200)
         instance.file.delete()
         instance.delete()
 
@@ -168,26 +128,6 @@ class ModelViewSet(viewsets.ModelViewSet):
 
     #def perform_create(self, serializer):
     #    serializer.save(owner=self.request.user)
-
-class AlgorithmViewSet(viewsets.ModelViewSet):
-    """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
-    Additionally we also provide an extra `highlight` action.
-    """
-    queryset = Algorithm.objects.all()
-    serializer_class = AlgorithmSerializer
-    #permission_classes = (
-    #    permissions.IsAuthenticatedOrReadOnly,
-    #    IsOwnerOrReadOnly, )
-
-    #def perform_destroy(self, instance):
-    #    instance.delete()
-
-
-    #def perform_create(self, serializer):
-    #    serializer.save(owner=self.request.user)
-
 
 class SmartphoneViewSet(viewsets.ModelViewSet):
     """

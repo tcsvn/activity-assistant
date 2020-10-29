@@ -1,0 +1,11 @@
+{% extends "base_bootstrap.html" %}
+{% load static %}
+
+{% block content %}
+
+{% if experiment_running %}
+    {% include 'dataset/active_data.html' %}
+{% else %}
+    {% include 'dataset/no_data.html' %}
+{% endif %}
+{% endblock %}

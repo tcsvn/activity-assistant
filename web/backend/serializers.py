@@ -3,11 +3,6 @@ from backend.models import *
 from django.contrib.auth.models import User
 
 
-class DataInstanceSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = DataInstance
-        fields = ('id', 'name', 'dataset', 'data_rep', 'timeslicelength', 'test_sel', 'data_file')
-
 class SyntheticActivitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = SyntheticActivity
@@ -37,45 +32,26 @@ class RealTimeNodeSerializer(serializers.HyperlinkedModelSerializer):
 class ServerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Server
-        fields = ('hass_address', 'server_address', 'hass_api_token',
-                  'selected_model', 'selected_algorithm', 'selected_dataset', 'realtime_node')
+        fields = ('server_address', 'hass_api_token', 'setup',
+                  'selected_model', 'realtime_node', 'dataset', 'is_polling', 
+                  'poll_interval')
 
 class DatasetSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Dataset
-        fields = ('id', 'name', 'class_name', 'path_to_folder')
+        fields = ('id', 
+                    'logging',
+                    'path_to_folder',
+                    'start_time',
+                    'end_time')
 
 class ModelSerializer(serializers.HyperlinkedModelSerializer):
-    benchmark = serializers.HyperlinkedRelatedField(
-            view_name='benchmark-detail',
-            allow_null=True,
-            many=False,
-            queryset=Benchmark.objects.all())
+
     class Meta:
         model = Model
-        fields = ('id', 'algorithm', 'person', 'dataset', 'file', 'visualization', 'datainstance',
+        fields = ('id', 'person', 'dataset', 'file', 'visualization', 'datainstance',
                   'train_loss', 'train_loss_graph', 'benchmark')
-
-class BenchmarkSerializer(serializers.HyperlinkedModelSerializer):
-    model = serializers.HyperlinkedRelatedField(
-            view_name='model-detail',
-            allow_null=False,
-            many=False,
-            queryset=Model.objects.all())
-    class Meta:
-        model = Benchmark
-        fields = ('model', 'df_conf_mat', 'df_metrics', 'df_class_acts', 'img_feature_importance',
-                  'img_act_dur_dists', 'img_inf_states')
-
-class AlgorithmSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = Algorithm
-        fields = ('id', 'name', 'class_name', 'description', 'compatible_dataset',
-                  'selected_person', 'selected_dataset',
-                  'multiple_person', 'unsupervised', 'synthetic_activities',
-                  'location', 'duration')
 
 class ActivitySerializer(serializers.HyperlinkedModelSerializer):
 
@@ -110,19 +86,11 @@ class SmartphoneSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('name', 'owner', 'person', 'logging', 
                 'logged_activity', 'logged_location', 'synchronized')
 
-class DeviceComponentSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = DeviceComponent
-        fields = ('id', 'name')
-
-
 class DeviceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Device
-        fields = ('id', 'name', 'location', 'component', 'state')
-        #fields = ('id', 'name', 'location', 'state')
+        fields = ('id', 'name')
 
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     #owner = serializers.ReadOnlyField(source='owner.username')
@@ -136,9 +104,8 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Person
-        fields = ('id', 'name', 'prediction',
+        fields = ('id', 'name', 'hass_name', 'prediction',
                 'smartphone',
-                'predicted_location',
                 'predicted_activities',
                 'synthetic_activities')
 

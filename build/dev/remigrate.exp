@@ -2,7 +2,7 @@
 
 set timeout 30
 
-spawn /bin/ash remigrate.sh
+spawn /bin/ash /home/remigrate.sh
 
 expect "Password:"
 send "asdf\n"

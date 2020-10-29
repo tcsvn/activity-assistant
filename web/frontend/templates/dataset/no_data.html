@@ -1,0 +1,25 @@
+    <div class="container mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-header"> Dataset</h5>
+                A total of {{ num_devs }} devices will be used for recording:
+                <ul>
+                    {%for name in device_lst %}
+                        <li>{{ name }}</li>
+                    {% endfor %}
+                </ul>
+                When the experiment is started part of the config is frozen to ensure consistency.
+                They can only be changed if the experiment is halted and thereby archived. Configuration
+                that is frozen includes devices to track.
+            </div>
+            <div class="card-footer">
+                <div class="col-6 btn-group" role="group" aria-label="Basic example">
+                        <form class="mr-2" action="{% url 'dataset' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="intent" value="start_experiment">
+                                <button type="submit" class="btn"> Start experiment </button>
+                        </form>
+                </div>
+            </div>
+        </div>
+    </div>

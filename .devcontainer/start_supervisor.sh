@@ -91,7 +91,8 @@ function run_supervisor() {
         -e SUPERVISOR_NAME=hassio_supervisor \
         -e SUPERVISOR_DEV=1 \
         -e SUPERVISOR_MACHINE="qemux86-64" \
-        homeassistant/amd64-hassio-supervisor:dev
+        homeassistant/amd64-hassio-supervisor:245
+        #homeassistant/amd64-hassio-supervisor:dev
 }
 
 case "$1" in

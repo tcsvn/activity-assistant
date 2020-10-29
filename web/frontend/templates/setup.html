@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> Activity-assistant </title>
+    <!-- include bootstrap -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
+          integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+</head>
+
+<body>
+    <script src="{% static 'jquery-3.2.1.slim.min.js' %}"></script>
+    <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
+            integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
+            crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
+            integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
+            crossorigin="anonymous"></script>
+
+        <div class="container mt-3">
+        <!-- progress bar -->
+        <div class="row mb-4">
+            <div class="col-12">
+            setup progress
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped bg-info" role="progressbar"
+                    style="width: {{ progress }}%" 
+                aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!--rest of content-->
+        <div class="row mb-4">
+            {% if step == "step 0" %}
+                <h3>Connect Home assistant component</h3>
+                Install the Activity assistant component on the home assistant side. If successfull
+                the Connect Button will bring you to the next step. 
+                <form action="{% url 'setup' %}" method="POST" class="mb-0">
+                    <input type="hidden" name="from_step" value="step 0">
+                    {% csrf_token %}
+                    {{ form }}
+                    <button type="submit" class="btn btn-outline-danger">Connect</button>
+                </form>
+            {% elif step == "step 1" %}
+                <h3>Configure Home assistant component</h3>
+                Activity-assistant has to update a local dataset with relevant entries of the homeassistant
+                database. Please set the interval in which the data is being polled. Recommended
+                is 30 minutes.
+                <form action="{% url 'setup' %}" method="POST" class="mb-0 mt-3">
+                    <div class="form-group">
+                      <label for="exampleFormControlSelect1">Select time interval</label>
+                      <select class="form-control" id="asdf" name="poll_interval">
+                        <option>30s</option>
+                        <option>1m</option>
+                        <option>5m</option>
+                        <option>10m</option>
+                        <option>30m</option>
+                        <option>1h</option>
+                        <option>2h</option>
+                        <option>6h</option>
+                      </select>
+                    </div>
+                    {% csrf_token %}
+                    {{ form }}
+
+                    <input type="hidden" name="from_step" value="step 1">
+                    <button type="submit" class="btn btn-outline-danger">Submit</button>
+                  </form>
+
+
+
+            {% elif step == "step 2" %}
+                  <h3>Setup device database</h3>
+                  <div class="container mt-3">
+                    <div class="row mb-1">
+                      Select multiple devices to track or not to track.
+                    </div>
+                  <form action="{% url 'setup' %}" method="POST" class="mb-0">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="hidden" name="from_step" value="step 2">
+                    <div class="form-row">
+                      <div class="form-group col-md-6">
+                        <label for="hass_dev_select">Home assistant devices</label>
+                        <select multiple="multiple" class="form-control" name="hass_select" id="hass_dev_select">
+                            {% for hass_device in hass_dev_list %}
+                                <option>{{ hass_device }} </option>
+                            {% endfor %}
+                        </select>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="act_assist_dev_select">Tracked by Activity assistant</label>
+                        <select multiple="multiple" class="form-control" name="act_assist_select" id="act_assist_dev_select">
+                            {% for aa_dev in aa_dev_list %}
+                                <option>{{ aa_dev }}</option>
+                            {% endfor %}
+                        </select> 
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col-md-6">
+                        <button type="submit" name="intent" value="track" class="btn btn-primary">Track</button>
+                      </div>
+                      <div class="form-group col-md-4">
+                        <button type="submit" name="intent" value="remove" class="btn btn-primary">Remove</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <form action="{% url 'setup' %}" method="POST" class="mb-0">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="hidden" name="from_step" value="step 2">
+                    <button type="submit" name="intent" value="next_step" class="btn btn-outline-danger">Next Step</button>
+                </form>
+
+
+            {% elif step == "step 3" %}
+                <h3>Create Activities</h3>
+
+                <div class="container mt-3">
+                  <form action="{% url 'setup' %}" method="POST" class="mb-0">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="hidden" name="from_step" value="step 3">
+                    <div class="form-group col-md-6">
+                      <label for="act_sel">Tracked by Activity assistant</label>
+                      <select multiple="multiple" class="form-control" name="act_select" id="act_sel">
+                          {% for activity in activity_list %}
+                              <option>{{ activity.name }}</option>
+                          {% endfor %}
+                      </select> 
+                    </div>
+                    <button type="submit" name="intent" value="delete" class="btn btn-primary mb-2">delete</button>
+                  </form>
+
+                  <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                    <div class="p-2">
+                      <form class="form-inline" action="{%url 'setup'%}" method="post"> 
+                        {% csrf_token %}
+                        {{ form }}
+                        <input type="hidden" name="from_step" value="step 3">
+                        <div class="form-group mb-2">
+                          <label for="inputPassword2" class="sr-only">Password</label>
+                          <input class="form-control" name="name" type="text" required placeholder="Activityname">
+                        </div>
+                        <button type="submit" name="intent" value="add" class="btn btn-primary mb-2">add</button>
+                      </form>
+                    </div>
+                  </div>
+                <form action="{% url 'setup' %}" method="POST" class="mb-0">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="hidden" name="from_step" value="step 3">
+                    <button type="submit" name="intent" value="next_step" class="btn btn-outline-danger">Next Step</button>
+                </form>
+
+                </div>
+            {% elif step == "step 4" %}
+                  <h3>Select Persons for tracking</h3>
+                 <div class="container mt-3">
+
+                  <form action="{% url 'setup' %}" method="POST" class="mb-0">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="hidden" name="from_step" value="step 4">
+                    <div class="form-row">
+                      <div class="form-group col-md-6">
+                        <label for="hass_dev_select">Home assistant persons</label>
+                        <select multiple="multiple" class="form-control" name="hass_select" id="hass_dev_select">
+                            {% for hass_device in hass_user_list %}
+                                <option>{{ hass_device }} </option>
+                            {% endfor %}
+                        </select>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="act_assist_dev_select">Tracked by Activity assistant</label>
+                        <select multiple="multiple" class="form-control" name="act_assist_select" id="act_assist_dev_select">
+                            {% for aa_dev in aa_user_list %}
+                                <option>{{ aa_dev.name }} ({{ aa_dev.hass_name}}) </option>
+                            {% endfor %}
+                        </select> 
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col-md-6">
+                        <button type="submit" name="intent" value="track" class="btn btn-primary">Track</button>
+                      </div>
+                      <div class="form-group col-md-4">
+                        <button type="submit" name="intent" value="remove" class="btn btn-primary">Remove</button>
+                      </div>
+                    </div>
+                  </form>
+
+                  <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                    <div class="p-2">
+                      <form class="form-inline" action="{%url 'setup'%}" method="post"> 
+                        {% csrf_token %}
+                        {{ form }}
+                        <input type="hidden" name="from_step" value="step 4">
+                        <div class="form-group mb-2">
+                          <label for="inputPassword2" class="sr-only">Password</label>
+                          <input class="form-control" name="name" type="text" required placeholder="Persons name">
+                        </div>
+                        <button type="submit" name="intent" value="add" class="btn btn-primary mb-2">add</button>
+                      </form>
+                    </div>
+                  </div>
+                <form action="{% url 'setup' %}" method="POST" class="mb-0">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="hidden" name="from_step" value="step 3">
+                    <button type="submit" name="intent" value="next_step" class="btn btn-outline-danger">Next Step</button>
+                </form>
+
+                </div>              
+            {% elif step == "step 5" %}
+                <h3>Setup complete</h3>
+                Where to go from here. Check out configuration 
+                <form action="{% url 'setup' %}" method="POST" class="mb-0">
+                    <input type="hidden" name="from_step" value="step 0">
+                    {% csrf_token %}
+                    {{ form }}
+                    <button type="submit" class="btn btn-outline-danger">Finish Setup</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</body>

@@ -1,0 +1,89 @@
+    <div class="container mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-header">
+                    <h5> Dataset</h5>
+                    <form class="mr-2" action="{% url 'dataset' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="intent" value="export_data">
+                            <input type="hidden" name="pk" value="{{ person.id }}">
+                            <button type="submit" class="btn"> export data </button>
+                    </form>
+                </div>
+                <div class="d-flex flex-column col-6">
+                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                        <div class="p-2"> device recording</div>
+                        <div class="p-2">
+                            {% if dataset.logging %}
+                                <p class="text-success mb-0">
+                                    running
+                                    {% else %}
+                                <p class="text-secondary mb-0">
+                                offline
+                            {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                        <div class="p-2"> start time </div>
+                        <div class="p-2">
+                            <p class="text-secondary mb-0">
+                                {{ dataset.start_time}} 
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                        <div class="p-2"> # devices </div>
+                        <div class="p-2">
+                             <p class="text-secondary mb-0">
+                                 7
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                        <div class="p-2"> # rows </div>
+                        <div class="p-2">
+                             <p class="text-secondary mb-0">
+                                 313.012.121
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                        <div class="p-2"> Datasize </div>
+                        <div class="p-2">
+                             <p class="text-secondary mb-0">
+                                 200GB
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="col-6 btn-group" role="group" aria-label="Basic example">
+                    {% if dataset.logging %}
+                        <form class="mr-2" action="{% url 'person' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="intent" value="decouple_smartphone">
+                            <input type="hidden" name="pk" value="{{ person.id }}">
+                            <button type="submit" class="btn btn-outline-secondary">Pause logging</button>
+                        </form>
+                    {% else %}
+                        <form class="mr-2" action="{% url 'person' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="intent" value="export_data">
+                                <input type="hidden" name="pk" value="{{ person.id }}">
+                                <button type="submit" class="btn"> Resume logging </button>
+                        </form>
+                    {% endif %}
+                </div>
+                <div class="col-2">
+                        <form class="mr-2" action="{% url 'person' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="intent" value="export_data">
+                                <input type="hidden" name="pk" value="{{ person.id }}">
+                                <button type="submit" class="btn btn-"> Archive Experiment </button>
+                        </form>
+                </div>
+            </div>
+        </div>
+    </div>
