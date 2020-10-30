@@ -1,6 +1,6 @@
 {
   "name": "Activity-assistant dev",
-  "version": "dev-1",
+  "version": "dev-0",
   "slug": "act_assist",
   "description": "Record, evaluate and predict Activities of Daily living (ADL)",
   "arch": ["amd64", "i386"],

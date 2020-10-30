@@ -7,6 +7,7 @@ class DatasetView(TemplateView):
     # list all persons and render them into the frontend
     def create_context(self, request):
         context = {}
+        context['person_list'] = Person.objects.all()
         srv = get_server()
         if srv.dataset is not None:
             context['dataset'] = srv.dataset

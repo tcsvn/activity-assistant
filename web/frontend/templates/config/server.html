@@ -1,0 +1,37 @@
+<form action="{% url url %}" method="POST" class="mb-0">
+    {% csrf_token %}
+    {{ form }}
+    <input type="hidden" name="from" value="conf_server">
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-sm-2 col-form-label">Server address</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="inputEmail3"  name="address"placeholder="{{ server.server_address }}">
+      </div>
+    </div>
+    <div class="form-group row">
+          <label for="inputState">Poll interval</label>
+            <select class="form-control" id="asdf" name="poll_interval">
+            {% for opt in poll_int_list%}
+                {% if opt == server.poll_interval %}
+                    <option selected> {{ opt }}</option>
+                {% else %}
+                    <option> {{ opt }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group row">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="gridCheck1" name="is_polling"
+            {% if server.is_polling %} checked {% endif %}>
+          <label class="form-check-label" name="is_polling" for="gridCheck1">
+            is polling
+          </label>
+        </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-10">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+</form>

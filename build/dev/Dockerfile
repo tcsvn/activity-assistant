@@ -6,6 +6,12 @@ ENV LANG C.UTF-8
 RUN apk add --update python3-dev py3-pip expect \
     jpeg-dev zlib-dev gcc linux-headers musl-dev # to fix pillow error 
 
+
+# pandas needs very long to intall over pip (has to be built)
+# therefore install from package repo
+# TODO remove --repository when this is in stable
+RUN apk add py3-pandas --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
+
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 

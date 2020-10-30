@@ -10,6 +10,10 @@ from frontend.forms import ModelForm
 import sys
 from homeassistant_api.websocket import HassWs
 import homeassistant_api.rest as hass_api
+from django.http import HttpResponseRedirect
+import sys
+import time
+sys.path.append('..')
 
 DATASET_NAME_HASS="homeassistant"
 HASS_DB_NAME = 'home-assistant_v2.db'
@@ -137,135 +141,7 @@ class CreatePersonView(TemplateView):
         context = self.create_context()
         return render(request, 'create_person.html', context)
 
-from django.http import HttpResponseRedirect
-import time
-class BasicConfig(TemplateView):
-    def get_context(self):
-        server_config = Server.objects.all()[0]
-        person_list = Person.objects.all()
-        access_token_available = self._is_access_token()
-        return {'server_address': server_config.server_address,
-                'hass_address': server_config.hass_address,
-                'access_token_available': access_token_available,
-                'person_list' : person_list,
-                }
-    def _is_access_token(self):
-        srv = Server.objects.all()[0]
-        return not srv.hass_api_token is None
 
-    def get(self, request, *args, **kwargs):
-        context = self.get_context()
-        return render(request, 'basic_config.html', context)
-
-    def set_server_addr(self, request):
-        server = Server.objects.all()[0]
-        srv_address = request.POST.get("server_address", "")
-        server.server_address = srv_address
-        server.save()
-
-
-    def reset_server_addr(self):
-        server = Server.objects.all()[0]
-        server.server_address = None
-        server.save()
-
-    def set_hass_addr(self, request):
-        server = Server.objects.all()[0]
-        hass_address = request.POST.get("hass_address", "")
-        server.hass_address = hass_address
-        server.save()
-
-
-    def set_access_token(self, request):
-        server = Server.objects.all()[0]
-        api_token = request.POST.get("hass_api_token","")
-        server.hass_api_token = api_token
-        server.save()
-        # todo check for home assistant connection to ensure the api key and the address is correct
-
-
-    def reset_hass_addr(self):
-        server = Server.objects.all()[0]
-        server.hass_address = None
-        server.save()
-
-    def reset_access_token(self):
-        # TODO revoke key in homeassistant
-        server = Server.objects.all()[0]
-        server.hass_api_token = None
-        server.save()
-
-    def post(self, request):
-        intent = request.POST.get("intent", "")
-        
-        if intent == "set_srv_addr":
-            self.set_server_addr(request)
-
-        elif intent == "reset_srv_addr":
-            self.reset_server_addr()
-
-        elif intent == "set_access_token":
-            self.set_access_token(request)
-
-        elif intent == "set_hass_addr":
-            self.set_hass_addr(request)
-
-        elif intent == "reset_hass_addr":
-            self.reset_hass_addr()
-
-        elif intent == "reset_hass_token":
-            self.reset_access_token()
-
-        context = self.get_context()
-        return render(request, 'basic_config.html', context)
-
-
-
-
-class ActivityView(TemplateView):
-    # list all persons and render them into the frontend
-
-    def get_context(self):
-        activity_list = Activity.objects.all()
-        person_list = Person.objects.all()
-        return { 'activity_list' : activity_list,
-                 'person_list' : person_list}
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context()
-        return render(request, 'activities.html', context)
-
-    def create_activity(self, name):
-        activity = Activity()
-        activity.name = name
-        activity.save()
-
-    def get_activity_by_id(self, pk):
-        activity_list = Activity.objects.all()
-        for act in activity_list:
-            if act.id == int(pk):
-                return act
-
-    def delete_activity(self, pk):
-        activity = self.get_activity_by_id(pk)
-        activity.delete()
-
-    def post(self, request):
-        intent = request.POST.get("intent","")
-        if (intent == "delete"):
-            pk = request.POST.get("pk", "")
-            self.delete_activity(pk)
-
-        elif (intent == "create"):
-            name = request.POST.get("name","")
-            self.create_activity(name)
-
-        context = self.get_context()
-        return render(request, 'activities.html', context)
-
-import sys
-import time
-sys.path.append('..')
 class AssignSensor(TemplateView):
     # list all persons and render them into the frontend
 

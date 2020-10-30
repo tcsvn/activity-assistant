@@ -4,12 +4,16 @@ from django.shortcuts import render, redirect
 
 import os 
 import homeassistant_api.rest as hass_rest
-from frontend.util import get_device_by_id, get_server, get_device_names, get_activity_names
+from frontend.util import get_server, \
+    get_device_names, get_activity_names, get_person_names
+from frontend.views.config import conf_devices, conf_activities, conf_persons, \
+    POLL_INTERVAL_LST
 """
 this view connects to homeassistant and gets all the relevant data to 
 setup activity assistant
 """
-SETUP_STEPS = ["step 0", "step 1", "step 2", "step 3", "step 4", "completed"]
+SETUP_STEPS = ["step 0", "step 1", "conf_devices", "conf_activities",
+                 "conf_persons", "step 5", "completed"]
 
 class SetupView(TemplateView):
 
@@ -19,20 +23,22 @@ class SetupView(TemplateView):
             srv.setup = SETUP_STEPS[0]
             srv.save()
         index = SETUP_STEPS.index(srv.setup)
-        progress = round((index/len(SETUP_STEPS))*100, 2)
+        progress = round((index/(len(SETUP_STEPS)-2))*100, 2)
 
         context = {
             'step':srv.setup,
-            'progress':progress
+            'progress':progress,
+            'url':'setup'
         }
-        if srv.setup == SETUP_STEPS[2]:
+        if srv.setup == SETUP_STEPS[1]:
+            context['poll_int_list'] = POLL_INTERVAL_LST
+        elif srv.setup == SETUP_STEPS[2]:
             hass_devices = hass_rest.get_device_list(
                 settings.HASS_API_URL , srv.hass_api_token)
-            devices = Device.objects.all()
-            dev_list = []
-            for dev in devices:
-                dev_list.append(dev.name)
+
+            dev_list = get_device_names()
             hass_devices = list(set(hass_devices).difference(set(dev_list)))
+
             context['hass_dev_list'] = hass_devices
             context['aa_dev_list'] = get_device_names()
         elif srv.setup == SETUP_STEPS[3]:
@@ -41,13 +47,9 @@ class SetupView(TemplateView):
             hass_users = hass_rest.get_user_names(
                 settings.HASS_API_URL, srv.hass_api_token,
             )
-            aa_users = []
-            for u in Person.objects.all():
-                aa_users.append(u.name)
-            hass_users = list(set(hass_users).difference(set(aa_users)))
+            hass_users = list(set(hass_users).difference(set(get_person_names())))
             context['hass_user_list'] = hass_users
             context['aa_user_list'] = Person.objects.all()
-            write_to_srv_poll_int(hass_users)
         return context
 
     def _increment_one_step(self):
@@ -77,7 +79,7 @@ class SetupView(TemplateView):
 
     def post_step1(self, request):
         p_int = str(request.POST.get("poll_interval", ""))
-        assert p_int in ['30s', '1m', '5m', '10m', '30m', '1h', '2h', '6h']
+        assert p_int in POLL_INTERVAL_LST
         srv = get_server()
         srv.poll_interval = p_int
         srv.save()
@@ -86,49 +88,30 @@ class SetupView(TemplateView):
     def post_step2(self, request):
         intent = request.POST.get("intent","")
         assert intent in ['track', 'remove', 'next_step']
-        dev_lst = request.POST.getlist('devices')
-        if intent == 'track':
-            for name in request.POST.getlist('hass_select'):
-                Device(name=name).save()
-        elif intent == 'remove':
-            for name in request.POST.getlist('act_assist_select'):
-                Device.objects.get(name=name).delete()
-        else:
+
+        if intent == 'next_step':
             self._increment_one_step()
+        else:
+            conf_devices(request)
 
     def post_step3(self, request):
         intent = request.POST.get("intent", "")
         assert intent in ['add', 'delete', 'next_step']
-        if intent == 'delete':
-            for name in request.POST.getlist('act_select'):
-                Activity.objects.get(name=name).delete()
-        elif intent == 'add':
-            name = request.POST.get("name", "")
-            if name not in get_activity_names():
-                Activity(name=name).save()
-        else:
+        if intent == 'next_step':
             self._increment_one_step()
+        else:
+            conf_activities(request)
 
     def post_step4(self, request):
         intent = request.POST.get("intent","")
         assert intent in ['track', 'remove', 'next_step', 'add']
-        dev_lst = request.POST.getlist('devices')
-        if intent == 'track':
-            for hass_name in request.POST.getlist('hass_select'):
-                name = hass_name.split('.')[0]
-                Person(name=name, hass_name=hass_name).save()
-        elif intent == 'remove':
-            for col in request.POST.getlist('act_assist_select'):
-                name = col.split(' ')[0]
-                Person.objects.get(name=name).delete()
-        elif intent == 'add':
-            name = request.POST.get("name", "")
-            Person(name=name, hass_name='person.' + name).save()
-        else:
+        if intent == 'next_step':
             self._increment_one_step()
+        else:
+            conf_persons(request)
 
     def post(self, request):
-        from_step = request.POST.get("from_step","")
+        from_step = request.POST.get("from","")
         if from_step == SETUP_STEPS[0]:
             self.post_step0(request)
         elif from_step == SETUP_STEPS[1]:
@@ -139,8 +122,11 @@ class SetupView(TemplateView):
             self.post_step3(request)
         elif from_step == SETUP_STEPS[4]:
             self.post_step4(request)
+        elif from_step == SETUP_STEPS[5]:
+            self._increment_one_step()
+            return redirect('/dashboard/')
         else:
-            return return_var(str(request)) 
+            return return_var(str(request.POST)) 
         context = self.create_context()
         return render(request, 'setup.html', context)
 

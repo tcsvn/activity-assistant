@@ -1,3 +1,4 @@
+wheel
 # django and rest framework
 django
 django-qr-code
@@ -8,6 +9,7 @@ Pillow
 
 # rt_node and data science stuff
 asyncws
+pyadlml
 
 # webserver (production)
 #gunicorn

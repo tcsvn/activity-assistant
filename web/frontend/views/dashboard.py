@@ -27,6 +27,7 @@ class DashboardView(TemplateView):
         activity_list = Activity.objects.all()
         count_person = len(person_list)
         #count_models = len(Model.objects.all())
+        count_models = 0
         count_activity = len(activity_list)
         count_device = len(Device.objects.all())
         srv = get_server()
@@ -41,7 +42,7 @@ class DashboardView(TemplateView):
             #'model_list' : model_list,
             'activity_list' : activity_list,
             'count_person' : count_person,
-            #'count_models' : count_models,
+            'count_models' : count_models,
             'count_activity' : count_activity,
             'count_device' : count_device,
             'setup_complete' : setup_complete,

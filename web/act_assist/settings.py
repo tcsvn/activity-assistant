@@ -100,7 +100,6 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-HASS_API_URL = 'http://supervisor/core/api'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 DEBUG=True
@@ -113,8 +112,12 @@ STATICFILES_DIRS = [
 
 SERVE_MEDIA = True
 MEDIA_URL = '/media/'
+HASS_API_URL = 'http://supervisor/core/api'
 
+# experiment
 ACTIVITY_FILE_NAME="activities.csv"
+DATA_FILE_NAME='data.csv'
+
 
 # API URLS
 URL_SERVER = r'server'

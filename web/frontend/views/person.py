@@ -1,5 +1,6 @@
 from backend.models import *
 from django.views.generic import TemplateView
+from django.shortcuts import render, redirect
 
 # css frontend
 class PersonView(TemplateView):
@@ -8,17 +9,15 @@ class PersonView(TemplateView):
         person_list = Person.objects.all()
         # get current person id from url
         pk = self._getPersonPk(request)
-        print('laalal: ', pk)
         person = Person.objects.get(pk=int(pk))
         pred_acts = person.predicted_activities.all()
         activity_list = Activity.objects.all()
         syn_act_list = SyntheticActivity.objects.filter(person=person)
         person_list = Person.objects.all()
-        smartphone = None
         try:
             smartphone = person.smartphone
         except:
-            pass
+            smartphone = None
         qr_code_data = self.generate_qr_code_data(person)
         context = {
                 'person' : person,
@@ -28,7 +27,6 @@ class PersonView(TemplateView):
                 'synthetic_activity_list':  syn_act_list,
                 'qr_code_data' : qr_code_data
                 }
-        print(qr_code_data)
         if pred_acts is not None:
             context['predicted_activities'] = pred_acts
         return context
@@ -98,7 +96,6 @@ class PersonView(TemplateView):
     def uncouple_smartphone(self, request):
         # delete the smartphone instance
         pk = request.POST.get("pk", "")
-        print("pk person: ", pk)
         person = Person.objects.filter(pk=int(pk))[0]
         person.smartphone.delete()
 
@@ -134,12 +131,6 @@ class PersonView(TemplateView):
             return self.retrieve_retrieve_syn_acts(request)
 
         context = self.create_context(request)
-        #print('request: ', request)
-        #print('request path: ', request.path)
-        #request.path = settings.URL_PERSONS + self._getPersonPk(request)
-        #print('request: ', request)
-        #print('request path: ', request.path)
-        #return redirect('person', 'person/16')
         return render(request, 'person.html', context)
 
     def generate_qr_code_data(self, person):

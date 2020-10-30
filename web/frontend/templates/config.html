@@ -1,0 +1,31 @@
+{% extends "base_bootstrap.html" %}
+{% load static %}
+
+{% block head %}
+  <script src="{% static 'js.cookie.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+  <div class='row'>
+    <h4>Server</h4>
+    {% include "config/server.html" %}
+  </div>
+  <hr>
+  <div class='row'>
+    <h4>Activities</h4>
+    {% include "config/create_activities.html" %}
+  </div>
+  <hr>
+  <div class='row'>
+    <h4>Devices</h4>
+    {% include "config/sel_device.html" %}
+  </div>
+  <hr>
+  <div class='row'>
+    <h4>Persons</h4>
+    {% include "config/sel_person.html" %}
+  </div>
+</div>
+{% endblock %}

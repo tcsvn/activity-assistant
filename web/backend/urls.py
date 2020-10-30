@@ -20,11 +20,8 @@ router.register(r'persons', views.PersonViewSet)
 #router.register(r'users', views.UserViewSet)
 router.register(r'activities', views.ActivityViewSet)
 router.register(r'devices', views.DeviceViewSet)
-#router.register(r'algorithms', views.AlgorithmViewSet)
 #router.register(r'models', views.ModelViewSet)
-#router.register(r'benchmarks', views.BenchmarkViewSet)
 router.register(r'datasets', views.DatasetViewSet)
-#router.register(r'datainstances', views.DataInstanceViewSet)
 router.register(r'smartphones', views.SmartphoneViewSet)
 #router.register(r'locations', views.LocationViewSet)
 #router.register(r'edges', views.EdgeViewSet)
@@ -32,7 +29,6 @@ urlpatterns = []
 
 
 urlpatterns += [
-#    url(r'^', include(router.urls)),
     url(r'^%s/'%(API_LINK), include(router.urls)),
 ]
 
@@ -40,13 +36,11 @@ urlpatterns += [
 # add coreapi suppoert
 schema_view = get_schema_view(title=API_TITLE)
 urlpatterns+=[
-#   url(r'^schema/$', schema_view),
    url(r'^%s/schema/$'%(API_LINK), schema_view),
 ]
 
 # add auth support
 urlpatterns += [
-#    url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^%s/auth/'%(API_LINK), include('rest_framework.urls')),
 ]
 

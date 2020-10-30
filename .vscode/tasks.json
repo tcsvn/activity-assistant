@@ -6,7 +6,7 @@
         {
             "label": "Start Home Assistant",
             "type": "shell",
-            "command": "/workspaces/test_hassio/addons/local/.devcontainer/start_supervisor.sh",
+            "command": "/workspaces/test_hassio/share/.devcontainer/start_supervisor.sh",
             "group": {
                 "kind": "test",
                 "isDefault": true,
@@ -19,7 +19,7 @@
         },{
             "label": "Cleanup stale Home Assistant environment",
             "type": "shell",
-            "command": "/workspaces/test_hassio/addons/local/.devcontainer/start_supervisor.sh --cleanup",
+            "command": "/workspaces/test_hassio/share/.devcontainer/start_supervisor.sh --cleanup",
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -36,6 +36,38 @@
                 "panel": "new"
             },
             "problemMatcher": []
-        }
+        },{
+            "label": "AA migrate django",
+            "type": "shell",
+            "command": "docker exec -ti addon_local_act_assist bash -c \"cd /share; python3 web/manage.py makemigrations; python3 web/manage.py migrate\"",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },{
+            "label": "AA build dev-0 addon",
+            "type": "shell",
+            "command": "docker build -f build/dev/Dockerfile --build-arg BUILD_FROM=\"homeassistant/amd64-base:latest\" -t local/amd64-addon-act_assist:dev-0 ./build/dev",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },{
+            "label": "AA shell",
+            "type": "shell",
+            "command": "docker exec -ti addon_local_act_assist /bin/bash",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+
+
     ]
 }
