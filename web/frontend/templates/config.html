@@ -12,6 +12,11 @@
     <h4>Server</h4>
     {% include "config/server.html" %}
   </div>
+  {% if experiment_active %}
+    <div class="alert alert-danger" role="alert">
+      An experiment is running. As such part of the configuration is disabled.
+    </div>
+  {% endif %}
   <hr>
   <div class='row'>
     <h4>Activities</h4>

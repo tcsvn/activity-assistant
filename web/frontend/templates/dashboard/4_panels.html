@@ -1,0 +1,47 @@
+<div class="container mb-3">
+    <div class="row">
+        <div class="col-sm">
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ count_person }}</h5>
+                    <p class="card-text">Persons registered</p>
+                </div>
+                <div class="card-footer bg-primary ">
+                    <a href="{% url 'config' %}" class="text-white">more info</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ count_models }}</h5>
+                    <p class="card-text">Models present</p>
+                </div>
+                <div class="card-footer bg-primary ">
+                    <a href="{% url 'model_selection' %}" class="text-white">more info</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ count_activity }}</h5>
+                    <p class="card-text"> Activities registered</p>
+                </div>
+                <div class="card-footer bg-primary ">
+                    <a href="{% url 'config' %}" class="text-white">more info</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ count_location }}</h5>
+                    <p class="card-text"> Locations registered</p>
+                </div>
+                <div class="card-footer bg-primary">
+                    <a href="{% url 'map' %}" class="text-white">more info</a>
+                </div>
+            </div>
+        </div>
+    </div>

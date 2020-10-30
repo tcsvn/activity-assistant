@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 import os 
 import homeassistant_api.rest as hass_rest
-from frontend.util import get_server, \
+from frontend.util import get_server, is_experiment_active,\
     get_device_names, get_activity_names, get_person_names 
 
 POLL_INTERVAL_LST = ['30s', '1m', '5m', '10m', '30m', '1h', '2h', '6h']
@@ -14,6 +14,7 @@ class ConfigView(TemplateView):
         person_list = Person.objects.all()
         act_list = Activity.objects.all()
         url = 'config'
+        exp_active = is_experiment_active()
 
         # get hass devices
         hass_devices = hass_rest.get_device_list(
@@ -26,6 +27,7 @@ class ConfigView(TemplateView):
         hass_users = hass_rest.get_user_names(
             settings.HASS_API_URL, srv.hass_api_token,)
         hass_users = list(set(hass_users).difference(set(get_person_names())))
+
         return {'server': srv,
                 'url': url,
                 'person_list':person_list,
@@ -35,6 +37,7 @@ class ConfigView(TemplateView):
                 'hass_user_list' : hass_users,
                 'aa_user_list' : person_list, 
                 'poll_int_list' : POLL_INTERVAL_LST,
+                'experiment_active':exp_active,
                 }
 
     def get(self, request, *args, **kwargs):

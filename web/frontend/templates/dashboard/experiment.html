@@ -1,0 +1,46 @@
+<div class="card w-90 mb-2">
+    <div class="card-body">
+        {% if not experiment_status == 'not_running' %}
+        <h5 class="card-title">Experiment: {{ dataset.name }} </h5>
+            <p class="card-text">
+                An experiment is running. You can pause the experiment for timeperiods e.g 
+                for quality time with your girlfriend ;) These time periods are marked with the activity "not recording". 
+                TODO add statistics like how long the exp is running
+                <ul>
+                    <li>start time:  {{ dataset.start_time }}</li>
+                </ul>
+            </p>
+            {% if experiment_status == 'running' %}
+                <form class="form" action="{% url 'dashboard' %}" method="POST">
+                        {% csrf_token %}
+                    <input type="hidden" name="intent" value="pause experiment">
+                    <button type="submit" class="btn btn-primary">Pause experiment</a>
+                </form>
+            {% else %}
+                <form class="form" action="{% url 'dashboard' %}" method="POST">
+                        {% csrf_token %}
+                    <input type="hidden" name="intent" value="continue experiment">
+                    <button type="submit" class="btn btn-primary">continue experiment</a>
+                </form>
+            {% endif %}
+            <form class="form" action="{% url 'dashboard' %}" method="POST">
+                    {% csrf_token %}
+                <input type="hidden" name="intent" value="finish experiment">
+                <button type="submit" class="btn btn-red">Finish experiment</a>
+            </form>
+        {% else %}
+        <h5 class="card-title">Experiment</h5>
+            <p class="card-text">Start an experiment. Notice that the configuration is frozen to ensure
+                consistency. It is not possible to change device or person assignments running experiment
+                during the run. Furthermore the option to run predictions is not avaliable.
+                Information about the current experiment can be looked up under dataset.
+            </p>
+            <form class="form" action="{% url 'dashboard' %}" method="POST">
+                {% csrf_token %}
+                <input class="form-control form-control-sm" name="name", type="text" placeholder="Experiment name. e.g Tuebingen 2019">
+                <input type="hidden" name="intent" value="start experiment">
+                <button type="submit" class="btn btn-primary">Start experiment</a>
+            </form>
+        {% endif %}
+    </div>
+</div>

@@ -40,11 +40,8 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Dataset
-        fields = ('id', 
-                    'logging',
-                    'path_to_folder',
-                    'start_time',
-                    'end_time')
+        fields = ('id', 'name', 'logging', 'path_to_folder', 'start_time', 'end_time',
+            'person')
 
 class ModelSerializer(serializers.HyperlinkedModelSerializer):
 

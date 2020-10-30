@@ -1,23 +1,56 @@
-<div class="container mb-3">
-    <div class="card">
+<div class="row col-12">
+    <div class="card w-90">
+        <div class="card-header">
+            Real-time Activity Inference Node
+        </div>
         <div class="card-body">
-            <h5 class="card-title"> Device Predictions </h5>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Probability</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for pred_dev in rt_node.predicted_devices.all %}
-                    <tr>
-                        <td>{{ pred_dev.predicted_state.name }}</td>
-                        <td>{{ pred_dev.score }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            {% if rt_node_running %}
+                <form class="form-inline" action="{% url 'dashboard' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="intent" value="stop">
+                    <div class="form-group mb-2">
+                        <label for="staticEmail2" class="sr-only">Email</label>
+                        <input type="text" readonly class="form-control-plaintext" id="staticEmail2"
+                                value="Model to run predictions:">
+                    </div>
+                    <fieldset disabled>
+                        <select id="disabledSelect" class="form-control">
+                            <option> {{ rt_node.model.algorithm.name }} with
+                                person {{ rt_node.model.person.name }}</option>
+                        </select>
+                    </fieldset>
+                    <button type="submit" class="btn btn-outline-warning ml-2"> stop</button>
+                </form>
+            {% else %}
+                <form class="form-row align-items-center" action="{% url 'dashboard' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="intent" value="run">
+                    <div class="col-auto my-1">
+                        Model running predictions:
+                    </div>
+                    <div class="col-auto my-1">
+                        <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
+                        <select class="form-control mr-sm-2" id="inlineFormCustomSelect"
+                                name="model_select">
+                            {% for model in model_list %}
+                                {% if model.dataset.name == "homeassistant" %}
+                                    {% if foorloop.first %}
+                                        <option selected value="{{ model.pk }}">
+                                            {% else %}
+                                        <option value="{{ model.pk }}">
+                                    {% endif %}
+                                {{ model.algorithm.name }} with
+                                person {{ model.person.name }} </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-auto my-1 ml-2">
+                        <button type="submit" class="btn btn-outline-primary">Run</button>
+                    </div>
+                </form>
+            {% endif %}
         </div>
     </div>
+</div>
 </div>

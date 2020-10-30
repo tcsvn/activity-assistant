@@ -1,19 +1,10 @@
 from backend.models import *
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
-from frontend.util import get_server
+from frontend.util import *
 
 class DashboardView(TemplateView):
 
-    def getCountAssignedDevices(self):
-        device_list = Device.objects.all()
-        if device_list == []:
-            return 0
-        counter = 0
-        for device in device_list:
-            if device.location != None:
-                counter += 1
-        return counter
 
     def is_rt_node_running(self):
         srv = Server.objects.all()[0]
@@ -24,6 +15,7 @@ class DashboardView(TemplateView):
 
     def create_context(self):
         person_list = Person.objects.all()
+        device_list = Device.objects.all()
         activity_list = Activity.objects.all()
         count_person = len(person_list)
         #count_models = len(Model.objects.all())
@@ -32,10 +24,10 @@ class DashboardView(TemplateView):
         count_device = len(Device.objects.all())
         srv = get_server()
         setup_complete = srv.setup == 'complete'
-
+        experiment_stat = get_experiment_status()
+        is_exp_active = is_experiment_active()
         #rt_node_running = self.is_rt_node_running()
         #rt_node = srv.realtime_node
-
         #model_list = Model.objects.all()
         context = {
             'person_list' : person_list,
@@ -46,9 +38,13 @@ class DashboardView(TemplateView):
             'count_activity' : count_activity,
             'count_device' : count_device,
             'setup_complete' : setup_complete,
+            'experiment_status':experiment_stat,
+            'experiment_active': is_exp_active,
             #'rt_node_running' : rt_node_running,
             #'rt_node' : rt_node
         }
+        if is_exp_active:
+            context['dataset'] = srv.dataset
         return context
 
 
@@ -78,7 +74,7 @@ class DashboardView(TemplateView):
         srv.realtime_node = rt
         srv.save()
 
-    def stop(self, request):
+    def stop(self):
         import os
         import signal
         rt_node = Server.objects.all()[0].realtime_node
@@ -93,21 +89,92 @@ class DashboardView(TemplateView):
         #children = current_process.children(recursive=True)
         #for child in children:
         #    print('Child pid is {}'.format(child.pid))
-
         rt_node.delete()
+
+    def start_experiment(self, request):
+        """ creates a new dataset object and assigns it to the server
+            that it knows an experiment is running. Also creates folders
+            like 
+                media/dataset/<datasetname>/<person_activities.csv>
+                media/dataset/<datasetname>/data.csv
+                ...
+            
+        """
+        ds_name = request.POST.get("name","")
+        try:
+            Dataset.objects.get(name=ds_name)
+            return
+        except:
+            pass
+
+        # 1. create dataset 
+        ds = Dataset(name=ds_name, logging=True, path_to_folder="")
+        ds.save()
+
+        # 
+        srv = get_server()
+        srv.dataset = ds
+        srv.save()
+
+        # 2. create folders and files
+        from pathlib import Path
+        exp_fp = settings.DATASET_PATH + ds_name + '/'
+        Path(exp_fp).mkdir(mode=0o777, parents=True, exist_ok=False)
+        Path(exp_fp + settings.DATA_FILE_NAME).touch()
+        for person in Person.objects.all():
+            Path(exp_fp + person.name + '_' + settings.ACTIVITY_FILE_NAME).touch()
+
+        # TODO save prior information about persons
+        # TODO save room assignments of sensors and activities
+
+        # 3. tell HASS component to start logging
+
+    def pause_experiment(self):
+        """ indicates to pause logging on AA level and send a message to 
+            the HASS component to stop the webhook sendings
+        """
+        ds = get_server().dataset
+        ds.logging = False
+        ds.save()
+
+        # TODO communicate to HASS component
+
+    def continue_experiment(self):
+        ds = get_server().dataset
+        ds.logging = True
+        ds.save()   
+        # TODO communicate to HASS component
+
+    def finish_experiment(self):
+        srv = get_server()
+        ds = srv.dataset
+        srv.dataset = None
+        srv.save()
+        ds.logging = False
+        from django.utils.timezone import now
+        ds.end_time = now()
+        ds.save()
+        # TODO remove debug line below
+        ds.delete()
+        # TODO tell HASS component to stop logging
 
     def post(self, request):
         intent = request.POST.get("intent","")
-        if intent == "run":
+        if intent == "run rt_node":
             self.run(request)
-
-        elif intent == "stop":
-            self.stop(request)
-
+        elif intent == "stop rt_node":
+            self.stop()
+        elif intent == "start experiment":
+            self.start_experiment(request)
+        elif intent == "pause experiment":
+            self.pause_experiment()
+        elif intent == "continue experiment":
+            self.continue_experiment()
+        elif intent == "finish experiment":
+            self.finish_experiment()
         context = self.create_context()
         return render(request, 'dashboard.html', context)
 
-    # list all persons and render them into the frontend
     def get(self, request):
         context = self.create_context()
         return render(request, 'dashboard.html', context)

@@ -9,13 +9,40 @@ from django.contrib.auth.models import User
 #from django.db.models.signals import post_save
 #from django.dispatch import receiver
 #from rest_framework.authtoken.models import Token
+class Person(models.Model):
+    #owner = models.ForeignKey('auth.User', related_name='persons', on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=20, blank=True, default='')
+    hass_name = models.CharField(max_length=20, blank=True, default='')
+    prediction = models.BooleanField(default=False, blank=True)
+    """
+    todo feature
+    predictions is either 'running', 'enabled' or 'disabled'
+    """
+    #prediction = models.CharField(max_length=10, default='disabled', blank=True)
+    #predicted_activity = models.ForeignKey(Activity, null=True, blank=True, on_delete=models.SET_NULL, related_name='%(class)s_predicted')
+    #predicted_activity = models.OneToMany(ActivityPrediction, null=True, blank=True, on_delete=models.SET_NULL, related_name='%(class)s_predicted')
+    #predicted_location = models.ForeignKey(Location, null=True, blank=True, on_delete=models.SET_NULL, related_name='%(class)s_predicted')
+
+    def save(self, *args, **kwargs):
+        # create additional user with one to one relationship so that
+        # one device can't alter the anything but its own person
+        #User.objects.create_user(username=self.name, email='test@test.de', password='test')
+        super(Person, self).save(*args, **kwargs)
+
+    class Meta:
+        ordering = ('created',)
+
 
 class Dataset(models.Model):
     # todo mark for deletion line below
+    name = models.CharField(null=True, max_length=100)
     path_to_folder = models.CharField(null=True, max_length=100)
     logging = models.BooleanField(default=False, blank=True)
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(null=True)
+    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.CASCADE,
+                related_name='person')
 
 # generate token for every new created user
 #@receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -59,30 +86,6 @@ class Activity(models.Model):
 
     class Meta:
         ordering = ["name"]
-
-class Person(models.Model):
-    #owner = models.ForeignKey('auth.User', related_name='persons', on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
-    name = models.CharField(max_length=20, blank=True, default='')
-    hass_name = models.CharField(max_length=20, blank=True, default='')
-    prediction = models.BooleanField(default=False, blank=True)
-    """
-    todo feature
-    predictions is either 'running', 'enabled' or 'disabled'
-    """
-    #prediction = models.CharField(max_length=10, default='disabled', blank=True)
-    #predicted_activity = models.ForeignKey(Activity, null=True, blank=True, on_delete=models.SET_NULL, related_name='%(class)s_predicted')
-    #predicted_activity = models.OneToMany(ActivityPrediction, null=True, blank=True, on_delete=models.SET_NULL, related_name='%(class)s_predicted')
-    #predicted_location = models.ForeignKey(Location, null=True, blank=True, on_delete=models.SET_NULL, related_name='%(class)s_predicted')
-
-    def save(self, *args, **kwargs):
-        # create additional user with one to one relationship so that
-        # one device can't alter the anything but its own person
-        #User.objects.create_user(username=self.name, email='test@test.de', password='test')
-        super(Person, self).save(*args, **kwargs)
-
-    class Meta:
-        ordering = ('created',)
 
 
 class ActivityPrediction(models.Model):

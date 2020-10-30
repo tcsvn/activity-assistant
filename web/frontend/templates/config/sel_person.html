@@ -23,10 +23,16 @@
     </div>
     <div class="form-row">
         <div class="form-group col-md-6">
-        <button type="submit" name="intent" value="track" class="btn btn-primary">Track</button>
+        <button type="submit" name="intent" value="track" class="btn btn-primary"
+            {% if experiment_active %} disabled {% endif %}>
+            Track
+        </button>
         </div>
         <div class="form-group col-md-4">
-        <button type="submit" name="intent" value="remove" class="btn btn-primary">Remove</button>
+        <button type="submit" name="intent" value="remove" class="btn btn-primary"
+            {% if experiment_active %} disabled {% endif %}>
+            Remove
+        </button>
         </div>
     </div>
     </form>
@@ -41,7 +47,10 @@
                 <label for="inputPassword2" class="sr-only">Password</label>
                 <input class="form-control" name="name" type="text" required placeholder="Persons name">
             </div>
-            <button type="submit" name="intent" value="add" class="btn btn-primary mb-2">add</button>
+            <button type="submit" name="intent" value="add" class="btn btn-primary mb-2"
+                {% if experiment_active %} disabled {% endif %}>
+                add
+            </button>
             </form>
         </div>
     </div>

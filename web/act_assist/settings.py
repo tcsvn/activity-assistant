@@ -115,8 +115,12 @@ MEDIA_URL = '/media/'
 HASS_API_URL = 'http://supervisor/core/api'
 
 # experiment
+DATASET_PATH = MEDIA_URL + 'dataset/' # path where all the datasets lie
 ACTIVITY_FILE_NAME="activities.csv"
 DATA_FILE_NAME='data.csv'
+PRIOR_ACTIVITY_FILE_NAME = "prior_activities.csv"
+DEV_ROOM_ASSIGNMENT_FILE_NAME = "asdf.csv"
+ACT_ROOM_ASSIGNMENT_FILE_NAME = "asdf2.csv"
 
 
 # API URLS
