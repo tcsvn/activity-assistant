@@ -6,8 +6,9 @@
 
 Activities of Daily living (ADLs) e.g cooking, working, sleeping and device readings are recorded by smart home inhabitants. The goal is to predict inhabitants activities using device readings. Activity-Assistant is a platform that streamlines the process of data collection. It can track selected devices and persons. Using the android app, device readings can be labeled with current activities. Furthermore Activity-assistant supports the deployment of trained models running predictions in real-time. A homeassistant integration offers users a way to automate stuff based on activity predictions.
 
-
-<p align="center"><img width=95% src="https://github.com/tcsvn/activity-assistant/blob/master/media/showreal.png"></p>
+<p align="center">
+  <img width="80%"  src=media/showreal.gif?raw=true>
+</p>
 
 ## Installation
 
