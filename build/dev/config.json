@@ -1,6 +1,6 @@
 {
   "name": "Activity-assistant dev",
-  "version": "dev-0",
+  "version": "dev-1",
   "slug": "act_assist",
   "description": "Record, evaluate and predict Activities of Daily living (ADL)",
   "arch": ["amd64", "i386"],
@@ -12,14 +12,13 @@
   "options":{},
   "homeassistant_api":true,
   "hassio_api":true,
-  "host_network":true,
   "ingress":true,
   "ingress_port":8000,
   "panel_icon":"mdi:account-reactivate",
   "ports": {
     "8000/tcp": 8000
   },
-  "map":["share:rw"],
+  "map":["share:rw", "config:ro"],
   "ports_description":{
     "8000/tcp": "Required for API access of mobile devices"
   }

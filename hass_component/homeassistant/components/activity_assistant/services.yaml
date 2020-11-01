@@ -1,0 +1,6 @@
+trigger_data_dump:
+  description: Trigger activity assistant to collect relevant data from HASS
+  fields:
+    entity_id:
+      description: Entity ID activity assistant binary sensor
+      example: "binary_sensor.act_assist_logging"

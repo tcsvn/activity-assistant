@@ -22,7 +22,7 @@ COPY db.sqlite3 /media/activity_assistant/media/db.sqlite3
 
 ENV DJANGO_ENV='development'
 WORKDIR /home/
-COPY remigrate.exp remigrate.sh run.sh ./
+COPY remigrate.exp remigrate.sh run.sh zero_conf_browser.py ./
 RUN chmod a+x run.sh
 
 CMD [ "./run.sh" ]

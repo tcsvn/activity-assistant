@@ -1,0 +1,1 @@
+"""Tests for the activity_assistant integration."""

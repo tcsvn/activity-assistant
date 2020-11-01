@@ -148,6 +148,7 @@ class DevicePrediction(models.Model):
 class Server(models.Model):
     server_address = models.CharField(max_length=40, null=True)
     hass_api_token = models.CharField(max_length=200, null=True)
+    hass_comp_installed = models.BooleanField(default=False)
     selected_model = models.ForeignKey(Model, null=True, on_delete=models.SET_NULL, related_name='model')
     realtime_node = models.ForeignKey(RealTimeNode, null=True, on_delete=models.SET_NULL)
     setup = models.CharField(max_length=10, null=True, default='step 0')

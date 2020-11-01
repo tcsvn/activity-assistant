@@ -37,6 +37,17 @@
             },
             "problemMatcher": []
         },{
+            "label": "Cp hass_component 2 HASS container",
+            "type": "shell",
+            "command": "/workspaces/test_hassio/share/build/dev/copy_hass_comp.sh",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "AA migrate django",
             "type": "shell",
             "command": "docker exec -ti addon_local_act_assist bash -c \"cd /share; python3 web/manage.py makemigrations; python3 web/manage.py migrate\"",
@@ -66,8 +77,17 @@
                 "panel": "new"
             },
             "problemMatcher": []
+        },{
+            "label": "HASS shell",
+            "type": "shell",
+            "command": "docker exec -ti homeassistant /bin/bash",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
         },
-
 
     ]
 }

@@ -2,8 +2,9 @@ from backend.models import *
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 
+from zeroconf import IPVersion, Zeroconf, ServiceInfo
 import os 
-import homeassistant_api.rest as hass_rest
+import hass_api.rest as hass_rest
 from frontend.util import get_server, \
     get_device_names, get_activity_names, get_person_names
 from frontend.views.config import conf_devices, conf_activities, conf_persons, \
@@ -75,7 +76,12 @@ class SetupView(TemplateView):
         tmp = hass_rest.get(disc_url, srv.hass_api_token)
         srv.server_address = tmp['base_url']
         srv.save()
-        self._increment_one_step()
+
+        propagate_discovery_info()
+        # only advance if the component was installed at hass site
+        if srv.hass_comp_installed:
+            self._increment_one_step()
+            unregister_discovery_info()
 
     def post_step1(self, request):
         p_int = str(request.POST.get("poll_interval", ""))
@@ -149,3 +155,36 @@ def write_to_srv_poll_int(var):
     srv = get_server()
     srv.poll_interval = str(var) 
     srv.save()
+
+def create_discovery_info():
+    import socket
+    props={"api_path":'/api/v1'}
+    info = ServiceInfo(
+            "_http._tcp.local.",
+            "activity_assist._http._tcp.local.",
+            port=8000,
+            properties=props,
+            addresses=[socket.inet_aton("127.0.0.1")],
+            server="ash-2.local.",
+    )
+    return info
+
+def unregister_discovery_info():
+    """ unre
+    """
+    ip_version = IPVersion.V4Only
+
+    info = create_discovery_info()
+    zc = Zeroconf(ip_version=ip_version)
+    zc.unregister_service(info)
+    zc.close()
+
+def propagate_discovery_info():
+    """ propagates zeroconf values over dns
+    """
+    ip_version = IPVersion.V4Only
+
+    info = create_discovery_info()
+    zc = Zeroconf(ip_version=ip_version)
+    zc.register_service(info)
+    zc.close()

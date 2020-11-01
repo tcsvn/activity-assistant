@@ -1,0 +1,14 @@
+{
+    "domain": "activity_assistant",
+    "name": "Activity assistant",
+    "config_flow":true,
+    "documentation":"http://deadlink.dead",
+    "requirements":[],
+    "ssdp":[],
+    "zero_conf":["activity_assist._http._tcp.local.", "_http._tcp.local.", "_tcp.local."],
+    "homekit":{},
+    "dependencies":[],
+    "codeowners":[
+        "@tcsvn"
+    ]
+}

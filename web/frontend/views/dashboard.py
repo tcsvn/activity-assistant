@@ -108,21 +108,23 @@ class DashboardView(TemplateView):
             pass
 
         # 1. create dataset 
-        ds = Dataset(name=ds_name, logging=True, path_to_folder="")
+        dataset_folder = settings.DATASET_PATH + ds_name +'/'
+        ds = Dataset(name=ds_name, logging=True, path_to_folder=dataset_folder)
         ds.save()
-
         # 
         srv = get_server()
         srv.dataset = ds
         srv.save()
 
-        # 2. create folders and files
+        # 2. create folders and inital files
         from pathlib import Path
-        exp_fp = settings.DATASET_PATH + ds_name + '/'
-        Path(exp_fp).mkdir(mode=0o777, parents=True, exist_ok=False)
-        Path(exp_fp + settings.DATA_FILE_NAME).touch()
-        for person in Person.objects.all():
-            Path(exp_fp + person.name + '_' + settings.ACTIVITY_FILE_NAME).touch()
+        from frontend.util import create_device_mapping_file, \
+            create_activity_files, create_data_file
+
+        Path(ds.path_to_folder).mkdir(mode=0o777, parents=True, exist_ok=False)
+        create_data_file(ds.path_to_folder)
+        create_activity_files(ds.path_to_folder, Person.objects.all()) 
+        create_device_mapping_file(ds.path_to_folder) 
 
         # TODO save prior information about persons
         # TODO save room assignments of sensors and activities

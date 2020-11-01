@@ -2,7 +2,7 @@ from backend.models import *
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 import os 
-import homeassistant_api.rest as hass_rest
+import hass_api.rest as hass_rest
 from frontend.util import get_server, is_experiment_active,\
     get_device_names, get_activity_names, get_person_names 
 
