@@ -11,7 +11,7 @@ if [ ! -e $CONTAINER_ALREADY_STARTED ]; then
 fi
 
 echo load fixtures!
-python3 web/manage.py loaddata only_server.json
+python3 web/manage.py loaddata /home/only_server.json
 
 echo Starting http server!
 # debug to check if the addon is reachable from the outside

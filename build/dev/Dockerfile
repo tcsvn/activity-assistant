@@ -15,9 +15,6 @@ RUN apk add py3-pandas py3-kiwisolver py3-scipy py3-scikit-learn py3-matplotlib 
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
-RUN mkdir -p /media/activity_assistant/models /media/activity_assistant/activity_logs /media/activity_assistant/dataset \
-    /media/activity_assistant/media
-
 COPY db.sqlite3 /media/activity_assistant/media/db.sqlite3
 
 ENV DJANGO_ENV='development'
