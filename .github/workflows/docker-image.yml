@@ -20,5 +20,4 @@ jobs:
       with:
         args: |
           --all \
-          --test \
           --target /data/build/dev
