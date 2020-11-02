@@ -113,15 +113,16 @@ STATICFILES_DIRS = [
 SERVE_MEDIA = True
 MEDIA_URL = '/media/'
 HASS_API_URL = 'http://supervisor/core/api'
+DATA_URL = '/data/'
 
 # experiment
-DATASET_PATH = MEDIA_URL + 'dataset/' # path where all the datasets lie
+DATASET_PATH = DATA_URL + 'datasets/' # path where all the datasets lie
 ACTIVITY_FILE_NAME="activities_subject_%s.csv"
 DATA_FILE_NAME='devices.csv'
 DATA_MAPPING_FILE_NAME='device_mapping.csv'
 PRIOR_ACTIVITY_FILE_NAME = "prior_activities_subject_%s.csv"
-DEV_ROOM_ASSIGNMENT_FILE_NAME = "devices_2_room_assignment.csv"
-ACT_ROOM_ASSIGNMENT_FILE_NAME = "activities_2_room_assignment.csv"
+DEV_ROOM_ASSIGNMENT_FILE_NAME = "devices_and_areas.csv"
+ACT_ROOM_ASSIGNMENT_FILE_NAME = "activities_and_areas.csv"
 
 
 # API URLS

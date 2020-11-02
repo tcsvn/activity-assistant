@@ -9,7 +9,9 @@ if [ ! -e $CONTAINER_ALREADY_STARTED ]; then
     echo "Run migration!"
     /home/remigrate.exp
 fi
-# TODO add fixtures dependend on config
+
+echo load fixtures!
+python3 web/manage.py loaddata only_server.json
 
 echo Starting http server!
 # debug to check if the addon is reachable from the outside

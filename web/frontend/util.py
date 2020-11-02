@@ -50,7 +50,9 @@ def load_activity_file(dataset, person):
     raise NotImplementedError
 
 def load_data_file(dataset):
-    raise NotImplementedError
+    #from pyadlml.dataset._dataset.act
+    fp = path_to_folder + settings.DATA_FILE_NAME
+    return pd.read_csv()
 
 def create_data_file(path_to_folder):
     """ creates inital device file 

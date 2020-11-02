@@ -50,7 +50,7 @@
         {
             "label": "AA migrate django",
             "type": "shell",
-            "command": "docker exec -ti addon_local_act_assist bash -c \"cd /share; python3 web/manage.py makemigrations; python3 web/manage.py migrate\"",
+            "command": "docker exec -ti addon_709d7dbe_act_assist_dev bash -c \"cd /share; python3 web/manage.py makemigrations; python3 web/manage.py migrate\"",
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -70,7 +70,7 @@
         },{
             "label": "AA shell",
             "type": "shell",
-            "command": "docker exec -ti addon_local_act_assist /bin/bash",
+            "command": "docker exec -ti addon_709d7dbe_act_assist_dev /bin/bash",
             "group": "test",
             "presentation": {
                 "reveal": "always",

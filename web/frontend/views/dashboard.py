@@ -95,8 +95,9 @@ class DashboardView(TemplateView):
         """ creates a new dataset object and assigns it to the server
             that it knows an experiment is running. Also creates folders
             like 
-                media/dataset/<datasetname>/<person_activities.csv>
-                media/dataset/<datasetname>/data.csv
+                /data/datasets/<datasetname>/activities_subject_<person>.csv>
+                /data/datasets/<datasetname>/devices.csv
+                /data/datasets/<datasetname>/device_mapping.csv
                 ...
             
         """

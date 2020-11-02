@@ -13,9 +13,7 @@ Activities of Daily living (ADLs) e.g cooking, working, sleeping and device read
 
 The installation of this add-on is pretty straightforward and not different in comparison to installing any other Hass.io add-on.
 
-TODO WARNING THIS DOES NOT WORK AT THE MOMENT (BUT WILL IN ABOUAT A WEEK)
-
-1. add the repository to the addon-store by pasting `http://github.com/tcsvn/hass_addons` into the manage add-on repositories dialog  
+1. add the repository to the addon-store by pasting `http://github.com/tcsvn/hassio-activity-assistant` into the manage add-on repositories dialog  
 2. Ensure that homeassistant uses sqlite as database and that it is available in the configuration folder (for standard installations this is the case)
 3. Search for the "Activity-Assistant" addon-on in the Hass.io add-on store and install it.
 4. Start the "Activity-Assistant" add-on.

@@ -11,6 +11,7 @@ zeroconf
 # rt_node and data science stuff
 asyncws
 pyadlml
+sqlalchemy
 
 # webserver (production)
 #gunicorn

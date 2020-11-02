@@ -7,7 +7,7 @@ from pyadlml.dataset._datasets.homeassistant import hass_db_2_data
 from pyadlml.dataset._datasets.activity_assistant import _read_devices
 import pandas as pd
 from backend.serializers import DatasetSerializer
-from frontend.util import get_device_names
+from frontend.util import get_device_names, load_data_file
 
 # todo somehow get this dynamically
 DB_URL = 'sqlite:////config/home-assistant_v2.db' 
@@ -18,18 +18,30 @@ class WebhookView(TemplateView):
         srv.hass_comp_installed = True
         srv.save()
 
-
-
-
-
     def collect_data_from_hass(self):
         # this is the case where the data is pulled
         srv = get_server()
         ds = srv.dataset
-        ds.path_to_folder
+        def hass_db_2_data(url, device_list):
+            import pandas
+            import sqlalchemy
+            engine = sqlalchemy.create_engine(DB_URL)
+            df = pandas.read_sql("SELECT * FROM persons", con = engine)
+            limiit =5000000
+            query = f"""
+            SELECT entity_id, state, last_changed
+            FROM states
+            WHERE
+                state NOT IN ('unknown', 'unavailable')
+            ORDER BY last_changed DESC
+            LIMIT {limit}
+            """
+            df = pd.read_sql_query(query, db_url)
+
         df_new = hass_db_2_data(DB_URL, get_device_names())
 
         # load df
+        df_dev = load_data_file(ds.path_to_folder)
         #df_cur = _read_devices(ds.path_to_folder + settings.DATA_FILE_NAME,
         #            ds.path_to_folder + setting.DATA_MAPPING_FILE_NAME)
         #df_cur = pd.read_csv()
