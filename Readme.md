@@ -1,8 +1,13 @@
 # Activity-Assistant
 > Collect, evaluate and predict activities of daily living from within homeassistant.
 
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/tcsvn/activity-assistant/Publish%20dev?style=flat-square)
+![Supports aarch64 Architecture](https://img.shields.io/badge/aarch64-yes-green?style=flat-square)
+![Supports amd64 Architecture](https://img.shields.io/badge/amd64-yes-green?style=flat-square)
+![Supports armhf Architecture](https://img.shields.io/badge/armhf-yes-green?style=flat-square)
+![Supports armv7 Architecture](https://img.shields.io/badge/armv7-yes-green?style=flat-square)
+![Supports i386 Architecture](https://img.shields.io/badge/i386-yes-green?style=flat-square)
 ![License](https://img.shields.io/pypi/l/pyadlml?style=flat-square)
-
 
 Activities of Daily living (ADLs) e.g cooking, working, sleeping and device readings are recorded by smart home inhabitants. The goal is to predict inhabitants activities using device readings. Activity-Assistant is a platform that streamlines the process of data collection. It can track selected devices and persons. Using the android app, device readings can be labeled with current activities. Furthermore Activity-assistant supports the deployment of trained models running predictions in real-time. A homeassistant integration offers users a way to automate stuff based on activity predictions.
 
