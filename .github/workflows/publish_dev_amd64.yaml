@@ -1,4 +1,4 @@
-name: 'Publish dev'
+name: 'Publish dev amd64'
 
 on:
   workflow_dispatch:
@@ -19,5 +19,5 @@ jobs:
       uses: home-assistant/builder@master
       with:
         args: |
-          --all \
+          --amd64 \
           --target /data/build/dev

@@ -1,11 +1,12 @@
-name: 'Publish dev'
-
+name: 'CI'
 on:
-  workflow_dispatch:
+  push:
+    branches: 
+      - master
 
 jobs:
-  publish:
-    name: Publish
+  build:
+    name: Test build
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
@@ -20,4 +21,4 @@ jobs:
       with:
         args: |
           --all \
-          --target /data/build/dev
+          --target /data/build/prod
