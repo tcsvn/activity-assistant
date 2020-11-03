@@ -112,3 +112,28 @@ def hass_db_2_data(db_url, device_list):
     df[DEVICE] = df['entity_id']
     df = df[[TIME, DEVICE, VAL ]]
     return df
+
+def pause_experiment():
+    """ indicates to pause logging on AA level and send a message to 
+        the HASS component to stop the webhook sendings
+    """
+    ds = get_server().dataset
+    ds.logging = False
+    ds.save()
+    # TODO communicate to HASS component
+
+def continue_experiment():
+    ds = get_server().dataset
+    ds.logging = True
+    ds.save()   
+    # TODO communicate to HASS component
+
+def finish_experiment():
+    srv = get_server()
+    ds = srv.dataset
+    srv.dataset = None
+    srv.save()
+    ds.logging = False
+    from django.utils.timezone import now
+    ds.end_time = now()
+    ds.save()

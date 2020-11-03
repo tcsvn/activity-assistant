@@ -9,6 +9,7 @@
     {% include 'dataset/no_data.html' %}
 {% endif %}
 
+<div class="container mb-3">
 <div class="accordion" id="accordionExample">
     {% for ds in dataset_list %}
     <div class="card">
@@ -19,7 +20,7 @@
           </button>
         </h2>
       </div>
-      <div id="collapse{{ds.name}}" class="collapse show" aria-labelledby="heading{{ds.name}}" data-parent="#accordionExample">
+      <div id="collapse{{ds.name}}" class="collapse" aria-labelledby="heading{{ds.name}}" data-parent="#accordionExample">
         <div class="card-body">
             <ul>
                 <li>dataset stats</li>
@@ -32,12 +33,14 @@
             </form>
             <form class="form" action="{% url 'dataset' %}" method="POST">
                     {% csrf_token %}
-                <button type="submit" class="btn btn-red" name="intent" value="delete_data">delete data</a>
+
+	              <input type="hidden" name="dataset_name" value="{{ds.name}}">
+                <button type="submit" class="btn btn-red" name="intent" value="delete_dataset">delete data</a>
             </form>
         </div>
       </div>
     </div>
     {% endfor %}
   </div>
-
+</div>
 {% endblock %}

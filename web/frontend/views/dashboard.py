@@ -132,34 +132,7 @@ class DashboardView(TemplateView):
 
         # 3. tell HASS component to start logging
 
-    def pause_experiment(self):
-        """ indicates to pause logging on AA level and send a message to 
-            the HASS component to stop the webhook sendings
-        """
-        ds = get_server().dataset
-        ds.logging = False
-        ds.save()
 
-        # TODO communicate to HASS component
-
-    def continue_experiment(self):
-        ds = get_server().dataset
-        ds.logging = True
-        ds.save()   
-        # TODO communicate to HASS component
-
-    def finish_experiment(self):
-        srv = get_server()
-        ds = srv.dataset
-        srv.dataset = None
-        srv.save()
-        ds.logging = False
-        from django.utils.timezone import now
-        ds.end_time = now()
-        ds.save()
-        # TODO remove debug line below
-        ds.delete()
-        # TODO tell HASS component to stop logging
 
     def post(self, request):
         intent = request.POST.get("intent","")
@@ -170,11 +143,11 @@ class DashboardView(TemplateView):
         elif intent == "start experiment":
             self.start_experiment(request)
         elif intent == "pause experiment":
-            self.pause_experiment()
+            pause_experiment()
         elif intent == "continue experiment":
-            self.continue_experiment()
+            continue_experiment()
         elif intent == "finish experiment":
-            self.finish_experiment()
+            finish_experiment()
         context = self.create_context()
         return render(request, 'dashboard.html', context)
 

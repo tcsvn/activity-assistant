@@ -25,18 +25,18 @@ class WebhookView(TemplateView):
         srv = get_server()
         ds = srv.dataset
         from frontend.util import hass_db_2_data
-        df_new = hass_db_2_data(DB_URL, get_device_names())
+        df_new = hass_db_2_data(DB_URL, get_device_names())\
+                    .drop_duplicates()
 
-        df_new.to_csv(ds.path_to_folder + '/df1.csv', sep=',')
         df_cur = load_data_file(ds.path_to_folder)
 
-        df_cur.to_csv(ds.path_to_folder + '/df2.csv', sep=',')
         df = pd.concat([df_cur, df_new], ignore_index=True)
 
         # save df
         dev_map = load_device_mapping(ds.path_to_folder, as_dict=True)
         df[DEVICE] = df[DEVICE].map(dev_map)
-        df.to_csv(ds.path_to_folder + '/df3.csv', sep=',', index=False)
+        df = df.drop_duplicates()
+        df.to_csv(ds.path_to_folder + 'devices.csv', sep=',', index=False)
 
     def get(self, request):
         srv = get_server()
