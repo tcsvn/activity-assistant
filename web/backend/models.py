@@ -155,3 +155,4 @@ class Server(models.Model):
     is_polling = models.BooleanField(default=False)
     poll_interval = models.CharField(max_length=10, default='10m')
     dataset = models.ForeignKey(Dataset, null=True, blank=True, on_delete=models.CASCADE, related_name='synthetic_activities')
+    zero_conf_pid = models.IntegerField(null=True)

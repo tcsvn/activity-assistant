@@ -2,7 +2,6 @@ from backend.models import *
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 
-from zeroconf import IPVersion, Zeroconf, ServiceInfo
 import os 
 import hass_api.rest as hass_rest
 from frontend.util import get_server, \
@@ -77,11 +76,19 @@ class SetupView(TemplateView):
         srv.server_address = tmp['base_url']
         srv.save()
 
-        propagate_discovery_info()
+        #if not srv.hass_comp_installed:
+        #    if srv.zero_conf_pid is None:
+        #        pid = start_zero_conf_server()
+        #        srv.zero_conf_pid = pid
+        #        srv.save()
+        #    else:
+        #        pass
         # only advance if the component was installed at hass site
         if srv.hass_comp_installed:
+        #    stop_zero_conf_server()
+        #    srv.zero_conf_pid = None
             self._increment_one_step()
-            unregister_discovery_info()
+        #    srv.save()
 
     def post_step1(self, request):
         p_int = str(request.POST.get("poll_interval", ""))
@@ -156,35 +163,25 @@ def write_to_srv_poll_int(var):
     srv.poll_interval = str(var) 
     srv.save()
 
-def create_discovery_info():
-    import socket
-    props={"api_path":'/api/v1'}
-    info = ServiceInfo(
-            "_http._tcp.local.",
-            "activity_assist._http._tcp.local.",
-            port=8000,
-            properties=props,
-            addresses=[socket.inet_aton("127.0.0.1")],
-            server="ash-2.local.",
+def start_zero_conf_server():
+    """ starts a zero conf server and returns the pid
+    """
+    import subprocess
+    proc = subprocess.Popen([
+        "python3", settings.ZERO_CONF_MAIN_PATH,
+        "--debug"#, HASSBRAIN_PW
+        #"--port", 
+    ],
+        close_fds=True
     )
-    return info
+    return proc.pid
 
-def unregister_discovery_info():
-    """ unre
-    """
-    ip_version = IPVersion.V4Only
-
-    info = create_discovery_info()
-    zc = Zeroconf(ip_version=ip_version)
-    zc.unregister_service(info)
-    zc.close()
-
-def propagate_discovery_info():
-    """ propagates zeroconf values over dns
-    """
-    ip_version = IPVersion.V4Only
-
-    info = create_discovery_info()
-    zc = Zeroconf(ip_version=ip_version)
-    zc.register_service(info)
-    zc.close()
+def stop_zero_conf_server():
+    import os
+    import signal
+    pid = get_server().zero_conf_pid
+    try:
+        os.kill(pid, signal.SIGTERM)
+        # todo leaves zombie behind correct this by sigterm handling in async io node
+    except ProcessLookupError:
+        print('process allready deleted')

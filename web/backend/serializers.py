@@ -34,7 +34,7 @@ class ServerSerializer(serializers.HyperlinkedModelSerializer):
         model = Server
         fields = ('server_address', 'hass_api_token', 'setup',
                   'selected_model', 'realtime_node', 'dataset', 'is_polling', 
-                  'poll_interval', 'hass_comp_installed')
+                  'poll_interval', 'hass_comp_installed', 'zero_conf_pid')
 
 class DatasetSerializer(serializers.HyperlinkedModelSerializer):
 

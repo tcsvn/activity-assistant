@@ -17,16 +17,6 @@
             },
             "problemMatcher": []
         },{
-            "label": "Cleanup stale Home Assistant environment",
-            "type": "shell",
-            "command": "/workspaces/test_hassio/share/.devcontainer/start_supervisor.sh --cleanup",
-            "group": "test",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": []
-        },{
             "label": "Run Home Assistant CLI",
             "type": "shell",
             "command": "docker exec -ti hassio_cli /usr/bin/cli.sh",

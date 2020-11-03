@@ -124,6 +124,7 @@ PRIOR_ACTIVITY_FILE_NAME = "prior_activities_subject_%s.csv"
 DEV_ROOM_ASSIGNMENT_FILE_NAME = "devices_and_areas.csv"
 ACT_ROOM_ASSIGNMENT_FILE_NAME = "activities_and_areas.csv"
 
+ZERO_CONF_MAIN_PATH = "/share/zero_conf_server.py"
 
 # API URLS
 URL_SERVER = r'server'

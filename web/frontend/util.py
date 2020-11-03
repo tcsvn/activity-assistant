@@ -1,5 +1,6 @@
 from backend.models import *
 import pandas as pd
+from pyadlml.dataset import DEVICE, TIME, VAL
 
 def get_device_names():
     res = []
@@ -49,10 +50,12 @@ def get_experiment_status():
 def load_activity_file(dataset, person):
     raise NotImplementedError
 
-def load_data_file(dataset):
-    #from pyadlml.dataset._dataset.act
-    fp = path_to_folder + settings.DATA_FILE_NAME
-    return pd.read_csv()
+def load_data_file(path_to_folder):
+    from pyadlml.dataset._datasets.activity_assistant import _read_devices
+    return _read_devices(
+        path_to_folder + settings.DATA_FILE_NAME,
+        path_to_folder + settings.DATA_MAPPING_FILE_NAME
+    )
 
 def create_data_file(path_to_folder):
     """ creates inital device file 
@@ -87,5 +90,25 @@ def create_device_mapping_file(path_to_folder):
         1,binary_sensor.ping_chris_pc
     """
     file_path = path_to_folder + settings.DATA_MAPPING_FILE_NAME 
-    df = pd.DataFrame(data=get_device_names(), columns=['device'])
+    df = pd.DataFrame(data=get_device_names(), columns=[DEVICE])
     df.to_csv(file_path, sep=',', index_label='id') 
+
+
+def load_device_mapping(path_to_folder, as_dict=False):
+    fp = path_to_folder + settings.DATA_MAPPING_FILE_NAME
+    if as_dict:
+        return pd.read_csv(fp, index_col=DEVICE).to_dict()['id']
+    else:
+        return pd.read_csv(fp, index_col='id').to_dict()[DEVICE]
+
+
+def hass_db_2_data(db_url, device_list):
+    from pyadlml.dataset._datasets.homeassistant import hass_db_2_df
+
+    df = hass_db_2_df(db_url)
+    df = df[df['entity_id'].isin(device_list)]
+    df[TIME] = pd.to_datetime(df['last_changed'])
+    df[VAL] = (df['state'] == 'on').astype(int)
+    df[DEVICE] = df['entity_id']
+    df = df[[TIME, DEVICE, VAL ]]
+    return df
