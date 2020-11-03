@@ -6,6 +6,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from .const import DOMAIN
 from homeassistant.helpers import entity_platform
+from zeroconf import ServiceInfo
 
 _LOGGER = logging.getLogger(__name__)
 CONFIG_SCHEMA = vol.Schema({DOMAIN: vol.Schema({})}, extra=vol.ALLOW_EXTRA)
@@ -17,6 +18,14 @@ def call_webhook():
     import requests
     tmp = requests.get('http://local-act-assist:8000/api/v1/dataset/webhook')
 
+def zeroconf_Info2Values(info : ServiceInfo):
+    res = {}
+    res['port'] = info.port
+    res['server'] = info.server
+    for key, value in info.properties.items():
+        res[key.decode("utf-8")] = value.decode("utf-8")
+    return res 
+
 async def async_setup(hass: HomeAssistant, config: dict):
     """Set up the activity_assistant component."""
     return True
@@ -25,6 +34,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """activity assistant form a config entry 
     is only called once the whole magic has to happen here
     """
+    # TODO get the single shot zeroconf
 
     #_LOGGER.warning(str(entry.version))
     #_LOGGER.warning(str(entry.entry_id))

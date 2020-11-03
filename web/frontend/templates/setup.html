@@ -48,7 +48,18 @@
                     {{ form }}
                     <button type="submit" class="btn btn-outline-danger">Connect</button>
                 </form>
-
+                <form action="{% url 'setup' %}" method="POST" class="mb-0">
+                    <input type="hidden" name="from" value="step 0">
+                    <input type="hidden" name="intent" value="start">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn">start zero_conf</button>
+                </form>
+                <form action="{% url 'setup' %}" method="POST" class="mb-0">
+                    <input type="hidden" name="from" value="step 0">
+                    <input type="hidden" name="intent" value="stop">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger">stop zero_cong</button>
+                </form>
             {% elif step == "step 1" %}
                 <h3>Configure Home assistant component</h3>
                 Activity-assistant has to update a local dataset with relevant entries of the homeassistant

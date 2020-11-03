@@ -4,10 +4,13 @@ from django.shortcuts import render, redirect
 
 import os 
 import hass_api.rest as hass_rest
-from frontend.util import get_server, \
-    get_device_names, get_activity_names, get_person_names
+from frontend.util import get_server, start_zero_conf_server,\
+    get_device_names, get_activity_names, get_person_names,\
+    stop_zero_conf_server
+
 from frontend.views.config import conf_devices, conf_activities, conf_persons, \
     POLL_INTERVAL_LST
+
 """
 this view connects to homeassistant and gets all the relevant data to 
 setup activity assistant
@@ -76,19 +79,19 @@ class SetupView(TemplateView):
         srv.server_address = tmp['base_url']
         srv.save()
 
+        intent = str(request.POST.get("intent", ""))
+        if intent == "start":
+            start_zero_conf_server()
+        elif intent == "stop":
+            stop_zero_conf_server()
+
         #if not srv.hass_comp_installed:
-        #    if srv.zero_conf_pid is None:
-        #        pid = start_zero_conf_server()
-        #        srv.zero_conf_pid = pid
-        #        srv.save()
-        #    else:
+
         #        pass
         # only advance if the component was installed at hass site
         if srv.hass_comp_installed:
         #    stop_zero_conf_server()
-        #    srv.zero_conf_pid = None
             self._increment_one_step()
-        #    srv.save()
 
     def post_step1(self, request):
         p_int = str(request.POST.get("poll_interval", ""))
@@ -151,37 +154,3 @@ class SetupView(TemplateView):
         else:
             context = self.create_context()
             return render(request, 'setup.html', context)
-
-def return_var(var):
-    from django.http import HttpResponse
-    msg = f'Today is {var}'
-    return HttpResponse(msg, content_type='text/plain')
-
-
-def write_to_srv_poll_int(var):
-    srv = get_server()
-    srv.poll_interval = str(var) 
-    srv.save()
-
-def start_zero_conf_server():
-    """ starts a zero conf server and returns the pid
-    """
-    import subprocess
-    proc = subprocess.Popen([
-        "python3", settings.ZERO_CONF_MAIN_PATH,
-        "--debug"#, HASSBRAIN_PW
-        #"--port", 
-    ],
-        close_fds=True
-    )
-    return proc.pid
-
-def stop_zero_conf_server():
-    import os
-    import signal
-    pid = get_server().zero_conf_pid
-    try:
-        os.kill(pid, signal.SIGTERM)
-        # todo leaves zombie behind correct this by sigterm handling in async io node
-    except ProcessLookupError:
-        print('process allready deleted')

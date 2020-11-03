@@ -6,11 +6,6 @@ To update, run python3 -m script.hassfest
 # fmt: off
 
 ZEROCONF = {
-    "activity_assist._http._tcp.local.": [
-        {
-            "domain": "activity_assistant"
-        }
-    ],
     "_Volumio._tcp.local.": [
         {
             "domain": "volumio"
@@ -83,6 +78,9 @@ ZEROCONF = {
         {
             "domain": "shelly",
             "name": "shelly*"
+        },
+        {
+            "domain": "activity_assistant"
         }
     ],
     "_ipp._tcp.local.": [

@@ -77,7 +77,16 @@
                 "panel": "new"
             },
             "problemMatcher": []
-        },
-
+        },{
+            "label": "HASS zeroconf browser",
+            "type": "shell",
+            "command": "docker exec -ti homeassistant /usr/local/bin/python3 /share/build/dev/zero_conf_browser.py",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        }
     ]
 }

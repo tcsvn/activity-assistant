@@ -137,3 +137,44 @@ def finish_experiment():
     from django.utils.timezone import now
     ds.end_time = now()
     ds.save()
+
+def start_zero_conf_server():
+    """ starts a zero conf server and saves the pid in 
+        the server zero_conf_pid field
+    """
+    import subprocess
+    srv = get_server()
+    if srv.zero_conf_pid is not None:
+        stop_zero_conf_server()
+    command = ["python3", settings.ZERO_CONF_MAIN_PATH]
+    command.append('--hostname')
+    if settings.DEBUG:
+        command.append('709d7dbe-act-assist-dev')
+    else:
+        command.append('709d7dbe-act-assist')
+    command.append('--api_path')
+    command.append('/api/v1')
+    command.append('--webhook')
+    command.append('/webhook')
+    command.append('--port')
+    command.append(str(8000))
+
+    proc = subprocess.Popen(command, close_fds=True)
+    srv.zero_conf_pid = proc.pid
+    srv.save()
+
+def stop_zero_conf_server():
+    """ stops a zero conf server and clears the servers 
+        zero_conf_pid field
+    """
+    import os
+    import signal
+    srv = get_server()
+    if srv.zero_conf_pid is not None:
+        pid = srv.zero_conf_pid
+        try:
+            os.kill(pid, signal.SIGTERM)
+        except ProcessLookupError:
+            print('process allready deleted')
+        srv.zero_conf_pid = None
+        srv.save()
