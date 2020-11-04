@@ -20,4 +20,5 @@ jobs:
       with:
         args: |
           --amd64 \
-          --target /data/build/dev
+          --target /data/build/dev \
+          --no-cache
