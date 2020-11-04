@@ -42,7 +42,7 @@ def get_experiment_status():
     srv = get_server()
     if srv.dataset is None:
         return 'not_running'
-    elif srv.dataset.logging:
+    elif srv.is_polling:
         return 'running'
     else:
         return 'paused'
@@ -120,13 +120,13 @@ def pause_experiment():
     ds = get_server().dataset
     ds.logging = False
     ds.save()
-    # TODO communicate to HASS component
+    stop_updater_service()
 
 def continue_experiment():
     ds = get_server().dataset
     ds.logging = True
     ds.save()   
-    # TODO communicate to HASS component
+    start_updater_service()
 
 def finish_experiment():
     srv = get_server()
@@ -137,6 +137,54 @@ def finish_experiment():
     from django.utils.timezone import now
     ds.end_time = now()
     ds.save()
+    stop_updater_service()
+
+def scan_str2seconds(s):
+    time = s[-1:]
+    count = int(s[:-1])
+    if time == 's':
+        return count
+    elif time == 'm':
+        return count*60
+    elif time == 'h':
+        return count*3600
+
+def start_updater_service():
+    from subprocess import Popen, PIPE
+    srv = get_server()
+    # create url
+    if settings.DEBUG:
+        hostname = '709d7dbe-act-assist-dev'
+    else:
+        hostname = '709d7dbe-act-assist'
+    url = 'http://' + hostname + ':8000/webhook'
+
+    # create scanseconds
+    secs = scan_str2seconds(srv.poll_interval)
+
+    command = ["python3", settings.UPDATER_SERVICE_PATH,
+        '--url', url,
+        '--poll_interval', str(secs)
+    ]
+    proc = Popen(command, stdout=PIPE, stderr=PIPE)
+    srv.poll_service_pid = proc.pid
+    srv.is_polling = True
+    srv.save()
+
+def stop_updater_service():
+    import os
+    import signal
+    srv = get_server()
+    if srv.is_polling:
+        pid = srv.poll_service_pid
+        try:
+            os.kill(pid, signal.SIGTERM)
+        except ProcessLookupError:
+            print('process allready deleted')
+        srv.poll_service_pid = None
+        srv.is_polling = False
+        srv.save()
+
 
 def start_zero_conf_server():
     """ starts a zero conf server and saves the pid in 
@@ -152,12 +200,11 @@ def start_zero_conf_server():
         command.append('709d7dbe-act-assist-dev')
     else:
         command.append('709d7dbe-act-assist')
-    command.append('--api_path')
-    command.append('/api/v1')
-    command.append('--webhook')
-    command.append('/webhook')
-    command.append('--port')
-    command.append(str(8000))
+    command += [
+        '--api_path', '/api/v1', 
+        '--webhook', '/webhook',
+        '--port', str(8000)
+    ]
 
     proc = subprocess.Popen(command, close_fds=True)
     srv.zero_conf_pid = proc.pid

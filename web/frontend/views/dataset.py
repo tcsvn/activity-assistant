@@ -15,6 +15,7 @@ class DatasetView(TemplateView):
         if srv.dataset is not None:
             context['dataset'] = srv.dataset
             context['experiment_running'] = True
+            context['polling'] = srv.is_polling
         else:
             context['experiment_running'] = False
             dev_lst = get_device_names()

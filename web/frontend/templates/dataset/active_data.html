@@ -8,12 +8,10 @@
                     <div class="d-flex flex-row p-2 justify-content-between align-items-center">
                         <div class="p-2"> device recording</div>
                         <div class="p-2">
-                            {% if dataset.logging %}
-                                <p class="text-success mb-0">
-                                    running
-                                    {% else %}
-                                <p class="text-secondary mb-0">
-                                offline
+                            {% if polling %}
+                                <p class="text-success mb-0"> running
+                            {% else %}
+                                <p class="text-secondary mb-0"> offline
                             {% endif %}
                             </p>
                         </div>
@@ -54,7 +52,7 @@
             </div>
             <div class="card-footer">
                 <div class="col-6 btn-group" role="group" aria-label="Basic example">
-                    {% if dataset.logging %}
+                    {% if polling %}
                         <form class="mr-2" action="{% url 'dataset' %}" method="POST">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-outline-secondary" name="intent" value="pause_experiment">Pause logging</button>

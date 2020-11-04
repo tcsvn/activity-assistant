@@ -8,8 +8,7 @@ from frontend.util import get_server, start_zero_conf_server,\
     get_device_names, get_activity_names, get_person_names,\
     stop_zero_conf_server
 
-from frontend.views.config import conf_devices, conf_activities, conf_persons, \
-    POLL_INTERVAL_LST
+from frontend.views.config import conf_devices, conf_activities, conf_persons
 
 """
 this view connects to homeassistant and gets all the relevant data to 
@@ -33,8 +32,10 @@ class SetupView(TemplateView):
             'progress':progress,
             'url':'setup'
         }
+        if srv.setup == SETUP_STEPS[0]:
+            start_zero_conf_server()
         if srv.setup == SETUP_STEPS[1]:
-            context['poll_int_list'] = POLL_INTERVAL_LST
+            context['poll_int_list'] = settings.POLL_INTERVAL_LST
         elif srv.setup == SETUP_STEPS[2]:
             hass_devices = hass_rest.get_device_list(
                 settings.HASS_API_URL , srv.hass_api_token)
@@ -79,18 +80,9 @@ class SetupView(TemplateView):
         srv.server_address = tmp['base_url']
         srv.save()
 
-        intent = str(request.POST.get("intent", ""))
-        if intent == "start":
-            start_zero_conf_server()
-        elif intent == "stop":
-            stop_zero_conf_server()
-
-        #if not srv.hass_comp_installed:
-
-        #        pass
         # only advance if the component was installed at hass site
         if srv.hass_comp_installed:
-        #    stop_zero_conf_server()
+            stop_zero_conf_server()
             self._increment_one_step()
 
     def post_step1(self, request):

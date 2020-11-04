@@ -6,7 +6,6 @@ import hass_api.rest as hass_rest
 from frontend.util import get_server, is_experiment_active,\
     get_device_names, get_activity_names, get_person_names 
 
-POLL_INTERVAL_LST = ['30s', '1m', '5m', '10m', '30m', '1h', '2h', '6h']
 
 class ConfigView(TemplateView):
     def get_context(self):
@@ -36,7 +35,7 @@ class ConfigView(TemplateView):
                 'activity_list' : act_list,
                 'hass_user_list' : hass_users,
                 'aa_user_list' : person_list, 
-                'poll_int_list' : POLL_INTERVAL_LST,
+                'poll_int_list' : settings.POLL_INTERVAL_LST,
                 'experiment_active':exp_active,
                 }
 

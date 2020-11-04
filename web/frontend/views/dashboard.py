@@ -110,7 +110,7 @@ class DashboardView(TemplateView):
 
         # 1. create dataset 
         dataset_folder = settings.DATASET_PATH + ds_name +'/'
-        ds = Dataset(name=ds_name, logging=True, path_to_folder=dataset_folder)
+        ds = Dataset(name=ds_name, path_to_folder=dataset_folder)
         ds.save()
         # 
         srv = get_server()
@@ -130,7 +130,8 @@ class DashboardView(TemplateView):
         # TODO save prior information about persons
         # TODO save room assignments of sensors and activities
 
-        # 3. tell HASS component to start logging
+        # 3. start logging service that polls data from home assistant
+        start_updater_service()
 
 
 

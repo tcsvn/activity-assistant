@@ -8,7 +8,7 @@ from pyadlml.dataset._datasets.activity_assistant import _read_devices
 import pandas as pd
 from backend.serializers import DatasetSerializer
 from frontend.util import get_device_names, load_data_file, \
-    load_device_mapping
+    load_device_mapping, get_experiment_status
 from pyadlml.dataset import DEVICE
 
 # todo somehow get this dynamically
@@ -40,16 +40,16 @@ class WebhookView(TemplateView):
 
     def get(self, request):
         srv = get_server()
+        srv.webhook_count += 1
+        srv.save()
         if not srv.hass_comp_installed:
             self.enable_hass_comp()
             resp = {'state':'success'}
+        elif get_experiment_status() == "running":
+            self.collect_data_from_hass()
+            resp = {'state':''}
         else:
-            if srv.dataset is not None:
-                if srv.dataset.logging:
-                    self.collect_data_from_hass()
-                    resp = {'state':''}
-            else:
-                resp = {}
+            resp = {}
         return JsonResponse(resp)
 
     def post(self, request):
