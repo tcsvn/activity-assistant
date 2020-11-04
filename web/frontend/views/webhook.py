@@ -44,11 +44,12 @@ class WebhookView(TemplateView):
             self.enable_hass_comp()
             resp = {'state':'success'}
         else:
-            if True:
-            #try:
-                resp = {'state':str(self.collect_data_from_hass())}
-            #except:
-            #    resp = {'state':'failure'}
+            if srv.dataset is not None:
+                if srv.dataset.logging:
+                    self.collect_data_from_hass()
+                    resp = {'state':''}
+            else:
+                resp = {}
         return JsonResponse(resp)
 
     def post(self, request):

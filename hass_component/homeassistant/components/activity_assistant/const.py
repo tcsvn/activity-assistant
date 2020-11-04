@@ -10,3 +10,6 @@ ZCNF_NAME = '_activity_assist'
 # activity-assistant
 KEY_WEBHOOK='webhook' 
 KEY_HOSTNAME='hostname'
+
+SERVICE_TRIGGER_DATADMP = 'trigger_data_dump'
+SERVICE_TRIGGER_DATADMP_METHOD = 'async_trigger_data_dump'
