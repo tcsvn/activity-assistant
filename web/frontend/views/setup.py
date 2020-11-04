@@ -87,7 +87,7 @@ class SetupView(TemplateView):
 
     def post_step1(self, request):
         p_int = str(request.POST.get("poll_interval", ""))
-        assert p_int in POLL_INTERVAL_LST
+        assert p_int in settings.POLL_INTERVAL_LST
         srv = get_server()
         srv.poll_interval = p_int
         srv.save()

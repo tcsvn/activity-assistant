@@ -12,6 +12,7 @@ zeroconf
 asyncws
 pyadlml
 sqlalchemy
+aiohttp
 
 # webserver (production)
 #gunicorn
