@@ -10,7 +10,6 @@ from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from django.views.generic import TemplateView
 from django.shortcuts import render
-
 from act_assist import settings
 
 TIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f'
@@ -33,6 +32,9 @@ class ServerViewSet(viewsets.ModelViewSet):
 
     #def perform_create(self, serializer):
     #    serializer.save(owner=self.request.user)
+
+    def perform_update(self, serializer):
+        pass
 
 class SyntheticActivityViewSet(viewsets.ModelViewSet):
     """
@@ -365,8 +367,6 @@ class DeviceViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         #serializer.save(owner=self.request.user)
         serializer.save()
-
-
 
 class PersonViewSet(viewsets.ModelViewSet):
     """

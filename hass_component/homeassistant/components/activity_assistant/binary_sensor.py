@@ -72,13 +72,13 @@ class Logging(BinarySensorEntity):
     async def async_update(self):
         """ calls webhook of Activity-assistant
         """
-        try:
-            status = await self._act_assist.call_webhook()
-            _LOGGER.warning('Scanning...')
-        except aiohttp.ClientError:
-            _LOGGER.warning('Webhook threw exception ')
+        #try:
+        #    status = await self._act_assist.call_webhook()
+        #    _LOGGER.warning('Scanning...')
+        #except aiohttp.ClientError:
+        #    _LOGGER.warning('Webhook threw exception ')
 
         # TODO set SCAN_INTERVAL to appropriate value
-        poll_int = await self._act_assist.get_scan_interval()
-        _LOGGER.warning('New Scanint: ' + str(poll_int))
-        SCAN_INTERVAL = poll_int
+        #poll_int = await self._act_assist.get_scan_interval()
+        #_LOGGER.warning('New Scanint: ' + str(poll_int))
+        #SCAN_INTERVAL = poll_int

@@ -116,6 +116,7 @@ HASS_API_URL = 'http://supervisor/core/api'
 DATA_URL = '/data/'
 
 # experiment
+POLL_INTERVAL_LST = ['1s', '5s', '30s', '1m', '5m', '10m', '30m', '1h', '2h', '6h']
 DATASET_PATH = DATA_URL + 'datasets/' # path where all the datasets lie
 ACTIVITY_FILE_NAME="activities_subject_%s.csv"
 DATA_FILE_NAME='devices.csv'
@@ -125,6 +126,7 @@ DEV_ROOM_ASSIGNMENT_FILE_NAME = "devices_and_areas.csv"
 ACT_ROOM_ASSIGNMENT_FILE_NAME = "activities_and_areas.csv"
 
 ZERO_CONF_MAIN_PATH = "/share/zero_conf_server.py"
+UPDATER_SERVICE_PATH = "/share/dataset_updater_service.py"
 
 # API URLS
 URL_SERVER = r'server'

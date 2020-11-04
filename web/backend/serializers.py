@@ -34,14 +34,14 @@ class ServerSerializer(serializers.HyperlinkedModelSerializer):
         model = Server
         fields = ('server_address', 'hass_api_token', 'setup',
                   'selected_model', 'realtime_node', 'dataset', 'is_polling', 
-                  'poll_interval', 'hass_comp_installed', 'zero_conf_pid')
+                  'poll_interval', 'hass_comp_installed', 'zero_conf_pid',
+                  'poll_service_pid', 'webhook_count')
 
 class DatasetSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Dataset
-        fields = ('id', 'name', 'logging', 'path_to_folder', 'start_time', 'end_time',
-            'person')
+        fields = ('id', 'name', 'path_to_folder', 'start_time', 'end_time')
 
 class ModelSerializer(serializers.HyperlinkedModelSerializer):
 

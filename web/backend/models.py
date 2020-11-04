@@ -38,11 +38,10 @@ class Dataset(models.Model):
     # todo mark for deletion line below
     name = models.CharField(null=True, max_length=100)
     path_to_folder = models.CharField(null=True, max_length=100)
-    logging = models.BooleanField(default=False, blank=True)
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(null=True)
-    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.CASCADE,
-                related_name='person')
+    # TODO add device strings field
+    # TODO add person strings field
 
 # generate token for every new created user
 #@receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -156,3 +155,5 @@ class Server(models.Model):
     poll_interval = models.CharField(max_length=10, default='10m')
     dataset = models.ForeignKey(Dataset, null=True, blank=True, on_delete=models.CASCADE, related_name='synthetic_activities')
     zero_conf_pid = models.IntegerField(null=True)
+    poll_service_pid = models.IntegerField(null=True)
+    webhook_count = models.IntegerField(default=0)
