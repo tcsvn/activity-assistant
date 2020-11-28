@@ -49,7 +49,19 @@ _For a guide on how to use please refer to the Documentation (to come)_
   - [homeassistant](https://github.com/todolink) - Homeautomation platform
 ## Support 
 [![Buy me a coffee][buy-me-a-coffee-shield]][buy-me-a-coffee]
-  
+
+## How to cite
+If you are using activity-assistant, consider citing the package
+```
+@software{activity-assistant,
+  author = {Christian Meier},
+  title = {activity-assistant},    
+  url = {https://github.com/tcsvn/activity-assistant},
+  version = {0.0.1-alpha},
+  date = {2020-01-12}
+}
+```
+
 ## License
 MIT  © [tcsvn](http://deadlink)
 
