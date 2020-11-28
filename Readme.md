@@ -48,7 +48,12 @@ _For a guide on how to use please refer to the Documentation (to come)_
   - [pyadlml](https://github.com/tcsvn/pyadlml) - A python library for data exploration. Data collected by Activity-assistant can be imported with `load_act_assist(path_to_folder)`
   - [homeassistant](https://github.com/todolink) - Homeautomation platform
 ## Support 
-  - Todo buy me a coffee batch
+[![Buy me a coffee][buy-me-a-coffee-shield]][buy-me-a-coffee]
   
 ## License
 MIT  © [tcsvn](http://deadlink)
+
+
+[buy-me-a-coffee-shield]: https://img.shields.io/static/v1.svg?label=%20&message=Buy%20me%20a%20coffee&color=6f4e37&logo=buy%20me%20a%20coffee&logoColor=white
+
+[buy-me-a-coffee]: https://www.buymeacoffee.com/tscvn
