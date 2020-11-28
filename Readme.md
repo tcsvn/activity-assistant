@@ -9,7 +9,7 @@
 ![Supports i386 Architecture](https://img.shields.io/badge/i386-yes-green?style=flat-square)
 ![License](https://img.shields.io/pypi/l/pyadlml?style=flat-square)
 
-Activities of Daily living (ADLs) e.g cooking, working, sleeping and device readings are recorded by smart home inhabitants. The goal is to predict inhabitants activities using device readings. Activity-assistant is a platform that streamlines the process of data collection. It can track selected devices and persons. Using the android app, device readings can be labeled with current activities. Furthermore Activity-assistant supports the deployment of trained models running predictions in real-time. A homeassistant integration offers users a way to automate stuff based on activity predictions.
+Activities of Daily living (ADLs) e.g cooking, working, sleeping and device readings are recorded by smart home inhabitants. The goal is to predict inhabitants activities using device readings. Activity-assistant is a platform that streamlines the process of data collection. It can track selected devices and persons. Using the android app, device readings can be labeled with current activities. Furthermore activity-assistant supports the deployment of trained models running predictions in real-time. A homeassistant integration offers users a way to automate stuff based on activity predictions.
 
 <p align="center">
   <img width="80%"  src=media/showreal.gif?raw=true>
@@ -21,8 +21,8 @@ The installation of this add-on is pretty straightforward and not different in c
 
 1. add the repository to the addon-store by pasting `http://github.com/tcsvn/hassio-activity-assistant` into the manage add-on repositories dialog  
 2. Ensure that homeassistant uses sqlite as database and that it is available in the configuration folder (for standard installations this is the case)
-3. Search for the "activity-Assistant" addon-on in the Hass.io add-on store and install it.
-4. Start the "activity-Assistant" add-on.
+3. Search for the "activity-assistant" addon-on in the Hass.io add-on store and install it.
+4. Start the "activity-assistant" add-on.
 5. Check the logs of the add-on to see if everything went well.
 6. Ready to go!
 
