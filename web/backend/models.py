@@ -10,11 +10,11 @@ from django.contrib.auth.models import User
 #from django.dispatch import receiver
 #from rest_framework.authtoken.models import Token
 class Person(models.Model):
-    #owner = models.ForeignKey('auth.User', related_name='persons', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=20, blank=True, default='')
     hass_name = models.CharField(max_length=20, blank=True, default='')
     prediction = models.BooleanField(default=False, blank=True)
+    activity_file = models.FileField(null=True)
     """
     todo feature
     predictions is either 'running', 'enabled' or 'disabled'
@@ -22,7 +22,6 @@ class Person(models.Model):
     #prediction = models.CharField(max_length=10, default='disabled', blank=True)
     #predicted_activity = models.ForeignKey(Activity, null=True, blank=True, on_delete=models.SET_NULL, related_name='%(class)s_predicted')
     #predicted_activity = models.OneToMany(ActivityPrediction, null=True, blank=True, on_delete=models.SET_NULL, related_name='%(class)s_predicted')
-    #predicted_location = models.ForeignKey(Location, null=True, blank=True, on_delete=models.SET_NULL, related_name='%(class)s_predicted')
 
     def save(self, *args, **kwargs):
         # create additional user with one to one relationship so that
@@ -42,12 +41,6 @@ class Dataset(models.Model):
     end_time = models.DateTimeField(null=True)
     # TODO add device strings field
     # TODO add person strings field
-
-# generate token for every new created user
-#@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-#def create_auth_token(sender, instance=None, created=False, **kwargs):
-#        if created:
-#                    Token.objects.create(user=instance)
 
 # A Location presents a vertice in a Graph 
 # Graph := (G, E)
@@ -75,13 +68,13 @@ class Edge(models.Model):
 # is something like a sensor, switch, or whatever
 class Device(models.Model):
     name = models.CharField(max_length=40)
-    #location = models.ForeignKey(Location, null=True, on_delete=models.SET_NULL)
+    #area = models.ForeignKey(Location, null=True, on_delete=models.SET_NULL)
 
 #  many to one relation with person
 # many persons can do the same activity, but a person can do  only one activity at once
 class Activity(models.Model):
     name = models.CharField(max_length=40)
-    locations = models.ManyToManyField(Location, related_name='activities')
+    #locations = models.ManyToManyField(Location, related_name='activities')
 
     class Meta:
         ordering = ["name"]
@@ -103,32 +96,26 @@ class SyntheticActivity(models.Model):
 
 
 
-# is the connected data logger
-# there can be persons without smartphone
-# there can be no smartphone without a person
-# access smartphone via person: person.smartphone <Smarpthone: nexus5>
+
 class Smartphone(models.Model):
-    owner = models.ForeignKey('auth.User', related_name='smartphones', on_delete=models.CASCADE)
+    """ represents the android app installed on one smartphone
+        there can be persons without smartphone
+        there can be no smartphone without a person
+    """
+    #owner = models.ForeignKey('auth.User', related_name='smartphones', on_delete=models.CASCADE)
     name = models.CharField(max_length=40)
-    logging = models.BooleanField(default=False)
-    logged_activity = models.ForeignKey(Activity, null=True, on_delete=models.SET_NULL, related_name='%(class)s_logged')
-    synchronized = models.BooleanField(default=False)
-
     # if a person is deleted so should the smartphone
-    person = models.OneToOneField(Person, blank=True, on_delete=models.CASCADE, primary_key=True)
+    person = models.OneToOneField(Person, blank=True, on_delete=models.CASCADE)#, primary_key=True)
+    logging = models.BooleanField(default=False)
+    synchronized = models.BooleanField(default=False)
+    logged_activity = models.ForeignKey(Activity, null=True, on_delete=models.SET_NULL, related_name='%(class)s_logged')
 
-    class Meta:
-        ordering = ["name"]
 
 class Model(models.Model):
     person = models.ForeignKey(Person, null=True, on_delete=models.CASCADE)
-    """
-    null is true because a model can be trained upon a dataset like kasteren or mavlab without
-    the association of a person
-    """
     dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE, related_name='dataset')
 
-    # todo rename file to sth more accurate
+    # TODO rename file to sth more accurate
     file = models.FileField(null=True)
     visualization = models.ImageField(null=True)
     train_loss = models.FileField(null=True)

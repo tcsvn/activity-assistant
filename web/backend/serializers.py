@@ -54,7 +54,7 @@ class ActivitySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Activity
-        fields = ('id', 'name', 'locations')
+        fields = ('id', 'name')#, 'locations')
 
 
 class LocationSerializer(serializers.HyperlinkedModelSerializer):
@@ -72,7 +72,8 @@ class EdgeSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class SmartphoneSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
+#class SmartphoneSerializer(serializers.HyperlinkedModelSerializer):
+    #owner = serializers.ReadOnlyField(source='owner.username')
     person = serializers.HyperlinkedRelatedField(
             view_name='person-detail',
             allow_null=False,
@@ -80,14 +81,14 @@ class SmartphoneSerializer(serializers.HyperlinkedModelSerializer):
             queryset=Person.objects.all())
     class Meta:
         model = Smartphone
-        fields = ('name', 'owner', 'person', 'logging', 
-                'logged_activity', 'logged_location', 'synchronized')
+        fields = ['id', 'name', 'person', 'logging', 
+                'logged_activity', 'synchronized']
 
 class DeviceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Device
-        fields = ('id', 'name')
+        fields = ['id', 'name']
 
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     #owner = serializers.ReadOnlyField(source='owner.username')
@@ -102,9 +103,9 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Person
         fields = ('id', 'name', 'hass_name', 'prediction',
-                'smartphone',
-                'predicted_activities',
-                'synthetic_activities')
+                'smartphone', 'activity_file')
+                #'predicted_activities',
+                #'synthetic_activities')
 
 #class UserSerializer(serializers.HyperlinkedModelSerializer):
 #    persons = serializers.PrimaryKeyRelatedField(many=True, queryset=Person.objects.all())

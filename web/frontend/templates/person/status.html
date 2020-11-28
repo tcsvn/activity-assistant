@@ -1,73 +1,57 @@
 <div class="container mb-3">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-header">Status {{ person.name }}</h5>
-            <div class="d-flex flex-column col-6">
-                <div class="d-flex flex-row p-2 justify-content-between align-items-center">
-                    <div class="p-2"> real-time prediction</div>
-                    <div class="p-2">
-                        {% if person.prediction %}
+            <h5 class="card-header"> Status: {{ person.name }}</h5>
+            <ul class="list-group col-6">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div> Real-time prediction</div>
+                    <div> {% if person.prediction %}
                             <p class="text-success mb-0">
                                 running
                                 {% else %}
                             <p class="text-secondary mb-0">
                             offline
-                        {% endif %}
+                            {% endif %}
                         </p>
                     </div>
-                </div>
-                <div class="d-flex flex-row p-2 justify-content-between align-items-center">
-                    <div class="p-2"> smartphone logging:</div>
-                    <div class="p-2">
-                        {% if smartphone %}
-                            <p class="text-primary mb-0">
-                                registered
-                                {% else %}
-                            <p class="text-secondary mb-0">
-                            unconfigured
-                        {% endif %}
-                        </p>
-                    </div>
-                </div>
-                {% if smartphone and not smartphone.logging %}
-                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
-                        <div class="p-2"> logging:</div>
-                        <div class="p-2">
-                            <p class="text-secondary mb-0">
-                                disabled
-                            </p>
+                </li>
+                {% if smartphone and smartphone.logging %}
+                    <li class="media list-group-item d-flex justify-content-between align-items-center">
+                        <i class="material-icons">smartphone</i>
+                        <div class="media-body"> 
+                            {{ smartphone.name }}
                         </div>
-                    </div>
+                        <p class="text-primary mb-0"> {{ smartphone.logged_activity.name }} </p>
+                    </li>
                 {% endif %}
-            </div>
-        </div>
-        <div class="card-footer">
-            <div class="col-12 btn-group" role="group" aria-label="Basic example">
+                {% if smartphone and not smartphone.logging %}
+                    <li class="media list-group-item d-flex justify-content-between align-items-center">
+                        <i class="material-icons">smartphone</i>
+                        <div class="media-body"> 
+                            {{ smartphone.name }}
+                        </div>
+                        <p class="text-secondary mb-0"> not logging </p>
+                    </li>
+                {% endif %}
+                {% if not smartphone %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div> smartphone </div>
+                        <div> <p class="text-secondary mb-0"> unregistered
+                                                                    </p>
+                        </div>
+                    </li>
+                {% endif %}
                 {% if smartphone %}
-                    <form class="mr-2" action="{% url 'person' %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="intent" value="decouple_smartphone">
-                        <input type="hidden" name="pk" value="{{ person.id }}">
-                        <button type="submit" class="btn btn-outline-secondary">decouple smartphone</button>
-                    </form>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Activities logged
+                        <span class="badge badge-primary badge-pill">11</span>
+                    </li>
                 {% endif %}
-
-            <!--
-                {% if person.prediction %}
-                    <form class="mr-2" action="{% url 'person' %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="intent" value="dis_rt_pred">
-                        <button type="submit" class="btn btn-outline-secondary">disable rt prediction</button>
-                    </form>
-                {% else %}
-                    <form class="mr-2" action="{% url 'person' %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="intent" value="en_rt_pred">
-                        <button type="submit" class="btn btn-outline-secondary">enable rt prediction</button>
-                    </form>
-                {% endif %}
-                -->
-            </div>
+              </ul>
         </div>
+        <!--
+        <div class="card-footer">
+        </div>
+    -->
     </div>
 </div>

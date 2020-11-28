@@ -17,68 +17,21 @@
     <script src="{% static 'fullcalendar/packages/list/main.js' %}"></script>
     <script src="{% static 'fullcalendar/packages/interaction/main.js' %}"></script>
     <script src="{% static 'fullcalendar/packages/bootstrap/main.js' %}"></script>
-    {% include 'person/calendar.html' %}
 {% endblock %}
 
 {% block content %}
 
     {% include 'person/status.html' %}
 
-    {% if person.prediction %}
-        {% include 'person/activity_prediction.html' %}
-    {% endif %}
-
-    {% if smartphone and smartphone.logging %}
-        <div class="container mb-3">
-            <div class="card">
-                <h5 class="card-header list-group">
-                    <div class="list-group-item">
-                        <i class="material-icons">smartphone</i>
-                        {{ smartphone.name }}
-                    </div>
-                </h5>
-                <div class="card-body">
-                    <div class="d-flex flex-column col-6">
-                        <div class="d-flex flex-row p-2 justify-content-between align-items-center">
-                            <div class="p-2">logged activity:</div>
-                            <div class="p-2">
-                                <p class="text-primary mb-0">
-                                    {{ smartphone.logged_activity.name }}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-row p-2 justify-content-between align-items-center">
-                            <div class="p-2">logged location:</div>
-                            <div class="p-2">
-                                <p class="text-primary mb-0">
-                                    {{ smartphone.logged_location.name }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endif %}
-
-    <div class="container mb-3 ">
-        <div class="card pb-5">
-            <div class="card-body" style="height: 500px;">
-                    <div id='external-events'>
-                        <h4>Draggable Activities</h4>
-                        <div id='external-events-list'>
-                            {% for activity in activity_list %}
-                                <div class='fc-event'>{{ activity.name }}</div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div id='calendar'></div>
-                    <div style='clear:both'></div>
-            </div>
-        </div>
-    </div>
-
     {% if not smartphone %}
         {% include 'person/register_smartphone.html' %}
     {% endif %}
+
+    <!-- TODO include this when the feature is ready, also include person/calendar_script.html
+    {% include 'person/calendar.html' %}
+    {% if person.prediction %}
+        {% include 'person/activity_prediction.html' %}
+    {% endif %}
+    -->
+
 {% endblock %}

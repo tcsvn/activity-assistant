@@ -1,6 +1,7 @@
 from backend.models import *
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
+from frontend.util import get_server
 
 # css frontend
 class PersonView(TemplateView):
@@ -93,12 +94,6 @@ class PersonView(TemplateView):
         syn_act.day_of_week = day_of_week
         syn_act.save()
 
-    def uncouple_smartphone(self, request):
-        # delete the smartphone instance
-        pk = request.POST.get("pk", "")
-        person = Person.objects.filter(pk=int(pk))[0]
-        person.smartphone.delete()
-
     def _get_person_from_request(self, request):
         pk = request.POST.get("pk", "")
         return Person.objects.filter(pk=int(pk))[0]
@@ -115,10 +110,7 @@ class PersonView(TemplateView):
     def post(self, request):
         intent = request.POST.get("intent","")
         #create object not through serialzier
-        if (intent == "uncouple" or intent == "decouple_smartphone"):
-            self.uncouple_smartphone(request)
-
-        elif (intent == "create_syn_act"):
+        if (intent == "create_syn_act"):
             self.create_syn_act(request)
 
         elif (intent == "delete_syn_act"):
@@ -134,15 +126,13 @@ class PersonView(TemplateView):
         return render(request, 'person.html', context)
 
     def generate_qr_code_data(self, person):
-        url = Server.objects.all()[0].server_address
+        url = get_server().server_address
         data = "{"
         data += "\"person\" : \"%s\" , "%(person.name)
         data += "\"username\" : \"%s\" , "%('admin')
         data += "\"password\" : \"%s\" , "%('asdf')
-        #data += "\"url_smartphone\" : \"%s\" ,"%(url + '/api/v1/smartphones/' + str(person.id))
-        #data += "\"url_person\" : \"%s\" ,"%(url + '/api/v1/persons/' + str(person.id))
-        data += "\"url_api\" : \"%s\" , "%(url + '/api/v1')
-        data += "\"id\" : \"%s\" "%(person.id)
+        data += "\"url_person\" : \"%s\" ,"%('persons/' + str(person.id) + '/')
+        data += "\"url_api\" : \"%s\""%(url + '/api/v1/')
         data += "}"
         return data
 

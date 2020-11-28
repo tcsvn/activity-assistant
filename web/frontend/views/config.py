@@ -61,14 +61,6 @@ class ConfigView(TemplateView):
 def conf_server(request):
     srv = get_server()
     try:
-        is_polling = request.POST.get("is_polling", "")
-        if is_polling == 'on':
-            srv.is_polling = True
-        else:
-            srv.is_polling = False
-    except:
-        pass
-    try:
         pol_int = request.POST.get("poll_interval", "")
         srv.poll_interval = pol_int
     except: 

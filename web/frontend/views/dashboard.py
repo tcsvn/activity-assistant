@@ -17,11 +17,13 @@ class DashboardView(TemplateView):
         person_list = Person.objects.all()
         device_list = Device.objects.all()
         activity_list = Activity.objects.all()
+        dataset_list = Dataset.objects.all()
         count_person = len(person_list)
         #count_models = len(Model.objects.all())
         count_models = 0
         count_activity = len(activity_list)
-        count_device = len(Device.objects.all())
+        count_device = len(device_list)
+        count_dataset = len(dataset_list)
         srv = get_server()
         setup_complete = srv.setup == 'complete'
         experiment_stat = get_experiment_status()
@@ -37,6 +39,7 @@ class DashboardView(TemplateView):
             'count_models' : count_models,
             'count_activity' : count_activity,
             'count_device' : count_device,
+            'count_dataset' : count_dataset,
             'setup_complete' : setup_complete,
             'experiment_status':experiment_stat,
             'experiment_active': is_exp_active,

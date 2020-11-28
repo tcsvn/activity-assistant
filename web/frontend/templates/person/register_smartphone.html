@@ -2,37 +2,59 @@
 
 <div class="container">
     <div class="card text-center">
-        <div class="card-header">
-            Smartphone
-        </div>
         <div class="card-body">
             <h5 class="card-title">Connect to Logger</h5>
-            <p class="card-text">Give more power to certain algorithms by creating labeled training or test
-                data, covering activitys of daily living (ADL).</p>
+            <p class="card-text"> Annotate data collected by homeassistant with Activites of daily living. </p>
             <div class="row">
                 <div class="col-4">
                     <div class="list-group" id="list-tab" role="tablist">
                         <a class="list-group-item list-group-item-action active" id="list-home-list"
-                            data-toggle="list" href="#list-home" role="tab" aria-controls="home">Get the app</a>
+                            data-toggle="list" href="#list-home" role="tab" aria-controls="home">1. Get the companion app</a>
                         <a class="list-group-item list-group-item-action" id="list-profile-list"
-                            data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">register
-                            smartphone</a>
+                            data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">2. 
+                            connect smartphone</a>
                     </div>
                 </div>
                 <div class="col-8">
                     <div class="tab-content" id="nav-tabContent">
-                        <div class="tab-pane fade show active" id="list-home" role="tabpanel"
-                                aria-labelledby="list-home-list">
+                        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                <ul class="list-group list-group-horizontal">
+                                    <li class="list-group-item">
+                                        <a href='https://play.google.com/store/apps/details?id=com.whatsapp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img
+                                        class="img-fluid col-6" alt='Get it on Google Play'
+                                        src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+                                    </li>
+                                    <li class="list-group-item">Dapibus ac facilisis in</li>
+                                    <li class="list-group-item">Morbi leo risus</li>
+                                  </ul>
+                                  <!--
                             <div class="col-5">
                                 <a href='https://play.google.com/store/apps/details?id=com.whatsapp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img
                                         class="img-fluid" alt='Get it on Google Play'
                                         src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
                             </div>
+                            <div class="col-5">
+                                <a href='https://play.google.com/store/apps/details?id=com.whatsapp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img
+                                        class="img-fluid" alt='Get it on Google Play'
+                                        src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+                            </div>
+                            <div class="col-5">
+                                <a href='https://play.google.com/store/apps/details?id=com.whatsapp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img
+                                        class="img-fluid" alt='Get it on Google Play'
+                                        src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+                            </div>
+-->
                         </div>
                         <div class="tab-pane fade" id="list-profile" role="tabpanel"
                                 aria-labelledby="list-profile-list">
-                            {% qr_from_text qr_code_data size=8 version=8 error_correction=L %}
-
+                                <div class="media">
+                                    <div class="aligned-self-start mr-3">
+                                        {% qr_from_text qr_code_data size=8 version=8 error_correction=L %}
+                                    </div>
+                                    <div class="media-body">
+                                      <p class="mb-0">Open the activity-assistant application on your phone. Click the "scan" button and get the Qrcode into focus</p>
+                                    </div>
+                                </div>
                         </div>
                     </div>
                 </div>
