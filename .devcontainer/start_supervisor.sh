@@ -91,8 +91,8 @@ function run_supervisor() {
         -e SUPERVISOR_NAME=hassio_supervisor \
         -e SUPERVISOR_DEV=1 \
         -e SUPERVISOR_MACHINE="qemux86-64" \
-        homeassistant/amd64-hassio-supervisor:245
-        #homeassistant/amd64-hassio-supervisor:dev
+        homeassistant/amd64-hassio-supervisor:2020.11.0
+        #homeassistant/amd64-hassio-supervisor:245
 }
 
 case "$1" in
@@ -111,4 +111,3 @@ case "$1" in
         run_supervisor
         stop_docker;; 
 esac
-
