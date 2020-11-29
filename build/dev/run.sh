@@ -10,10 +10,11 @@ if [ ! -e $CONTAINER_ALREADY_STARTED ]; then
     /home/remigrate.exp
 fi
 
-echo load fixtures!
+#echo load fixtures!
 python3 web/manage.py loaddata /home/only_server.json
 
 echo Starting http server!
+
 # debug to check if the addon is reachable from the outside
 #python3 -m http.server 8000
 
