@@ -6,19 +6,33 @@ from pygments.formatters.html import HtmlFormatter
 from pygments import highlight
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.files.storage import FileSystemStorage
+import os
 #from django.db.models.signals import post_save
 #from django.dispatch import receiver
 #from rest_framework.authtoken.models import Token
+
 def person_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/activities_subject_<person.name>.csv
-    return settings.MEDIA_ROOT + settings.ACTIVITY_FILE_NAME%(instance.name)
+    return settings.ACTIVITY_FILE_NAME%(instance.name)
+
+class OverwriteStorage(FileSystemStorage):
+    ''' this is used to overwrite existing files in a put request
+        for FileField cases as in Person and model
+    '''
+    def get_available_name(self, name, max_length):
+        if self.exists(name):
+            os.remove(os.path.join(settings.MEDIA_ROOT, name))
+        return name
 
 class Person(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=20, blank=True, default='')
     hass_name = models.CharField(max_length=20, blank=True, default='')
     prediction = models.BooleanField(default=False, blank=True)
-    activity_file = models.FileField(null=True, upload_to=person_path)
+    activity_file = models.FileField(null=True, 
+        upload_to=person_path, storage=OverwriteStorage()) 
+
     """
     todo feature
     predictions is either 'running', 'enabled' or 'disabled'

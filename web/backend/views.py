@@ -12,7 +12,9 @@ from django.views.generic import TemplateView
 from django.shortcuts import render
 from act_assist import settings
 import logging
-
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+import os
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -300,21 +302,6 @@ class PersonViewSet(viewsets.ModelViewSet):
     #permission_classes = (
     #    permissions.IsAuthenticatedOrReadOnly,)
         #IsOwnerOrReadOnly, )
-
-    def perform_update(self, serializer):
-        """ when updating activity file, the file should be replaced
-
-        Parameters
-        ----------
-        serializer : 
-        """
-        logger.error("~"*10)
-        prae_act_file = serializer.instance.activity_file
-        logger.error("before", prae_act_file)
-        instance = serializer.save()
-        post_act_file = instance.activity_file
-        logger.error("after", post_act_file)
-        logger.error("\n"*5)
 
 #class UserViewSet(viewsets.ReadOnlyModelViewSet):
 #    """
