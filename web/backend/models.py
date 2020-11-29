@@ -9,12 +9,16 @@ from django.contrib.auth.models import User
 #from django.db.models.signals import post_save
 #from django.dispatch import receiver
 #from rest_framework.authtoken.models import Token
+def person_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/activities_subject_<person.name>.csv
+    return settings.MEDIA_ROOT + settings.ACTIVITY_FILE_NAME%(instance.name)
+
 class Person(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=20, blank=True, default='')
     hass_name = models.CharField(max_length=20, blank=True, default='')
     prediction = models.BooleanField(default=False, blank=True)
-    activity_file = models.FileField(null=True)
+    activity_file = models.FileField(null=True, upload_to=person_path)
     """
     todo feature
     predictions is either 'running', 'enabled' or 'disabled'

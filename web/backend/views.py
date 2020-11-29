@@ -11,6 +11,10 @@ from django.contrib.auth.models import User
 from django.views.generic import TemplateView
 from django.shortcuts import render
 from act_assist import settings
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 TIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f'
 
@@ -297,34 +301,20 @@ class PersonViewSet(viewsets.ModelViewSet):
     #    permissions.IsAuthenticatedOrReadOnly,)
         #IsOwnerOrReadOnly, )
 
-    #@action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
-    #def highlight(self, request, *args, **kwargs):
-    #    snippet = self.get_object()
-    #    return Response(snippet.highlighted)
+    def perform_update(self, serializer):
+        """ when updating activity file, the file should be replaced
 
-    def _create_activity_file_if_not_exists(self, folder_path):
-        # create file if it not exists
-        file_path = folder_path + "/" + settings.ACTIVITY_FILE_NAME
-        from pathlib import Path
-        act_file = Path(file_path)
-        if not act_file.is_file():
-            open(file_path, 'a').close()
-
-    def _create_activity_folder_if_not_exists(self, folder_path):
-        # if the folder for the person to log the activities to does not exits, create one
-        import os
-        if not os.path.exists(folder_path):
-            os.makedirs(folder_path)
-
-    def perform_create(self, serializer):
-        serializer.save()
-        instance = serializer.instance
-
-        person_path = settings.HASSBRAIN_ACT_FILE_FOLDER + "/" + str(instance.name)
-        print('person_path: ', person_path)
-        self._create_activity_folder_if_not_exists(person_path)
-        self._create_activity_file_if_not_exists(person_path)
-
+        Parameters
+        ----------
+        serializer : 
+        """
+        logger.error("~"*10)
+        prae_act_file = serializer.instance.activity_file
+        logger.error("before", prae_act_file)
+        instance = serializer.save()
+        post_act_file = instance.activity_file
+        logger.error("after", post_act_file)
+        logger.error("\n"*5)
 
 #class UserViewSet(viewsets.ReadOnlyModelViewSet):
 #    """

@@ -113,11 +113,11 @@ STATICFILES_DIRS = [
 SERVE_MEDIA = True
 MEDIA_URL = '/media/'
 HASS_API_URL = 'http://supervisor/core/api'
-DATA_URL = '/data/'
+DATA_ROOT = '/data/'
 
 # experiment
 POLL_INTERVAL_LST = ['1s', '5s', '30s', '1m', '5m', '10m', '30m', '1h', '2h', '6h']
-DATASET_PATH = DATA_URL + 'datasets/' # path where all the datasets lie
+DATASET_PATH = DATA_ROOT + 'datasets/' # path where all the datasets lie
 ACTIVITY_FILE_NAME="activities_subject_%s.csv"
 DATA_FILE_NAME='devices.csv'
 DATA_MAPPING_FILE_NAME='device_mapping.csv'

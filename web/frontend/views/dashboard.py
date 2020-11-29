@@ -2,6 +2,11 @@ from backend.models import *
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 from frontend.util import *
+from pathlib import Path
+from frontend.util import create_device_mapping_file, \
+    create_activity_files, create_data_file
+import os
+import signal
 
 class DashboardView(TemplateView):
 
@@ -78,8 +83,7 @@ class DashboardView(TemplateView):
         srv.save()
 
     def stop(self):
-        import os
-        import signal
+
         rt_node = Server.objects.all()[0].realtime_node
         try:
             os.kill(rt_node.pid, signal.SIGTERM)
@@ -121,9 +125,7 @@ class DashboardView(TemplateView):
         srv.save()
 
         # 2. create folders and inital files
-        from pathlib import Path
-        from frontend.util import create_device_mapping_file, \
-            create_activity_files, create_data_file
+
 
         Path(ds.path_to_folder).mkdir(mode=0o777, parents=True, exist_ok=False)
         create_data_file(ds.path_to_folder)
@@ -133,10 +135,16 @@ class DashboardView(TemplateView):
         # TODO save prior information about persons
         # TODO save room assignments of sensors and activities
 
-        # 3. start logging service that polls data from home assistant
+
+        # 3. mark all smartphone dirty and delete activity files
+        for person in Person.objects.all():
+            if hasattr(person, 'smartphone') and person.smartphone is not None:
+                person.smartphone.synchronized = False
+            person.activity_file = None
+            person.save()
+            
+        # 4. start logging service that polls data from home assistant
         start_updater_service()
-
-
 
     def post(self, request):
         intent = request.POST.get("intent","")

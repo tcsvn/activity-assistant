@@ -1,6 +1,11 @@
 from backend.models import *
 import pandas as pd
 from pyadlml.dataset import DEVICE, TIME, VAL
+from django.utils.timezone import now
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 def get_device_names():
     res = []
@@ -133,10 +138,18 @@ def finish_experiment():
     ds = srv.dataset
     srv.dataset = None
     srv.save()
+
+    # wrap up dataset
     ds.logging = False
-    from django.utils.timezone import now
     ds.end_time = now()
     ds.save()
+
+    # copy stuff from persons to dataset folder
+    for person in Person.objects.all():
+        file2 = person.activity_file
+        logger.info("filetype: ", type(file2))
+        logger.info("filetype: ", dir(file2))
+
     stop_updater_service()
 
 def scan_str2seconds(s):
