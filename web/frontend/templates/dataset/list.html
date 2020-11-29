@@ -1,36 +1,52 @@
 <div class="container mb-3">
     <div class="accordion" id="accordionExample">
         {% for ds in dataset_list %}
-        <div class="card">
-            <div class="card-header" id="heading{{ds.name}}">
-                <h2 class="mb-0">
-                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                        data-target="#collapse{{ds.name}}" aria-expanded="true" aria-controls="collapse{{ds.name}}">
-                        {{ds.name}}
-                    </button>
-                </h2>
-            </div>
-            <div id="collapse{{ds.name}}" class="collapse" aria-labelledby="heading{{ds.name}}"
-                data-parent="#accordionExample">
-                <div class="card-body">
-                    <ul>
-                        <li>dataset stats</li>
-                        <li>dataset stats</li>
-                        <li>dataset stats</li>
-                    </ul>
-                    <form class="form" action="{% url 'dataset' %}" method="POST">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-red" name="intent" value="export_data">export data</a>
-                    </form>
-                    <form class="form" action="{% url 'dataset' %}" method="POST">
-                        {% csrf_token %}
+            {% if ds.name != dataset.name %} <!-- don't print the current experiment-->
+            <div class="card">
+                <div class="card-header" id="heading{{ds.name}}">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                            data-target="#collapse{{ds.name}}" aria-expanded="true" aria-controls="collapse{{ds.name}}">
+                            {{ds.name}}
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapse{{ds.name}}" class="collapse" aria-labelledby="heading{{ds.name}}"
+                    data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="col-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between ">
+                                    Start time
+                                    <span>{{ ds.start_time }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between ">
+                                    End time
+                                    <span>{{ ds.end_time }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between ">
+                                    More to come
+                                    <span> ... </span>
+                                </li>
+                            </ul>
+                        </div>
 
-                        <input type="hidden" name="dataset_name" value="{{ds.name}}">
-                        <button type="submit" class="btn btn-red" name="intent" value="delete_dataset">delete data</a>
-                    </form>
+                        <div class="btn-group">
+                            <form class="form" action="{% url 'dataset' %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-secondary" name="intent" value="export_data">export data</button>
+                            </form>
+                            <form class="form" action="{% url 'dataset' %}" method="POST">
+                                {% csrf_token %}
+
+                                <input type="hidden" name="dataset_name" value="{{ds.name}}">
+                                <button type="submit" class="btn btn-secondary" name="intent" value="delete_dataset">delete data</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+            {% endif %}
         {% endfor %}
     </div>
 </div>

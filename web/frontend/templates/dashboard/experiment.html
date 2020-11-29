@@ -3,31 +3,34 @@
         {% if not experiment_status == 'not_running' %}
         <h5 class="card-title">Experiment: {{ dataset.name }} </h5>
             <p class="card-text">
-                An experiment is running. You can pause the experiment for timeperiods e.g 
-                for quality time with your girlfriend ;) These time periods are marked with the activity "not recording". 
-                TODO add statistics like how long the exp is running
+                An experiment is currently conducted. Pausing the experiment adds a device
+                in the data that marks the beginning and end of the time interval not ment to be include in 
+                the data analysis.  
                 <ul>
                     <li>start time:  {{ dataset.start_time }}</li>
                 </ul>
             </p>
-            {% if experiment_status == 'running' %}
-                <form class="form" action="{% url 'dashboard' %}" method="POST">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                {% if experiment_status == 'running' %}
+                    <form class="form" action="{% url 'dashboard' %}" method="POST">
+                            {% csrf_token %}
+                        <input type="hidden" name="intent" value="pause experiment">
+                        <button type="submit" class="btn btn-primary">Pause experiment</button>
+                    </form>
+                {% else %}
+                    <form class="form" action="{% url 'dashboard' %}" method="POST">
+                            {% csrf_token %}
+                        <input type="hidden" name="intent" value="continue experiment">
+                        <button type="submit" class="btn btn-primary">continue experiment</button>
+                    </form>
+                {% endif %}
+                <form class="formk" action="{% url 'dashboard' %}" method="POST">
                         {% csrf_token %}
-                    <input type="hidden" name="intent" value="pause experiment">
-                    <button type="submit" class="btn btn-primary">Pause experiment</a>
+                    <input type="hidden" name="intent" value="finish experiment">
+                    <button type="submit" class="btn btn-red">Finish experiment</button>
                 </form>
-            {% else %}
-                <form class="form" action="{% url 'dashboard' %}" method="POST">
-                        {% csrf_token %}
-                    <input type="hidden" name="intent" value="continue experiment">
-                    <button type="submit" class="btn btn-primary">continue experiment</a>
-                </form>
-            {% endif %}
-            <form class="form" action="{% url 'dashboard' %}" method="POST">
-                    {% csrf_token %}
-                <input type="hidden" name="intent" value="finish experiment">
-                <button type="submit" class="btn btn-red">Finish experiment</a>
-            </form>
+            </div> 
+
         {% else %}
         <h5 class="card-title">Experiment</h5>
             <p class="card-text">Start an experiment. Notice that the configuration is frozen to ensure
