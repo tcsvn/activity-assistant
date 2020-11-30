@@ -7,7 +7,7 @@ from backend import views
 from act_assist import settings
 from act_assist import settings as set
 
-API_TITLE='Activity-Assistant API'
+API_TITLE='Activity-assistant API'
 API_LINK='api/v1'
 
 router = DefaultRouter()

@@ -3,8 +3,7 @@ from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 from frontend.util import *
 from pathlib import Path
-from frontend.util import create_device_mapping_file, \
-    create_activity_files, create_data_file
+import frontend.experiment as experiment
 import os
 import signal
 
@@ -31,8 +30,8 @@ class DashboardView(TemplateView):
         count_dataset = len(dataset_list)
         srv = get_server()
         setup_complete = srv.setup == 'complete'
-        experiment_stat = get_experiment_status()
-        is_exp_active = is_experiment_active()
+        experiment_stat = experiment.get_status()
+        is_exp_active = experiment.is_active()
         #rt_node_running = self.is_rt_node_running()
         #rt_node = srv.realtime_node
         #model_list = Model.objects.all()
@@ -98,53 +97,7 @@ class DashboardView(TemplateView):
         #    print('Child pid is {}'.format(child.pid))
         rt_node.delete()
 
-    def start_experiment(self, request):
-        """ creates a new dataset object and assigns it to the server
-            that it knows an experiment is running. Also creates folders
-            like 
-                /data/datasets/<datasetname>/activities_subject_<person>.csv>
-                /data/datasets/<datasetname>/devices.csv
-                /data/datasets/<datasetname>/device_mapping.csv
-                ...
-            
-        """
-        ds_name = request.POST.get("name","")
-        try:
-            Dataset.objects.get(name=ds_name)
-            return
-        except:
-            pass
 
-        # 1. create dataset 
-        dataset_folder = settings.DATASET_PATH + ds_name +'/'
-        ds = Dataset(name=ds_name, path_to_folder=dataset_folder)
-        ds.save()
-        # 
-        srv = get_server()
-        srv.dataset = ds
-        srv.save()
-
-        # 2. create folders and inital files
-
-
-        Path(ds.path_to_folder).mkdir(mode=0o777, parents=True, exist_ok=False)
-        create_data_file(ds.path_to_folder)
-        create_activity_files(ds.path_to_folder, Person.objects.all()) 
-        create_device_mapping_file(ds.path_to_folder) 
-
-        # TODO save prior information about persons
-        # TODO save room assignments of sensors and activities
-
-
-        # 3. mark all smartphone dirty and delete activity files
-        for person in Person.objects.all():
-            if hasattr(person, 'smartphone') and person.smartphone is not None:
-                person.smartphone.synchronized = False
-            person.activity_file = None
-            person.save()
-            
-        # 4. start logging service that polls data from home assistant
-        start_updater_service()
 
     def post(self, request):
         intent = request.POST.get("intent","")
@@ -153,13 +106,13 @@ class DashboardView(TemplateView):
         elif intent == "stop rt_node":
             self.stop()
         elif intent == "start experiment":
-            self.start_experiment(request)
+            experiment.start(request)
         elif intent == "pause experiment":
-            pause_experiment()
+            experiment.pause()
         elif intent == "continue experiment":
-            continue_experiment()
+            experiment.resume()
         elif intent == "finish experiment":
-            finish_experiment()
+            experiment.finish()
         context = self.create_context()
         return render(request, 'dashboard.html', context)
 

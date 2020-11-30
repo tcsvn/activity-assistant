@@ -5,10 +5,10 @@ from django.http import JsonResponse
 from django.views.generic import TemplateView
 from pyadlml.dataset._datasets.homeassistant import hass_db_2_data
 from pyadlml.dataset._datasets.activity_assistant import _read_devices
-import pandas as pd
 from backend.serializers import DatasetSerializer
-from frontend.util import get_device_names, load_data_file, \
-    load_device_mapping, get_experiment_status
+from frontend.util import get_device_names
+import frontend.experiment as experiment
+import pandas as pd
 from pyadlml.dataset import DEVICE
 
 # todo somehow get this dynamically
@@ -24,16 +24,15 @@ class WebhookView(TemplateView):
         # this is the case where the data is pulled
         srv = get_server()
         ds = srv.dataset
-        from frontend.util import hass_db_2_data
-        df_new = hass_db_2_data(DB_URL, get_device_names())\
+        df_new = experiment.hass_db_2_data(DB_URL, get_device_names())\
                     .drop_duplicates()
 
-        df_cur = load_data_file(ds.path_to_folder)
+        df_cur = experiment.load_data_file(ds.path_to_folder)
 
         df = pd.concat([df_cur, df_new], ignore_index=True)
 
         # save df
-        dev_map = load_device_mapping(ds.path_to_folder, as_dict=True)
+        dev_map = experiment.load_device_mapping(ds.path_to_folder, as_dict=True)
         df[DEVICE] = df[DEVICE].map(dev_map)
         df = df.drop_duplicates()
         df.to_csv(ds.path_to_folder + 'devices.csv', sep=',', index=False)
@@ -45,7 +44,7 @@ class WebhookView(TemplateView):
         if not srv.hass_comp_installed:
             self.enable_hass_comp()
             resp = {'state':'success'}
-        elif get_experiment_status() == "running":
+        elif experiment.get_status() == "running":
             self.collect_data_from_hass()
             resp = {'state':''}
         else:

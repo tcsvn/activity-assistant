@@ -1,8 +1,7 @@
 from backend.models import *
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
-from frontend.util import get_server, get_device_names, \
-    pause_experiment, continue_experiment, finish_experiment
+from frontend.util import get_server, get_device_names
 
 # css frontend
 class DatasetView(TemplateView):
@@ -28,7 +27,10 @@ class DatasetView(TemplateView):
         ds = Dataset.objects.get(name=name)
         path = ds.path_to_folder
         import shutil
-        shutil.rmtree(path)
+        try:
+            shutil.rmtree(path)
+        except FileNotFoundException:
+            pass
         ds.delete()
 
     def get(self, request):
@@ -37,15 +39,8 @@ class DatasetView(TemplateView):
 
     def post(self, request):
         intent = request.POST.get("intent","")
-        assert intent in ['pause_experiment', 'continue_experiment', 'finish_experiment',
-         'delete_dataset', 'export_data']
-        if intent == 'pause_experiment':
-            pause_experiment()
-        elif intent == 'continue_experiment':
-            continue_experiment()
-        elif intent == 'finish_experiment':
-            finish_experiment()
-        elif intent == 'delete_dataset':
+        assert intent in ['delete_dataset', 'export_data']
+        if intent == 'delete_dataset':
             self.delete_dataset(request)
         elif intent == 'delete_dataset':
             self.export_data(request)
