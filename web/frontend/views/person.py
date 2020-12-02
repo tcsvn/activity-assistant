@@ -20,13 +20,16 @@ class PersonView(TemplateView):
         except:
             smartphone = None
         qr_code_data = self.generate_qr_code_data(person)
+        sm_download_link = settings.ACT_ASSIST_RELEASE_LINK
+
         context = {
                 'person' : person,
                 'smartphone' : smartphone, 
                 'person_list' : person_list,
                 'activity_list' : activity_list,
                 'synthetic_activity_list':  syn_act_list,
-                'qr_code_data' : qr_code_data
+                'qr_code_data' : qr_code_data,
+                'qr_code_sm_download' : sm_download_link,
                 }
         if pred_acts is not None:
             context['predicted_activities'] = pred_acts
@@ -135,5 +138,3 @@ class PersonView(TemplateView):
         data += "\"url_api\" : \"%s\""%(url + '/api/v1/')
         data += "}"
         return data
-
-

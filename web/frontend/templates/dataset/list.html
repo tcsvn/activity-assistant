@@ -34,7 +34,8 @@
                         <div class="btn-group">
                             <form class="form" action="{% url 'dataset' %}" method="POST">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-secondary" name="intent" value="export_data">export data</button>
+                                <input type="hidden" name="dataset_name" value="{{ds.name}}">
+                                <button type="submit" class="btn btn-secondary" name="intent" value="export_dataset">export data</button>
                             </form>
                             <form class="form" action="{% url 'dataset' %}" method="POST">
                                 {% csrf_token %}
