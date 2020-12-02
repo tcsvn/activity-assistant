@@ -123,3 +123,23 @@ def stop_zero_conf_server():
             print('process allready deleted')
         srv.zero_conf_pid = None
         srv.save()
+
+import pandas as pd
+
+def collect_data_from_hass():
+    # this is the case where the data is pulled
+    srv = get_server()
+    ds = srv.dataset
+    import frontend.experiment as experiment
+    df_new = experiment.hass_db_2_data(settings.DB_URL, get_device_names())\
+                .drop_duplicates()
+
+    df_cur = experiment.load_data_file(ds.path_to_folder)
+
+    df = pd.concat([df_cur, df_new], ignore_index=True)
+
+    # save df
+    dev_map = experiment.load_device_mapping(ds.path_to_folder, as_dict=True)
+    df[DEVICE] = df[DEVICE].map(dev_map)
+    df = df.drop_duplicates()
+    df.to_csv(ds.path_to_folder + 'devices.csv', sep=',', index=False)

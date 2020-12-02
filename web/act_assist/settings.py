@@ -128,6 +128,8 @@ ACT_ROOM_ASSIGNMENT_FILE_NAME = "activities_and_areas.csv"
 ZERO_CONF_MAIN_PATH = "/share/zero_conf_server.py"
 UPDATER_SERVICE_PATH = "/share/dataset_updater_service.py"
 
+DB_URL = 'sqlite:////config/home-assistant_v2.db' 
+
 ACT_ASSIST_VERSION = "v0.0.1-alpha"
 ACT_ASSIST_RELEASE_LINK = "https://github.com/tcsvn/activity-assistant-logger/releases/download/{}/activity-assistant.apk".format(ACT_ASSIST_VERSION)
 

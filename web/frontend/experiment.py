@@ -165,6 +165,11 @@ def resume():
     start_updater_service()
 
 def finish():
+    # get one last pull from homeassistant
+    from frontend.util import collect_data_from_hass
+    collect_data_from_hass()
+
+    # deassociate dataset
     srv = get_server()
     ds = srv.dataset
     srv.dataset = None
@@ -175,7 +180,7 @@ def finish():
     ds.end_time = django.utils.timezone.now()
     ds.save()
 
-    # copy stuff from persons to dataset folder
+    # copy stuff activity files persons to dataset folder
     import shutil
     for person in Person.objects.all():
         src = settings.MEDIA_ROOT + person.activity_file.name
