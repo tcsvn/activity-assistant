@@ -117,7 +117,7 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Person
         fields = ('id', 'name', 'hass_name', 'prediction',
-                'smartphone', 'activity_file')
+                'person_statistic','smartphone', 'activity_file')
                 #'synthetic_activities')
 
 #class UserSerializer(serializers.HyperlinkedModelSerializer):

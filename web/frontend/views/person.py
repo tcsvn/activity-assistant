@@ -31,6 +31,8 @@ class PersonView(TemplateView):
                 'qr_code_data' : qr_code_data,
                 'qr_code_sm_download' : sm_download_link,
                 }
+        if person.person_statistic is not None:
+            context['ps'] = person.person_statistic
         if pred_acts is not None:
             context['predicted_activities'] = pred_acts
         return context

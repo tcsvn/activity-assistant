@@ -20,6 +20,7 @@
 {% endblock %}
 
 {% block content %}
+    <div class="container">
 
     {% include 'person/status.html' %}
 
@@ -27,11 +28,26 @@
         {% include 'person/register_smartphone.html' %}
     {% endif %}
 
+    {% if person.person_statistic %}
+    <div class="card">
+        <div class="card-header">
+            Current behavior
+        </div>
+        <div class="card-body col-sm12 col-md12 col-lg-8 col-xl-6">
+          <h5 class="card-title"></h5>
+            {% include 'person/person_statistics.html' %}
+          <a href="../dataset/{{ps.dataset.id}}" class="btn btn-primary">go to analytics</a>
+        </div>
+      </div>
+    {% endif %}
+
     <!-- TODO include this when the feature is ready, also include person/calendar_script.html
+
+            <div class="card-body col-sm-12 col-md-12 col-lg-9 col-xl-7">
     {% include 'person/calendar.html' %}
     {% if person.prediction %}
         {% include 'person/activity_prediction.html' %}
     {% endif %}
     -->
-
+    </div>
 {% endblock %}

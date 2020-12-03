@@ -24,26 +24,7 @@ class OverwriteStorage(FileSystemStorage):
         if self.exists(name):
             os.remove(os.path.join(settings.MEDIA_ROOT, name))
         return name
-
-class Person(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    name = models.CharField(max_length=20, blank=True, default='')
-    hass_name = models.CharField(max_length=20, blank=True, default='')
-    prediction = models.BooleanField(default=False, blank=True)
-    activity_file = models.FileField(null=True, 
-        upload_to=person_path, storage=OverwriteStorage()) 
-
-
-    def save(self, *args, **kwargs):
-        # create additional user with one to one relationship so that
-        # one device can't alter the anything but its own person
-        #User.objects.create_user(username=self.name, email='test@test.de', password='test')
-        super(Person, self).save(*args, **kwargs)
-
-    class Meta:
-        ordering = ('created',)
-
-
+        
 class Dataset(models.Model):
     # todo mark for deletion line below
     name = models.CharField(null=True, max_length=100)
@@ -62,7 +43,6 @@ class Dataset(models.Model):
 class PersonStatistic(models.Model):
     name = models.CharField(null=True, max_length=100)
     dataset = models.ForeignKey(Dataset, related_name="person_statistics", on_delete=models.CASCADE)
-    person = models.ForeignKey(Person, null=True, on_delete=models.SET_NULL)
     activity_file = models.FileField(null=True) 
     
     plot_hist_counts = models.ImageField(null=True)
@@ -70,6 +50,21 @@ class PersonStatistic(models.Model):
     plot_boxplot_duration = models.ImageField(null=True)
     plot_ridge_line = models.ImageField(null=True)
     plot_heatmap_transitions = models.ImageField(null=True)
+
+class Person(models.Model):
+    name = models.CharField(max_length=20, blank=True, default='')
+    hass_name = models.CharField(max_length=20, blank=True, default='')
+    person_statistic = models.OneToOneField(PersonStatistic, null=True, on_delete=models.SET_NULL, related_name='person')
+    prediction = models.BooleanField(default=False, blank=True)
+    activity_file = models.FileField(null=True, 
+        upload_to=person_path, storage=OverwriteStorage()) 
+
+
+    def save(self, *args, **kwargs):
+        # create additional user with one to one relationship so that
+        # one device can't alter the anything but its own person
+        #User.objects.create_user(username=self.name, email='test@test.de', password='test')
+        super(Person, self).save(*args, **kwargs)
 
 # A Location presents a vertice in a Graph 
 # Graph := (G, E)

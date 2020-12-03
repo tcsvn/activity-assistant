@@ -145,7 +145,12 @@ def start(request):
         if hasattr(person, 'smartphone') and person.smartphone is not None:
             person.smartphone.synchronized = False
             person.smartphone.save()
-        PersonStatistic(name=person.name, person=person, dataset=ds).save()
+        
+        # create new personstatistic
+        ps = PersonStatistic(name=person.name, dataset=ds)
+        person.person_statistic = ps
+        person.person_statistic.save()
+        person.save()
         
     # 4. start logging service that polls data from home assistant
     start_updater_service()
@@ -181,14 +186,20 @@ def finish():
     ds.end_time = django.utils.timezone.now()
     ds.save()
 
+    # dissacosiate person statistics from persons
+    for person in Person.objects.all():
+        person.person_statistic = None
+        person.save()
+
     # copy stuff activity files persons to dataset folder
+    copy_actfiles2dataset(ds)
+
+    stop_updater_service()
+
+
+def copy_actfiles2dataset(ds):
     import shutil
     for person in Person.objects.all():
         src = settings.MEDIA_ROOT + person.activity_file.name
-        logger.error('orig fp: ' +  str(src))
         dest = ds.path_to_folder + settings.ACTIVITY_FILE_NAME%(person.name)
-        logger.error('new fp: ' + str(dest))
-        logger.error("sm: " + str(hasattr(person, 'smartphone')))
         shutil.copyfile(src, dest) 
-
-    stop_updater_service()

@@ -1,58 +1,56 @@
-<div class="container mb-3">
-    <div class="card">
-        <h3 class="card-header"> {{ person.name }}</h3>
-        <div class="card-body">
-            <div class="card-title"> <h5>Status</h5></div>
-            <ul class="list-group col-6">
+<div class="card mb-3">
+    <h3 class="card-header"> {{ person.name }}</h3>
+    <div class="card-body">
+        <div class="card-title"> <h5>Status</h5></div>
+        <ul class="list-group col-6">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div> Real-time prediction</div>
+                <div> {% if person.prediction %}
+                        <p class="text-success mb-0">
+                            running
+                            {% else %}
+                        <p class="text-secondary mb-0">
+                        offline
+                        {% endif %}
+                    </p>
+                </div>
+            </li>
+            {% if smartphone and smartphone.logging %}
+                <li class="media list-group-item d-flex justify-content-between align-items-center">
+                    <i class="material-icons">smartphone</i>
+                    <div class="media-body"> 
+                        {{ smartphone.name }}
+                    </div>
+                    <p class="text-primary mb-0"> {{ smartphone.logged_activity.name }} </p>
+                </li>
+            {% endif %}
+            {% if smartphone and not smartphone.logging %}
+                <li class="media list-group-item d-flex justify-content-between align-items-center">
+                    <i class="material-icons">smartphone</i>
+                    <div class="media-body"> 
+                        {{ smartphone.name }}
+                    </div>
+                    <p class="text-secondary mb-0"> not logging </p>
+                </li>
+            {% endif %}
+            {% if not smartphone %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div> Real-time prediction</div>
-                    <div> {% if person.prediction %}
-                            <p class="text-success mb-0">
-                                running
-                                {% else %}
-                            <p class="text-secondary mb-0">
-                            offline
-                            {% endif %}
-                        </p>
+                    <div> smartphone </div>
+                    <div> <p class="text-secondary mb-0"> unregistered
+                                                                </p>
                     </div>
                 </li>
-                {% if smartphone and smartphone.logging %}
-                    <li class="media list-group-item d-flex justify-content-between align-items-center">
-                        <i class="material-icons">smartphone</i>
-                        <div class="media-body"> 
-                            {{ smartphone.name }}
-                        </div>
-                        <p class="text-primary mb-0"> {{ smartphone.logged_activity.name }} </p>
-                    </li>
-                {% endif %}
-                {% if smartphone and not smartphone.logging %}
-                    <li class="media list-group-item d-flex justify-content-between align-items-center">
-                        <i class="material-icons">smartphone</i>
-                        <div class="media-body"> 
-                            {{ smartphone.name }}
-                        </div>
-                        <p class="text-secondary mb-0"> not logging </p>
-                    </li>
-                {% endif %}
-                {% if not smartphone %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div> smartphone </div>
-                        <div> <p class="text-secondary mb-0"> unregistered
-                                                                    </p>
-                        </div>
-                    </li>
-                {% endif %}
-                {% if smartphone %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Activities logged
-                        <span class="badge badge-primary badge-pill">11</span>
-                    </li>
-                {% endif %}
-              </ul>
-        </div>
-        <!--
-        <div class="card-footer">
-        </div>
-    -->
+            {% endif %}
+            {% if smartphone %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Activities logged
+                    <span class="badge badge-primary badge-pill">11</span>
+                </li>
+            {% endif %}
+            </ul>
     </div>
+    <!--
+    <div class="card-footer">
+    </div>
+-->
 </div>

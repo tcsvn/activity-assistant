@@ -6,6 +6,9 @@ from zipfile import ZipFile
 import pathlib
 import logging
 from django.http import FileResponse
+from frontend.experiment import copy_actfiles2dataset
+from frontend.util import collect_data_from_hass
+
 logger = logging.getLogger(__name__)
 
 # css frontend
@@ -61,19 +64,31 @@ class DatasetView(TemplateView):
         generate_device_analysis(ds)
 
 
+    def generate_analysis_for_exp(self, request):
+        name = request.POST.get("dataset_name","")
+        ds = Dataset.objects.get(name=name)
+        copy_actfiles2dataset(ds)
+        collect_data_from_hass()
+        generate_device_analysis(ds)
+
+
     def get(self, request):
         context = self.create_context(request)
         return render(request, 'dataset.html', context)
 
     def post(self, request):
         intent = request.POST.get("intent","")
-        assert intent in ['delete_dataset', 'export_dataset', 'generate_analysis']
+        assert intent in ['delete_dataset', 'export_dataset', 'generate_analysis', \
+            'gen_analysis_for_experiment']
         if intent == 'delete_dataset':
             self.delete_dataset(request)
         elif intent == 'export_dataset':
             return self.export_dataset(request)
         elif intent == 'generate_analysis':
             self.generate_analysis(request)
+        elif intent == 'gen_analysis_for_experiment':
+            self.generate_analysis_for_exp(request)
+
         context = self.create_context(request)
         return render(request, 'dataset.html', context)
 

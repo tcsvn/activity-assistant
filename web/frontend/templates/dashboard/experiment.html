@@ -8,8 +8,12 @@
                 the data analysis.  
                 <ul>
                     <li>start time:  {{ dataset.start_time }}</li>
+                    <li># devices:  3 </li>
                 </ul>
             </p>
+            To get insights go to <a href="../dataset">dataset</a> and analyse stuff
+    </div>
+    <div class="card-footer">
             <div class="btn-group" role="group" aria-label="Basic example">
                 {% if experiment_status == 'running' %}
                     <form class="form" action="{% url 'dashboard' %}" method="POST">
