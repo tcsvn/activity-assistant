@@ -145,6 +145,7 @@ def start(request):
         if hasattr(person, 'smartphone') and person.smartphone is not None:
             person.smartphone.synchronized = False
             person.smartphone.save()
+        PersonStatistic(name=person.name, person=person, dataset=ds).save()
         
     # 4. start logging service that polls data from home assistant
     start_updater_service()

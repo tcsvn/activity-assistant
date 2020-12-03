@@ -43,6 +43,12 @@
                                 <input type="hidden" name="dataset_name" value="{{ds.name}}">
                                 <button type="submit" class="btn btn-secondary" name="intent" value="delete_dataset">delete data</button>
                             </form>
+                            <form class="form" action="{% url 'dataset' %}" method="POST">
+                                {% csrf_token %}
+
+                                <input type="hidden" name="dataset_name" value="{{ds.name}}">
+                                <button type="submit" class="btn btn-secondary" name="intent" value="generate_analysis">analyse</button>
+                            </form>
                         </div>
                     </div>
                 </div>

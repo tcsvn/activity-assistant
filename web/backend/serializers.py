@@ -37,14 +37,27 @@ class ServerSerializer(serializers.HyperlinkedModelSerializer):
                   'poll_interval', 'hass_comp_installed', 'zero_conf_pid',
                   'poll_service_pid', 'webhook_count')
 
-class DatasetSerializer(serializers.HyperlinkedModelSerializer):
+class PersonStatisticSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = PersonStatistic
+        fields = ('id', 'name', 'dataset', 'person', 'plot_hist_counts', 
+            'plot_hist_cum_duration', 'plot_boxplot_duration',
+            'plot_ridge_line', 'plot_heatmap_transitions'
+            )
 
+class DatasetSerializer(serializers.HyperlinkedModelSerializer):
+    # The many-to-one realtionship with Personstatistic is realized via the related-name
+    # of field dataset in personstatistic. (google reverse relations for further information)
     class Meta:
         model = Dataset
-        fields = ('id', 'name', 'path_to_folder', 'start_time', 'end_time')
+        fields = ('id', 'name', 'path_to_folder', 'start_time', 'end_time', 
+            'person_statistics', 'plot_hist_on_off','plot_boxs_on_duration',
+            'plot_heatmap_trigger_one_day', 'plot_hist_trigger_time_diff',
+            'plot_heatmap_cross_corr', 'plot_hist_counts'
+        )
+
 
 class ModelSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Model
         fields = ('id', 'person', 'dataset', 'file', 'visualization', 'datainstance',
@@ -104,7 +117,6 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         model = Person
         fields = ('id', 'name', 'hass_name', 'prediction',
                 'smartphone', 'activity_file')
-                #'predicted_activities',
                 #'synthetic_activities')
 
 #class UserSerializer(serializers.HyperlinkedModelSerializer):

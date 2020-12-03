@@ -291,6 +291,16 @@ class DeviceViewSet(viewsets.ModelViewSet):
         #serializer.save(owner=self.request.user)
         serializer.save()
 
+class PersonStatisticViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+    Additionally we also provide an extra `highlight` action.
+    """
+    queryset = PersonStatistic.objects.all()
+    serializer_class = PersonStatisticSerializer
+
+
 class PersonViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,

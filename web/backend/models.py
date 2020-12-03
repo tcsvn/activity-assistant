@@ -33,13 +33,6 @@ class Person(models.Model):
     activity_file = models.FileField(null=True, 
         upload_to=person_path, storage=OverwriteStorage()) 
 
-    """
-    todo feature
-    predictions is either 'running', 'enabled' or 'disabled'
-    """
-    #prediction = models.CharField(max_length=10, default='disabled', blank=True)
-    #predicted_activity = models.ForeignKey(Activity, null=True, blank=True, on_delete=models.SET_NULL, related_name='%(class)s_predicted')
-    #predicted_activity = models.OneToMany(ActivityPrediction, null=True, blank=True, on_delete=models.SET_NULL, related_name='%(class)s_predicted')
 
     def save(self, *args, **kwargs):
         # create additional user with one to one relationship so that
@@ -57,8 +50,25 @@ class Dataset(models.Model):
     path_to_folder = models.CharField(null=True, max_length=100)
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(null=True)
-    # TODO add device strings field
-    # TODO add person strings field
+
+    plot_hist_on_off = models.ImageField(null=True)
+    plot_boxs_on_duration = models.ImageField(null=True)
+    plot_heatmap_trigger_one_day = models.ImageField(null=True)
+    plot_hist_trigger_time_diff = models.ImageField(null=True)
+    plot_heatmap_cross_corr = models.ImageField(null=True)
+    plot_hist_counts = models.ImageField(null=True)
+
+class PersonStatistic(models.Model):
+    name = models.CharField(null=True, max_length=100)
+    dataset = models.ForeignKey(Dataset, related_name="person_statistics", on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, null=True, on_delete=models.SET_NULL)
+    activity_file = models.FileField(null=True) 
+    
+    plot_hist_counts = models.ImageField(null=True)
+    plot_hist_cum_duration = models.ImageField(null=True)
+    plot_boxplot_duration = models.ImageField(null=True)
+    plot_ridge_line = models.ImageField(null=True)
+    plot_heatmap_transitions = models.ImageField(null=True)
 
 # A Location presents a vertice in a Graph 
 # Graph := (G, E)
@@ -131,7 +141,6 @@ class Smartphone(models.Model):
 
 class Model(models.Model):
     person = models.ForeignKey(Person, null=True, on_delete=models.CASCADE)
-    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE, related_name='dataset')
 
     # TODO rename file to sth more accurate
     file = models.FileField(null=True)

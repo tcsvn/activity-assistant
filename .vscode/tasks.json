@@ -36,6 +36,26 @@
                 "panel": "new"
             },
             "problemMatcher": []
+        },{
+            "label": "cp hass_config 2 hass container",
+            "type": "shell",
+            "command": "/workspaces/test_hassio/share/build/dev/copy_hass_config.sh",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },{
+            "label": "reset hassconfig",
+            "type": "shell",
+            "command": "/workspaces/test_hassio/share/build/dev/copy_hass_config.sh",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
         },
         {
             "label": "AA migrate django",
