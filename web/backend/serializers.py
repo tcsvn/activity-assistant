@@ -51,9 +51,10 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Dataset
         fields = ('id', 'name', 'path_to_folder', 'start_time', 'end_time', 
-            'person_statistics', 'plot_hist_on_off','plot_boxs_on_duration',
+            'person_statistics', 'plot_hist_on_off','plot_boxplot_on_duration',
             'plot_heatmap_trigger_one_day', 'plot_hist_trigger_time_diff',
-            'plot_heatmap_cross_corr', 'plot_hist_counts'
+            'plot_heatmap_trigger_time',
+            'plot_heatmap_cross_correlation', 'plot_hist_counts'
         )
 
 

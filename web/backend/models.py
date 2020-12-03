@@ -51,12 +51,13 @@ class Dataset(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(null=True)
 
-    plot_hist_on_off = models.ImageField(null=True)
-    plot_boxs_on_duration = models.ImageField(null=True)
-    plot_heatmap_trigger_one_day = models.ImageField(null=True)
-    plot_hist_trigger_time_diff = models.ImageField(null=True)
-    plot_heatmap_cross_corr = models.ImageField(null=True)
     plot_hist_counts = models.ImageField(null=True)
+    plot_hist_on_off = models.ImageField(null=True)
+    plot_boxplot_on_duration = models.ImageField(null=True)
+    plot_heatmap_trigger_one_day = models.ImageField(null=True)
+    plot_heatmap_trigger_time = models.ImageField(null=True)
+    plot_hist_trigger_time_diff = models.ImageField(null=True)
+    plot_heatmap_cross_correlation = models.ImageField(null=True)
 
 class PersonStatistic(models.Model):
     name = models.CharField(null=True, max_length=100)
