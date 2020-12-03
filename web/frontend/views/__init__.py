@@ -6,3 +6,4 @@ from .setup import SetupView
 from .dataset import DatasetView
 from .config import ConfigView
 from .webhook import WebhookView
+from .datasetAnalytics import DatasetAnalyticsView

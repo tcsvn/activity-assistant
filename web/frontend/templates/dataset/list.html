@@ -4,12 +4,31 @@
             {% if ds.name != dataset.name %} <!-- don't print the current experiment-->
             <div class="card">
                 <div class="card-header" id="heading{{ds.name}}">
-                    <h2 class="mb-0">
-                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                    <div class="btn-toolbar justify-content-between" role="toolbar">
+                        <button class="btn btn-link" type="button" data-toggle="collapse"
                             data-target="#collapse{{ds.name}}" aria-expanded="true" aria-controls="collapse{{ds.name}}">
                             {{ds.name}}
                         </button>
-                    </h2>
+                        <div class="btn-group">
+                            <form class="form" action="{% url 'dataset' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="dataset_name" value="{{ds.name}}">
+                                <button type="submit" class="btn btn-secondary" name="intent" value="export_dataset">export data</button>
+                            </form>
+                            <form class="form" action="{% url 'dataset' %}" method="POST">
+                                {% csrf_token %}
+
+                                <input type="hidden" name="dataset_name" value="{{ds.name}}">
+                                <button type="submit" class="btn btn-secondary" name="intent" value="generate_analysis">analyse</button>
+                            </form>
+                            <form class="form" action="{% url 'dataset' %}" method="POST">
+                                {% csrf_token %}
+
+                                <input type="hidden" name="dataset_name" value="{{ds.name}}">
+                                <button type="submit" class="btn btn-danger" name="intent" value="delete_dataset">delete data</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
                 <div id="collapse{{ds.name}}" class="collapse" aria-labelledby="heading{{ds.name}}"
                     data-parent="#accordionExample">
@@ -25,30 +44,27 @@
                                     <span>{{ ds.end_time }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between ">
+                                    # devices 
+                                    <span> ... </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between ">
+                                    # activities
+                                    <span> ... </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between ">
+                                    # recorded events
+                                    <span> ... </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between ">
+                                    # recorded activities
+                                    <span> ... </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between ">
                                     More to come
                                     <span> ... </span>
                                 </li>
                             </ul>
-                        </div>
-
-                        <div class="btn-group">
-                            <form class="form" action="{% url 'dataset' %}" method="POST">
-                                {% csrf_token %}
-                                <input type="hidden" name="dataset_name" value="{{ds.name}}">
-                                <button type="submit" class="btn btn-secondary" name="intent" value="export_dataset">export data</button>
-                            </form>
-                            <form class="form" action="{% url 'dataset' %}" method="POST">
-                                {% csrf_token %}
-
-                                <input type="hidden" name="dataset_name" value="{{ds.name}}">
-                                <button type="submit" class="btn btn-secondary" name="intent" value="delete_dataset">delete data</button>
-                            </form>
-                            <form class="form" action="{% url 'dataset' %}" method="POST">
-                                {% csrf_token %}
-
-                                <input type="hidden" name="dataset_name" value="{{ds.name}}">
-                                <button type="submit" class="btn btn-secondary" name="intent" value="generate_analysis">analyse</button>
-                            </form>
+                            <a href="../dataset/{{ ds.id }}"> go to see analytics </a>
                         </div>
                     </div>
                 </div>

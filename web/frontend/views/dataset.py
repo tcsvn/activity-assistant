@@ -120,7 +120,7 @@ def generate_device_analysis(dataset):
 
     root_path = settings.MEDIA_ROOT + dataset.name + '/'
 
-    #gen_plots_persons(dataset, data, root_path)
+    gen_plots_persons(dataset, data, root_path)
 
     from pyadlml.dataset.plot.devices import hist_trigger_time_diff, boxplot_on_duration, \
         heatmap_trigger_one_day, heatmap_trigger_time, heatmap_cross_correlation, \
