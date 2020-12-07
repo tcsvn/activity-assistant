@@ -15,9 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
-
 #ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
 
 # allow hosts for the home net
@@ -102,18 +99,21 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-DEBUG=True
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-    '/home/hassbrain_rest/frontend/static/',
-]
 
 SERVE_MEDIA = True
 MEDIA_URL = '/media/'
 HASS_API_URL = 'http://supervisor/core/api'
+
 DATA_ROOT = '/data/'
+MEDIA_ROOT = DATA_ROOT + 'media/'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': DATA_ROOT + '/db.sqlite3',
+    }
+}
 
 # experiment
 POLL_INTERVAL_LST = ['1s', '5s', '30s', '1m', '5m', '10m', '30m', '1h', '2h', '6h']
@@ -124,9 +124,6 @@ DATA_MAPPING_FILE_NAME='device_mapping.csv'
 PRIOR_ACTIVITY_FILE_NAME = "prior_activities_subject_%s.csv"
 DEV_ROOM_ASSIGNMENT_FILE_NAME = "devices_and_areas.csv"
 ACT_ROOM_ASSIGNMENT_FILE_NAME = "activities_and_areas.csv"
-
-ZERO_CONF_MAIN_PATH = "/share/zero_conf_server.py"
-UPDATER_SERVICE_PATH = "/share/dataset_updater_service.py"
 
 DB_URL = 'sqlite:////config/home-assistant_v2.db' 
 

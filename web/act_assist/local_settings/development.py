@@ -9,14 +9,10 @@ SECRET_KEY = 'mawcf9#i&c3cl#g47-oks8wio8%7205@0u_g4233$q30pcgzdn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ZERO_CONF_MAIN_PATH = "/share/zero_conf_server.py"
+UPDATER_SERVICE_PATH = "/share/dataset_updater_service.py"
 
-DATA_ROOT = '/data/'
-MEDIA_ROOT = DATA_ROOT + 'media/'
-
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': DATA_ROOT + '/db.sqlite3',
-    }
-}
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/home/hassbrain_rest/frontend/static/',
+]
