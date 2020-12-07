@@ -5,7 +5,7 @@ CONTAINER_ALREADY_STARTED="/data/cont_already_started_file"
 
 cd /opt/$DJANGO_PROJECT/web
 export PYTHONPATH=/etc/opt/$DJANGO_PROJECT:/opt/$DJANGO_PROJECT
-#export DJANGO_SETTINGS_MODULE=settings
+export DJANGO_SETTINGS_MODULE=settings
 
 
 if [ ! -e $CONTAINER_ALREADY_STARTED ]; then
