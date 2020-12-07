@@ -18,7 +18,7 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Publish
-      uses: home-assistant/builder@master
+      uses: tcsvn/builder@master
       with:
         args: |
           --all \
