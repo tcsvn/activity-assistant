@@ -49,7 +49,7 @@
         },{
             "label": "reset hassconfig",
             "type": "shell",
-            "command": "/workspaces/test_hassio/share/build/dev/copy_hass_config.sh",
+            "command": "/workspaces/test_hassio/share/.devcontainer/copy_hass_config.sh",
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -71,6 +71,16 @@
             "label": "AA build dev addon",
             "type": "shell",
             "command": "docker build -f build/dev/Dockerfile --build-arg BUILD_FROM=\"homeassistant/amd64-base:latest\" -t tchr157/activity-assistant-amd64:dev ./build/dev",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },{
+            "label": "AA build production amd",
+            "type": "shell",
+            "command": "docker build -f build/prod/Dockerfile --build-arg BUILD_FROM=\"homeassistant/amd64-base:latest\" -t tchr157/activity-assistant-amd64:latest .",
             "group": "test",
             "presentation": {
                 "reveal": "always",
