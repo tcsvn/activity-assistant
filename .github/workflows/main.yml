@@ -22,5 +22,4 @@ jobs:
       with:
         args: |
           --all \
-          --target /data/ \
-          --file /data/build/prod/Dockerfile
+          --target /data
