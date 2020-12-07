@@ -1,0 +1,6 @@
+{
+    "squash": false,
+    "args": {
+      "--file": "/data/build/prod/Dockerfile"
+    }
+  }
