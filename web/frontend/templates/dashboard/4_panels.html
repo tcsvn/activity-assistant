@@ -1,47 +1,55 @@
 <div class="container mb-3">
     <div class="row">
         <div class="col-sm">
-            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">{{ count_person }}</h5>
-                    <p class="card-text">Persons registered</p>
+            <div class="card border border-dark mb-3" style="max-width: 18rem">
+                <div class="card-body text-dark">
+                        <h5 class="card-title">{{ count_person }}</h5>
+                    <p class="card-text">
+                        Person registered
+                    </p>
                 </div>
-                <div class="card-footer bg-primary ">
-                    <a href="{% url 'config' %}" class="text-white">more info</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm">
-            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">{{ count_models }}</h5>
-                    <p class="card-text">Models uploaded</p>
-                </div>
-                <div class="card-footer bg-primary ">
-                    <a href="{% url 'config' %}" class="text-white">more info</a>
+                <div class="card-footer">
+                    <a href="{% url 'config' %}">more info</a>
                 </div>
             </div>
         </div>
         <div class="col-sm">
-            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">{{ count_activity }}</h5>
-                    <p class="card-text"> Activities registered</p>
+            <div class="card border border-dark mb-3" style="max-width: 18rem">
+                <div class="card-body text-dark">
+                        <h5 class="card-title"> #x</h5>
+                    <p class="card-text">
+                        Models registered
+                    </p>
                 </div>
-                <div class="card-footer bg-primary ">
-                    <a href="{% url 'config' %}" class="text-white">more info</a>
+                <div class="card-footer">
+                    <a href="{% url 'config' %}">more info</a>
                 </div>
             </div>
         </div>
         <div class="col-sm">
-            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">{{ count_dataset }}</h5>
-                    <p class="card-text"> Dataset created</p>
+            <div class="card border border-dark mb-3" style="max-width: 18rem">
+                <div class="card-body text-dark">
+                        <h5 class="card-title">#x</h5>
+                    <p class="card-text">
+                        Dask runners connected
+                    </p>
                 </div>
-                <div class="card-footer bg-primary">
-                    <a href="{% url 'config' %}" class="text-white">more info</a>
+                <div class="card-footer">
+                    <a href="{% url 'config' %}">more info</a>
                 </div>
             </div>
+        </div>
+        <div class="col-sm">
+        <div class="card border border-dark mb-3" style="max-width: 18rem">
+            <div class="card-body text-dark">
+              <h5 class="card-title">{{ count_dataset }}</h5>
+              <p class="card-text">
+                Datasets created
+              </p>
+            </div>
+                <div class="card-footer">
+                    <a href="{% url 'dataset' %}">more info</a>
+                </div>
+          </div>
         </div>
     </div>

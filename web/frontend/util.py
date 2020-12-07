@@ -143,3 +143,15 @@ def collect_data_from_hass():
     df[DEVICE] = df[DEVICE].map(dev_map)
     df = df.drop_duplicates()
     df.to_csv(ds.path_to_folder + 'devices.csv', sep=',', index=False)
+
+
+def get_line_numbers_file(file_path):
+    with open(file_path) as my_file:
+        return sum(1 for _ in my_file)
+
+def get_folder_size(file_path):
+    from pathlib import Path
+    try:
+        return Path(file_path).stat().st_size
+    except:
+        return 0

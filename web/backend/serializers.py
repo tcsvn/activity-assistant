@@ -41,6 +41,7 @@ class PersonStatisticSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = PersonStatistic
         fields = ('id', 'name', 'dataset', 'person', 'plot_hist_counts', 
+            'num_activities', 'num_recorded_activities',
             'plot_hist_cum_duration', 'plot_boxplot_duration',
             'plot_ridge_line', 'plot_heatmap_transitions'
             )
@@ -51,7 +52,9 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Dataset
         fields = ('id', 'name', 'path_to_folder', 'start_time', 'end_time', 
-            'person_statistics', 'plot_hist_on_off','plot_boxplot_on_duration',
+            'num_devices',  
+            'num_recorded_events', 'data_size', 'person_statistics', 
+            'plot_hist_on_off','plot_boxplot_on_duration',
             'plot_heatmap_trigger_one_day', 'plot_hist_trigger_time_diff',
             'plot_heatmap_trigger_time',
             'plot_heatmap_cross_correlation', 'plot_hist_counts'

@@ -1,15 +1,26 @@
-<div class="container mb-3">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-header"> Dataset</h5>
-            No experiment is running at the time.
-            A total of {{ num_devs }} devices will be used for recording:
-            <ul>
-                {%for name in device_lst %}
-                    <li>{{ name }}</li>
-                {% endfor %}
-            </ul>
-            To start an experiment head over to the <a href="../dashboard/">dashboard</a>.
-        </div>
+<div class="card">
+    <div class="card-body elegant-color-dark">
+        <h5 class="card-header"> Experiment</h5>
+        No experiment is running at the time.
+        A total of {{ num_devs }} devices will be used for recording:
+        <h6>Selected devices</h6>
+        <ul>
+            {%for name in device_lst %}
+                <li>{{ name }}</li>
+            {% endfor %}
+        </ul>
+        <h6>Selected persons</h6>
+        <ul>
+            {%for person in person_list %}
+                <li>{{ person.name }}</li>
+            {% endfor %}
+        </ul>
+        <h6>Selected activities</h6>
+        <ul>
+            {%for activity in activity_list %}
+                <li>{{ activity.name }}</li>
+            {% endfor %}
+        </ul>
+        To start an experiment head over to the <a href="../dashboard/">dashboard</a>.
     </div>
 </div>

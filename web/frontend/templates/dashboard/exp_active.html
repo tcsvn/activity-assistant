@@ -1,0 +1,37 @@
+<div class="card w-90 mb-2">
+    <div class="card-body">
+        <h5 class="card-title">Experiment: {{ dataset.name }} </h5>
+            <p class="card-text">
+                An experiment is currently conducted. Pausing the experiment adds a device
+                in the data that marks the beginning and end of the time interval not ment to be include in 
+                the data analysis.  
+                <ul>
+                    <li>start time:  {{ dataset.start_time }}</li>
+                    <li># devices:  3 </li>
+                </ul>
+            </p>
+            To get insights go to <a href="../dataset">dataset</a> and analyse stuff
+    </div>
+    <div class="card-footer">
+            <div class="btn-group shadow-0 float-right" role="group" aria-label="Basic example">
+                {% if experiment_status == 'running' %}
+                    <form class="form mr-1" action="{% url 'dashboard' %}" method="POST">
+                            {% csrf_token %}
+                        <input type="hidden" name="intent" value="pause experiment">
+                        <button type="submit" class="btn btn-outline-primary">Pause experiment</button>
+                    </form>
+                {% else %}
+                    <form class="form mr-1" action="{% url 'dashboard' %}" method="POST">
+                            {% csrf_token %}
+                        <input type="hidden" name="intent" value="continue experiment">
+                        <button type="submit" class="btn btn-outline-primary">continue experiment</button>
+                    </form>
+                {% endif %}
+                <form class="form" action="{% url 'dashboard' %}" method="POST">
+                        {% csrf_token %}
+                    <input type="hidden" name="intent" value="finish experiment">
+                    <button type="submit" class="btn btn-outline-danger">Finish experiment</button>
+                </form>
+            </div> 
+    </div>
+</div>

@@ -120,16 +120,41 @@ def gen_plots_persons(dataset, data, root_path):
         path_to_heatmap_transitions = path + heatmap_transitions_filename
         heatmap_transitions(data.df_activities, file_path=path_to_heatmap_transitions)
         ps.plot_heatmap_transitions = sub_path + heatmap_transitions_filename
+        
+        try:
+            ridge_line_filename = 'ridge_line.png'
+            path_to_ridge_line = path + ridge_line_filename
+            ridge_line(data.df_activities, file_path=path_to_ridge_line)
+            ps.plot_ridge_line = sub_path + ridge_line_filename
+        except:
+            pass
 
-        ridge_line_filename = 'ridge_line.png'
-        path_to_ridge_line = path + ridge_line_filename
-        ridge_line(data.df_activities, file_path=path_to_ridge_line)
-        ps.plot_ridge_line = sub_path + ridge_line_filename
         ps.save()
 
 def generate_device_analysis(dataset):
     """
     """
+    from frontend.util import get_line_numbers_file, get_folder_size
+    dataset.num_devices = get_line_numbers_file(
+        dataset.path_to_folder + 'device_mapping.csv') -1
+    dataset.num_recorded_events = get_line_numbers_file(
+        dataset.path_to_folder + 'devices.csv') -1
+    data_size = get_folder_size(
+        dataset.path_to_folder + 'devices.csv'
+        )
+    for ps in dataset.person_statistics.all():
+        ps.num_activities = len(Activity.objects.all())
+        act_file_path = ps.person.activity_file.path
+        ps.num_recorded_activities = get_line_numbers_file(
+            act_file_path) -1
+        ps.save()
+        data_size += get_folder_size(
+            act_file_path
+        )
+
+    dataset.data_size = data_size
+    dataset.save()
+
     import pyadlml.dataset._datasets.activity_assistant as act_assist
     data = act_assist.load(dataset.path_to_folder, 'admin')
 

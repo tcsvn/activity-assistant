@@ -24,13 +24,17 @@ class OverwriteStorage(FileSystemStorage):
         if self.exists(name):
             os.remove(os.path.join(settings.MEDIA_ROOT, name))
         return name
-        
+
 class Dataset(models.Model):
     # todo mark for deletion line below
     name = models.CharField(null=True, max_length=100)
     path_to_folder = models.CharField(null=True, max_length=100)
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(null=True)
+
+    num_devices = models.IntegerField(null=True)
+    num_recorded_events = models.IntegerField(null=True)
+    data_size = models.IntegerField(null=True)
 
     plot_hist_counts = models.ImageField(null=True)
     plot_hist_on_off = models.ImageField(null=True)
@@ -44,7 +48,9 @@ class PersonStatistic(models.Model):
     name = models.CharField(null=True, max_length=100)
     dataset = models.ForeignKey(Dataset, related_name="person_statistics", on_delete=models.CASCADE)
     activity_file = models.FileField(null=True) 
-    
+    num_activities = models.IntegerField(null=True)
+    num_recorded_activities = models.IntegerField(null=True)   
+
     plot_hist_counts = models.ImageField(null=True)
     plot_hist_cum_duration = models.ImageField(null=True)
     plot_boxplot_duration = models.ImageField(null=True)

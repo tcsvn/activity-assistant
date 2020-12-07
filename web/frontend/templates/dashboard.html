@@ -14,7 +14,13 @@
     <div class="container">
         {% include 'dashboard/4_panels.html' %}
 
-        {% include 'dashboard/experiment.html' %}
+
+        {% if not experiment_status == 'not_running' %}
+            {% include 'dashboard/exp_active.html' %}
+        {% else %}
+            {% include 'dashboard/exp_inactive.html' %}
+        {% endif %}
+
         {% if not experiment_active %}
             {% include 'dashboard/rt_node.html' %}
             {% if rt_node_running %}

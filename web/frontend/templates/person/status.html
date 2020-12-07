@@ -2,14 +2,14 @@
     <h3 class="card-header"> {{ person.name }}</h3>
     <div class="card-body">
         <div class="card-title"> <h5>Status</h5></div>
-        <ul class="list-group col-6">
+        <ul class="list-group list-group-flush col-6">
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div> Real-time prediction</div>
                 <div> {% if person.prediction %}
                         <p class="text-success mb-0">
                             running
                             {% else %}
-                        <p class="text-secondary mb-0">
+                        <p class="text-muted mb-0">
                         offline
                         {% endif %}
                     </p>
@@ -30,13 +30,13 @@
                     <div class="media-body"> 
                         {{ smartphone.name }}
                     </div>
-                    <p class="text-secondary mb-0"> not logging </p>
+                    <p class="text-muted mb-0"> not logging </p>
                 </li>
             {% endif %}
             {% if not smartphone %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div> smartphone </div>
-                    <div> <p class="text-secondary mb-0"> unregistered
+                    <div> <p class="text-muted mb-0"> unregistered
                                                                 </p>
                     </div>
                 </li>
@@ -44,7 +44,7 @@
             {% if smartphone %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Activities logged
-                    <span class="badge badge-primary badge-pill">11</span>
+                    <span class="badge bg-info rounded-pill">11</span>
                 </li>
             {% endif %}
             </ul>
