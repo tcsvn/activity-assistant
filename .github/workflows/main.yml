@@ -1,4 +1,4 @@
-name: 'CI'
+name: 'Publish master CI'
 on:
   push:
     branches: 
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Test build
+    name: Publish to all Arcs
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
@@ -22,4 +22,4 @@ jobs:
       with:
         args: |
           --all \
-          --target /data/build/prod
+          --target /data
