@@ -118,7 +118,7 @@ DATABASES = {
 }
 
 # experiment
-POLL_INTERVAL_LST = ['1s', '5s', '30s', '1m', '5m', '10m', '30m', '1h', '2h', '6h']
+POLL_INTERVAL_LST = ['5s', '1m', '10m', '30m', '2h', '6h']
 DATASET_PATH = DATA_ROOT + 'datasets/' # path where all the datasets lie
 ACTIVITY_FILE_NAME="activities_subject_%s.csv"
 DATA_FILE_NAME='devices.csv'
@@ -146,14 +146,13 @@ ENV_SETTINGS = environ.get('DJANGO_ENV') or 'development'
 if ENV_SETTINGS == 'development':
     try:
         from act_assist.local_settings.development import *
-        logger.error('using development settings')
     except ImportError:
-        # No local settings was found, skipping
-        pass
+        logger.error('couldn\'t import development settings')
+        raise
+
 elif ENV_SETTINGS == 'production':
     try:
         from act_assist.local_settings.production import *
-        logger.error('using production settings')
     except ImportError:
-        # No local settings was found, skipping
-        pass
+        logger.error('couldn\'t import development settings')
+        raise 

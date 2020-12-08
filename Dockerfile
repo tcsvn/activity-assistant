@@ -36,7 +36,7 @@ COPY web/act_assist/settings.py  /etc/opt/activity_assistant/
 COPY web/act_assist/local_settings/ /etc/opt/activity_assistant/local_settings/
 
 WORKDIR /home
-COPY build/prod/start.sh build/prod/inital_server.json ./
+COPY build/prod/start.sh build/prod/initial_server.json ./
 RUN chmod a+x start.sh
 
 # copy static files
