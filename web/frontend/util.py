@@ -155,3 +155,8 @@ def get_folder_size(file_path):
         return Path(file_path).stat().st_size
     except:
         return 0
+
+def refresh_hass_token():
+    srv = get_server()
+    srv.hass_api_token = os.environ.get('SUPERVISOR_TOKEN')
+    srv.save()

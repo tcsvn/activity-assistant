@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 import os 
 import hass_api.rest as hass_rest
-from frontend.util import get_server, \
+from frontend.util import get_server, refresh_hass_token, \
     get_device_names, get_activity_names, get_person_names 
 import frontend.experiment as experiment
 
@@ -15,6 +15,7 @@ class ConfigView(TemplateView):
         act_list = Activity.objects.all()
         url = 'config'
         exp_active = experiment.is_active()
+        refresh_hass_token()
 
         # get hass devices
         hass_devices = hass_rest.get_device_list(

@@ -6,7 +6,7 @@ import os
 import hass_api.rest as hass_rest
 from frontend.util import get_server, start_zero_conf_server,\
     get_device_names, get_activity_names, get_person_names,\
-    stop_zero_conf_server
+    stop_zero_conf_server, refresh_hass_token
 
 from frontend.views.config import conf_devices, conf_activities, conf_persons
 
@@ -70,9 +70,8 @@ class SetupView(TemplateView):
             and pings the activity assistant component
         """
         # get rest api key
-        srv = get_server()
-        srv.hass_api_token = os.environ.get('SUPERVISOR_TOKEN')
-        srv.save()
+        refresh_hass_token()
+
 
         # get server_address
         disc_url = settings.HASS_API_URL + '/discovery_info'
