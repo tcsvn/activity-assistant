@@ -3,9 +3,10 @@ FROM $BUILD_FROM
 
 ENV LANG C.UTF-8
 
-RUN apk add --update python3-dev py3-pip expect \ # todo remove expect
-    jpeg-dev zlib-dev gcc linux-headers musl-dev # to fix pillow error 
-
+# todo remove expect
+# to fix pillow error 
+RUN apk add --update python3-dev py3-pip expect \ 
+    jpeg-dev zlib-dev gcc linux-headers musl-dev 
 
 # pandas needs very long to intall over pip (has to be built)
 # therefore install from package repo
