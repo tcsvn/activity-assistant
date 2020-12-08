@@ -3,6 +3,9 @@ from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 from frontend.util import get_server
 
+import logging
+logger = logging.getLogger(__name__)
+
 # css frontend
 class PersonView(TemplateView):
     # list all persons and render them into the frontend
@@ -21,7 +24,6 @@ class PersonView(TemplateView):
             smartphone = None
         qr_code_data = self.generate_qr_code_data(person)
         sm_download_link = settings.ACT_ASSIST_RELEASE_LINK
-
         context = {
                 'person' : person,
                 'smartphone' : smartphone, 

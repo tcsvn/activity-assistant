@@ -140,6 +140,20 @@ URL_PERSONS = r'/person/'
 URL_SYNTHETIC_ACTIVITY = r'syntheticactivity'
 URL_DEVICE_COMPONENT = r'devcomp'
 
+# qrcode cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+    'qr-code': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'qr-code-cache',
+        'TIMEOUT': 3600
+    }
+}
+
+QR_CODE_CACHE_ALIAS = 'qr-code'
+
 
 from os import environ
 ENV_SETTINGS = environ.get('DJANGO_ENV') or 'development'

@@ -52,11 +52,10 @@
             >
               <div class="row">
                 <div class="col">
-                  <img
-                    class="img-fluid col-12"
-                    alt="Get it on Google Play"
-                    src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
-                  />
+                  <div class="media">
+                    {% qr_from_text qr_code_sm_download size=6 version=6 error_correction=L %}
+
+                  </div>
                 </div>
                 <div class="col">
                   <img
@@ -66,10 +65,11 @@
                   />
                 </div>
                 <div class="col">
-                  <div class="media">
-                    {% qr_from_text qr_code_sm_download size=6 version=6
-                    error_correction=L %}
-                  </div>
+                  <img
+                    class="img-fluid col-12"
+                    alt="Get it on Google Play"
+                    src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
+                  />
                 </div>
               </div>
             </div>
@@ -81,8 +81,7 @@
             >
               <div class="media">
                 <div class="aligned-self-start mr-3">
-                  {% qr_from_text qr_code_data size=8 version=8
-                  error_correction=L %}
+                  {% qr_from_text qr_code_data size=8 version=8 error_correction=L %}
                 </div>
                 <div class="media-body">
                   <p class="mb-0">
