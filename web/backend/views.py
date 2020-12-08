@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from django.views.generic import TemplateView
 from django.shortcuts import render
-from act_assist import settings
+import settings
 import logging
 from django.db.models.signals import pre_save
 from django.dispatch import receiver

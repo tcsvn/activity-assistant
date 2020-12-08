@@ -1,18 +1,15 @@
 wheel
 # django and rest framework
-django
+#django
 django-qr-code
 djangorestframework
-pygments
+#pygments
 coreapi
-Pillow
-zeroconf
+#Pillow
+#zeroconf
 
 # rt_node and data science stuff
 asyncws
 pyadlml
-sqlalchemy
-aiohttp
-
-# webserver (production)
-#gunicorn
+#sqlalchemy
+#aiohttp

@@ -1,16 +1,16 @@
 """
-WSGI config for hassbrain_web project.
+WSGI config for activity-assistant project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/2.1/howto/deployment/wsgi/
 """
 
-import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'act_assist.settings')
+# TODO delete
+import os
+#os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'act_assist.settings')
 
 application = get_wsgi_application()

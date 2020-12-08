@@ -4,14 +4,13 @@ from django.urls import path, re_path
 from rest_framework.routers import DefaultRouter
 from rest_framework.schemas import get_schema_view
 from backend import views
-from act_assist import settings
-from act_assist import settings as set
+import settings
 
 API_TITLE='Activity-assistant API'
 API_LINK='api/v1'
 
 router = DefaultRouter()
-router.register(set.URL_SERVER, views.ServerViewSet)
+router.register(settings.URL_SERVER, views.ServerViewSet)
 #router.register(r'realtimenode', views.RealTimeNodeViewSet)
 #router.register(set.URL_DEVICE_PREDICTIONS, views.DevicePredictionViewSet)
 #router.register(set.URL_ACTIVITY_PREDICTIONS, views.ActivityPredictionViewSet)

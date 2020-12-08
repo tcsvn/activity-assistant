@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -111,7 +113,7 @@ MEDIA_ROOT = DATA_ROOT + 'media/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': DATA_ROOT + '/db.sqlite3',
+        'NAME': DATA_ROOT + 'db.sqlite3',
     }
 }
 
@@ -144,12 +146,14 @@ ENV_SETTINGS = environ.get('DJANGO_ENV') or 'development'
 if ENV_SETTINGS == 'development':
     try:
         from act_assist.local_settings.development import *
+        logger.error('using development settings')
     except ImportError:
         # No local settings was found, skipping
         pass
 elif ENV_SETTINGS == 'production':
     try:
         from act_assist.local_settings.production import *
+        logger.error('using production settings')
     except ImportError:
         # No local settings was found, skipping
         pass

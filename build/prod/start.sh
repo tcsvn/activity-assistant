@@ -9,10 +9,11 @@ export DJANGO_SETTINGS_MODULE=settings
 
 
 if [ ! -e $CONTAINER_ALREADY_STARTED ]; then
+    mkdir -p /data/
     touch $CONTAINER_ALREADY_STARTED
-    echo $PWD
-    python3 manage.py migrate
-    python3 manage.py loaddata /home/minimal.json
+    python3 manage.py makemigrations
+    python3 manage.py migrate --run-syncdb
+    python3 manage.py loaddata /home/inital_server.json
 fi
 
 
