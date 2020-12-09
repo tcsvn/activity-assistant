@@ -39,8 +39,6 @@ class ServerViewSet(viewsets.ModelViewSet):
     #def perform_create(self, serializer):
     #    serializer.save(owner=self.request.user)
 
-    def perform_update(self, serializer):
-        pass
 
 class SyntheticActivityViewSet(viewsets.ModelViewSet):
     """
@@ -305,7 +303,6 @@ class PersonViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions.
-    Additionally we also provide an extra `highlight` action.
     """
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
