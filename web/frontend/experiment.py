@@ -130,18 +130,16 @@ def start(request):
     srv.save()
 
     # 2. create folders and inital files
-
-
     Path(ds.path_to_folder).mkdir(mode=0o777, parents=True, exist_ok=False)
     create_data_file(ds.path_to_folder)
-    create_activity_files(settings.MEDIA_ROOT, Person.objects.all()) 
-    create_device_mapping_file(ds.path_to_folder) 
+    create_device_mapping_file(ds.path_to_folder)
 
     # TODO save prior information about persons
     # TODO save room assignments of sensors and activities
 
     # 3. mark all smartphone dirty and delete existing activity files
     for person in Person.objects.all():
+        person.reset_activity_file()
         if hasattr(person, 'smartphone') and person.smartphone is not None:
             person.smartphone.synchronized = False
             person.smartphone.save()

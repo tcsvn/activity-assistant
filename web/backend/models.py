@@ -8,6 +8,12 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 import os
+import logging
+from pyadlml.dataset.activities import _create_activity_df
+from django.core.files import File
+
+
+logger = logging.getLogger(__name__)
 #from django.db.models.signals import post_save
 #from django.dispatch import receiver
 #from rest_framework.authtoken.models import Token
@@ -71,6 +77,16 @@ class Person(models.Model):
         # one device can't alter the anything but its own person
         #User.objects.create_user(username=self.name, email='test@test.de', password='test')
         super(Person, self).save(*args, **kwargs)
+    
+    def reset_activity_file(self):
+        """ creates inital and assigns activity file
+        File looks like this
+            start_time, end_time, activity
+        """
+        fp = settings.MEDIA_ROOT + settings.ACTIVITY_FILE_NAME%(self.name)
+        _create_activity_df().to_csv(fp, sep=',', index=False)
+        self.activity_file = File(open(fp))
+        self.save()
 
 # A Location presents a vertice in a Graph 
 # Graph := (G, E)
