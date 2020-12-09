@@ -112,11 +112,15 @@ def start(request):
     Parameters
     ----------
     request : 
+
+    Returns
+    -------
+        True if it was successfull
     """
     ds_name = request.POST.get("name","")
     try:
         Dataset.objects.get(name=ds_name)
-        return
+        return False
     except:
         pass
 
@@ -152,6 +156,7 @@ def start(request):
         
     # 4. start logging service that polls data from home assistant
     start_updater_service()
+    return True
 
 def pause():
     """ indicates to pause logging on AA level and send a message to 

@@ -9,7 +9,6 @@ import signal
 
 class DashboardView(TemplateView):
 
-
     def is_rt_node_running(self):
         srv = Server.objects.all()[0]
         try:
@@ -17,7 +16,13 @@ class DashboardView(TemplateView):
         except:
             return False
 
-    def create_context(self):
+    def create_context(self, add_context=None):
+        """
+        Parameters
+        ----------
+        add_context : dict
+            additional context to set to the normal one
+        """
         person_list = Person.objects.all()
         device_list = Device.objects.all()
         activity_list = Activity.objects.all()
@@ -52,6 +57,8 @@ class DashboardView(TemplateView):
         }
         if is_exp_active:
             context['dataset'] = srv.dataset
+        if add_context is not None:
+            context.update(add_context)
         return context
 
 
@@ -101,19 +108,21 @@ class DashboardView(TemplateView):
 
     def post(self, request):
         intent = request.POST.get("intent","")
+        add_context = {}
         if intent == "run rt_node":
             self.run(request)
         elif intent == "stop rt_node":
             self.stop()
         elif intent == "start experiment":
-            experiment.start(request)
+            if not experiment.start(request):
+                add_context['exp_duplicate_names'] = True
         elif intent == "pause experiment":
             experiment.pause()
         elif intent == "continue experiment":
             experiment.resume()
         elif intent == "finish experiment":
             experiment.finish()
-        context = self.create_context()
+        context = self.create_context(add_context)
         return render(request, 'dashboard.html', context)
 
     def get(self, request):

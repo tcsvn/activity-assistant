@@ -20,6 +20,14 @@
         {% else %}
             {% include 'dashboard/exp_inactive.html' %}
         {% endif %}
+        {% if exp_duplicate_names %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Experiment could net be created!</strong> Check for duplicate names
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
 
         {% if not experiment_active %}
             {% include 'dashboard/rt_node.html' %}
