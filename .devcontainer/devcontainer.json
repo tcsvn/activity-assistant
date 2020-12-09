@@ -17,6 +17,5 @@
 		"terminal.integrated.shell.linux": "/bin/bash"
 	},
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/test_hassio/share,type=bind,consistency=delegated",
-	"workspaceFolder": "/workspaces/test_hassio/share",
-	"mounts":["source=${localWorkspaceFolder}/build/dev,target=/workspaces/test_hassio/addons/local,type=bind,consistency=delegated"]
+	"workspaceFolder": "/workspaces/test_hassio/share"
 }
