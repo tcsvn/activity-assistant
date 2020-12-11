@@ -47,18 +47,25 @@ class ConfigView(TemplateView):
 
     def post(self, request):
         from_section = request.POST.get("from", "")
-        assert from_section in ["conf_devices", "conf_persons", "conf_activities", "conf_server"]
+        assert from_section in ["conf_devices", "conf_persons",\
+             "conf_activities", "conf_server", "debug"]
         if from_section == 'conf_devices': 
             conf_devices(request)
         elif from_section == 'conf_persons': 
             conf_persons(request)
         elif from_section == 'conf_activities': 
             conf_activities(request)
-        else:
+        elif from_section == 'conf_server':
             conf_server(request)
+        elif from_section == 'debug':
+            debug(request)
 
         context = self.get_context()
         return render(request, 'config.html', context)
+
+def debug(request):
+    from frontend.util import collect_data_from_hass
+    collect_data_from_hass()
 
 def conf_server(request):
     srv = get_server()

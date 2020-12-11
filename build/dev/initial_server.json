@@ -11,6 +11,7 @@
     "is_polling": false,
     "poll_interval": "10m",
     "dataset": null,
+    "time_zone": null,
     "zero_conf_pid": null,
     "poll_service_pid": null,
     "webhook_count": 0

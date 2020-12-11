@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 import os
 import logging
+from pathlib import Path
 from pyadlml.dataset.activities import _create_activity_df
 from django.core.files import File
 
@@ -35,7 +36,7 @@ class Dataset(models.Model):
     # todo mark for deletion line below
     name = models.CharField(null=True, max_length=100)
     path_to_folder = models.CharField(null=True, max_length=100)
-    start_time = models.DateTimeField(auto_now_add=True)
+    start_time = models.DateTimeField(null=True)
     end_time = models.DateTimeField(null=True)
 
     num_devices = models.IntegerField(null=True)
@@ -77,6 +78,12 @@ class Person(models.Model):
         # one device can't alter the anything but its own person
         #User.objects.create_user(username=self.name, email='test@test.de', password='test')
         super(Person, self).save(*args, **kwargs)
+
+        # check if there is a file attached to person if not create empty one
+        try:
+            self.activity_file.path
+        except ValueError:
+            self.reset_activity_file()
     
     def reset_activity_file(self):
         """ creates inital and assigns activity file
@@ -84,7 +91,10 @@ class Person(models.Model):
             start_time, end_time, activity
         """
         fp = settings.MEDIA_ROOT + settings.ACTIVITY_FILE_NAME%(self.name)
-        _create_activity_df().to_csv(fp, sep=',', index=False)
+        output_dir = Path(settings.MEDIA_ROOT)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        tmp = _create_activity_df()
+        tmp.to_csv(fp, sep=',', index=False)
         self.activity_file = File(open(fp))
         self.save()
 
@@ -188,4 +198,5 @@ class Server(models.Model):
     dataset = models.ForeignKey(Dataset, null=True, blank=True, on_delete=models.CASCADE, related_name='synthetic_activities')
     zero_conf_pid = models.IntegerField(null=True)
     poll_service_pid = models.IntegerField(null=True)
+    time_zone = models.CharField(max_length=20, null=True)
     webhook_count = models.IntegerField(default=0)

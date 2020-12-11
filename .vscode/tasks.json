@@ -39,7 +39,7 @@
         },{
             "label": "cp hass_config 2 hass container",
             "type": "shell",
-            "command": "/workspaces/test_hassio/share/build/dev/copy_hass_config.sh",
+            "command": "/workspaces/test_hassio/share/.devcontainer/copy_hass_config.sh",
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -60,7 +60,7 @@
         {
             "label": "AA migrate django",
             "type": "shell",
-            "command": "docker exec -ti addon_7efcd0a6_act_assist_dev bash -c \"cd /share; python3 web/manage.py makemigrations; python3 web/manage.py migrate\"",
+            "command": "docker exec -ti addon_7efcd0a6_act_assist_dev bash -c \"export PYTHONPATH=/share/web/act_assist; cd /share; python3 web/manage.py makemigrations; python3 web/manage.py migrate\"",
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -80,7 +80,7 @@
         },{
             "label": "AA build production amd",
             "type": "shell",
-            "command": "docker build -f build/prod/Dockerfile --build-arg BUILD_FROM=\"homeassistant/amd64-base:latest\" -t tchr157/activity-assistant-amd64:latest .",
+            "command": "docker build -f Dockerfile --build-arg BUILD_FROM=\"homeassistant/amd64-base:latest\" -t tchr157/activity-assistant-amd64:latest .",
             "group": "test",
             "presentation": {
                 "reveal": "always",

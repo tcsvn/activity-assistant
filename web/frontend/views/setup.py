@@ -6,9 +6,12 @@ import os
 import hass_api.rest as hass_rest
 from frontend.util import get_server, start_zero_conf_server,\
     get_device_names, get_activity_names, get_person_names,\
-    stop_zero_conf_server, refresh_hass_token
+    stop_zero_conf_server, refresh_hass_token, get_person_hass_names
 
 from frontend.views.config import conf_devices, conf_activities, conf_persons
+import logging
+logger = logging.getLogger(__name__)
+
 
 """
 this view connects to homeassistant and gets all the relevant data to 
@@ -51,7 +54,7 @@ class SetupView(TemplateView):
             hass_users = hass_rest.get_user_names(
                 settings.HASS_API_URL, srv.hass_api_token,
             )
-            hass_users = list(set(hass_users).difference(set(get_person_names())))
+            hass_users = list(set(hass_users).difference(set(get_person_hass_names())))
             context['hass_user_list'] = hass_users
             context['aa_user_list'] = Person.objects.all()
         return context
@@ -72,11 +75,17 @@ class SetupView(TemplateView):
         # get rest api key
         refresh_hass_token()
 
-
         # get server_address
+        srv = get_server()
         disc_url = settings.HASS_API_URL + '/discovery_info'
         tmp = hass_rest.get(disc_url, srv.hass_api_token)
         srv.server_address = tmp['base_url']
+
+        srv.time_zone = hass_rest.get_time_zone(
+            settings.HASS_API_URL,
+            srv.hass_api_token
+        )
+
         srv.save()
 
         # only advance if the component was installed at hass site
@@ -84,7 +93,10 @@ class SetupView(TemplateView):
         stop_zero_conf_server()
         self._increment_one_step()
 
+
     def post_step1(self, request):
+        """ select poll interval
+        """
         p_int = str(request.POST.get("poll_interval", ""))
         assert p_int in settings.POLL_INTERVAL_LST
         srv = get_server()
@@ -93,6 +105,8 @@ class SetupView(TemplateView):
         self._increment_one_step()
 
     def post_step2(self, request):
+        """ select devices to track
+        """
         intent = request.POST.get("intent","")
         assert intent in ['track', 'remove', 'next_step']
 
@@ -102,6 +116,8 @@ class SetupView(TemplateView):
             conf_devices(request)
 
     def post_step3(self, request):
+        """ create activities
+        """
         intent = request.POST.get("intent", "")
         assert intent in ['add', 'delete', 'next_step']
         if intent == 'next_step':
@@ -110,6 +126,8 @@ class SetupView(TemplateView):
             conf_activities(request)
 
     def post_step4(self, request):
+        """ track persons
+        """
         intent = request.POST.get("intent","")
         assert intent in ['track', 'remove', 'next_step', 'add']
         if intent == 'next_step':

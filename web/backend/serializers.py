@@ -34,8 +34,8 @@ class ServerSerializer(serializers.HyperlinkedModelSerializer):
         model = Server
         fields = ('server_address', 'hass_api_token', 'setup',
                   'selected_model', 'realtime_node', 'dataset', 'is_polling', 
-                  'poll_interval', 'hass_comp_installed', 'zero_conf_pid',
-                  'poll_service_pid', 'webhook_count')
+                  'poll_interval', 'hass_comp_installed', 'time_zone', 
+                  'zero_conf_pid', 'poll_service_pid', 'webhook_count')
 
 class PersonStatisticSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

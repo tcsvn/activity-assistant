@@ -7,7 +7,17 @@
 
 
 {% block content %}
+<!-- DEBUG START-->
 <div class="container">
+    <form class="form-inline" action="{%url url %}" method="post"> 
+    {% csrf_token %}
+      <button type="submit" name="intent" value="debug" class="btn btn-danger mb-2">
+        debug
+      </button>
+      <input type="hidden" name="from" value="debug">
+    </form>
+<!-- DEBUG END-->
+
   <div class='row'>
     <h4>Server</h4>
     {% include "config/server.html" %}

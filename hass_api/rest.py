@@ -1,5 +1,6 @@
 import requests
-
+import logging
+logger = logging.getLogger(__name__)
 
 def get(url, token):
     headers = {
@@ -30,6 +31,11 @@ def get_config_folder(url, token):
     url = url + "/api/config"
     resp = get(url, token)
     return resp['config_dir']
+
+def get_time_zone(url, token):
+    url = url + "/config"
+    resp = get(url, token)
+    return resp['time_zone']
 
 def get_device_list(url, token):
     devs = get(url + '/states', token)
