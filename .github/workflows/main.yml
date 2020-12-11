@@ -22,4 +22,5 @@ jobs:
       with:
         args: |
           --all \
+           --no-cache \
           --target /data
