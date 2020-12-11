@@ -122,6 +122,7 @@ DATABASES = {
 POLL_INTERVAL_LST = ['5s', '1m', '10m', '30m', '2h', '6h']
 DATASET_PATH = DATA_ROOT + 'datasets/' # path where all the datasets lie
 ACTIVITY_FILE_NAME="activities_subject_%s.csv"
+ACTIVITY_MAPPING_FILE_NAME="activity_mapping.csv"
 DATA_FILE_NAME='devices.csv'
 DATA_MAPPING_FILE_NAME='device_mapping.csv'
 PRIOR_ACTIVITY_FILE_NAME = "prior_activities_subject_%s.csv"

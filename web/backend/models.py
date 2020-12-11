@@ -64,6 +64,13 @@ class PersonStatistic(models.Model):
     plot_ridge_line = models.ImageField(null=True)
     plot_heatmap_transitions = models.ImageField(null=True)
 
+    def get_activity_fp(self):
+        """ returns filepath to activity file
+        """
+        return os.path.join(self.dataset.path_to_folder,
+            settings.ACTIVITY_FILE_NAME%(self.name)
+        )
+
 class Person(models.Model):
     name = models.CharField(max_length=20, blank=True, default='')
     hass_name = models.CharField(max_length=20, blank=True, default='')

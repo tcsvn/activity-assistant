@@ -1,89 +1,78 @@
 <!-- Accordion wrapper -->
 <div class="accordion" id="accordionExample">
-    {% for ds in dataset_list %}
-        {% if ds.name != dataset.name %} <!-- don't print the current experiment-->
-    <!-- Single collapse -->
-    <div id="heading{{ds.id}}">
-      <div class="btn-toolbar justify-content-between" role="toolbar">
+  {% for ds in dataset_list %} {% if ds.name != dataset.name %}
+  <!-- don't print the current experiment-->
+  <!-- Single collapse -->
+  <div id="heading{{ds.id}}">
+    <div class="btn-toolbar justify-content-between" role="toolbar">
       <h2>
         <button
           class="btn btn-link btn-block text-left pl-3"
-          type="button" data-toggle="collapse" data-target="#collapse{{ds.id}}"
-          aria-expanded="true" aria-controls="collapse{{ds.id}}">
-            {{ds.name}}
+          type="button"
+          data-toggle="collapse"
+          data-target="#collapse{{ds.id}}"
+          aria-expanded="true"
+          aria-controls="collapse{{ds.id}}">
+          {{ds.name}}
         </button>
       </h2>
-                        <div class="btn-group shadow-0">
-                            <form class="form mr-1" action="{% url 'dataset' %}" method="POST">
-                                {% csrf_token %}
-                                <input type="hidden" name="dataset_name" value="{{ds.name}}">
-                                <button type="submit" class="btn btn-link" name="intent" value="export_dataset">export data</button>
-                            </form>
+      <div class="btn-group shadow-0">
+        <form class="form mr-1" action="{% url 'dataset' %}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="dataset_name" value="{{ds.name}}" />
+          <button
+            type="submit"
+            class="btn btn-link"
+            name="intent"
+            value="export_dataset">
+            export data
+          </button>
+        </form>
 
-                            <form class="form" action="{% url 'dataset' %}" method="POST">
-                                {% csrf_token %}
+        <form class="form" action="{% url 'dataset' %}" method="POST">
+          {% csrf_token %}
 
-                                <input type="hidden" name="dataset_name" value="{{ds.name}}">
-                                <button type="submit" class="btn btn-danger" name="intent" value="delete_dataset">delete data</button>
-                            </form>
-                        </div>
+          <input type="hidden" name="dataset_name" value="{{ds.name}}" />
+          <button
+            type="submit"
+            class="btn btn-danger"
+            name="intent"
+            value="delete_dataset">
+            delete data
+          </button>
+        </form>
+      </div>
     </div>
-    </div>
-  
-    <div
-      id="collapse{{ds.id}}"
-      class="collapse pl-3"
-      aria-labelledby="heading{{ds.id}}"
-      data-parent="#accordionExample"
-    >
-                        <div class="col-6">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex justify-content-between ">
-                                    Start time
-                                    <span>{{ ds.start_time }}</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between ">
-                                    End time
-                                    <span>{{ ds.end_time }}</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between ">
-                                    # devices 
-                                    <span> ... </span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between ">
-                                    # activities
-                                    <span> ... </span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between ">
-                                    # recorded events
-                                    <span> ... </span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between ">
-                                    # recorded activities
-                                    <span> ... </span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between ">
-                                    More to come
-                                    <span> ... </span>
-                                </li>
-                            </ul>
-                            <div class="row">
-                                <div class="col">
-                        go to see
-                            <a href="../dataset/{{ ds.id }}">  specifc analytics </a>
-</div>
-                                <div class="col">
-                            <form class="form" action="{% url 'dataset' %}" method="POST">
-                                {% csrf_token %}
-
-                                <input type="hidden" name="dataset_name" value="{{ds.name}}">
-                                <button type="submit" class="btn btn-dark" name="intent" value="generate_analysis">reanalyse</button>
-                            </form>
-
-</div>
-                        </div>
-                        </div>
-    </div>
-            {% endif %}
-    {% endfor %}
   </div>
+
+  <div
+    id="collapse{{ds.id}}"
+    class="collapse pl-3"
+    aria-labelledby="heading{{ds.id}}"
+    data-parent="#accordionExample">
+    <div class="col-6">
+      {% include 'dataset/dataset_statistic.html'%}
+      <div class="row">
+        <div class="col">
+          go to see
+          <a href="../dataset/{{ ds.id }}"> specifc analytics </a>
+        </div>
+        <div class="col">
+          <form class="form" action="{% url 'dataset' %}" method="POST">
+            {% csrf_token %}
+
+            <input type="hidden" name="dataset_name" value="{{ds.name}}" />
+            <button
+              type="submit"
+              class="btn btn-dark"
+              name="intent"
+              value="generate_analysis">
+              reanalyse
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %} {% endfor %}
+</div>

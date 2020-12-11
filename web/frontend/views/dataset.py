@@ -7,9 +7,29 @@ import pathlib
 import logging
 from django.http import FileResponse
 from frontend.experiment import copy_actfiles2dataset
-from frontend.util import collect_data_from_hass
-
+from frontend.util import collect_data_from_hass, get_line_numbers_file, get_folder_size
 logger = logging.getLogger(__name__)
+
+def get_datasets_personal_statistics():
+    """ creates a dictionary for every dataset with statistics like
+        number of persons, total number of recorded activities
+        and number of activities. This is used for display in templates
+    """
+    srv = get_server()
+    hackdct = []
+    for ds in Dataset.objects.all():
+        if srv.dataset is not None and srv.dataset.name == ds.name:
+            continue
+        tmp = {}
+        tmp['ds_name'] = ds.name
+        num_rec_acts = 0
+        tmp['num_persons'] = len(ds.person_statistics.all())
+        for ps in ds.person_statistics.all():
+            tmp['num_activities']  = ps.num_activities
+            num_rec_acts += ps.num_recorded_activities
+        tmp['num_recorded_activities'] = num_rec_acts
+        hackdct.append(tmp)
+    return hackdct
 
 # css frontend
 class DatasetView(TemplateView):
@@ -18,7 +38,12 @@ class DatasetView(TemplateView):
         context = {}
         context['person_list'] = Person.objects.all()
         context['dataset_list'] = Dataset.objects.all()
+        context['activity_list'] = Activity.objects.all()
+
         srv = get_server()
+
+        context['datasets_perstats'] = get_datasets_personal_statistics()
+
         if srv.dataset is not None:
             context['dataset'] = srv.dataset
             context['experiment_running'] = True
@@ -92,35 +117,48 @@ class DatasetView(TemplateView):
         context = self.create_context(request)
         return render(request, 'dataset.html', context)
 
-def gen_plots_persons(dataset, data, root_path):
+def gen_plots_persons(dataset, data):
     from pyadlml.dataset.plot.activities import hist_counts, boxplot_duration, \
         hist_cum_duration, heatmap_transitions, ridge_line
 
+    root_path = settings.MEDIA_ROOT + dataset.name + '/'
     for ps in dataset.person_statistics.all():
         sub_path = dataset.name + '/plots/' + ps.name + '/'
         path = settings.MEDIA_ROOT + sub_path
 
-        # generate plots
-        hist_counts_filename = 'hist_counts.png'
-        path_to_hist_counts = path + hist_counts_filename
-        hist_counts(data.df_activities, file_path=path_to_hist_counts)
-        ps.plot_hist_counts = sub_path + hist_counts_filename
+        try:
+            hist_counts_filename = 'hist_counts.png'
+            path_to_hist_counts = path + hist_counts_filename
+            hist_counts(data.df_activities, file_path=path_to_hist_counts)
+            ps.plot_hist_counts = sub_path + hist_counts_filename
+        except:
+            pass
 
-        boxplot_duration_filename = 'boxplot_duration.png'
-        path_to_boxplot_duration = path + boxplot_duration_filename
-        boxplot_duration(data.df_activities, file_path=path_to_boxplot_duration)
-        ps.plot_boxplot_duration = sub_path + boxplot_duration_filename
+        try:
+            boxplot_duration_filename = 'boxplot_duration.png'
+            path_to_boxplot_duration = path + boxplot_duration_filename
+            boxplot_duration(data.df_activities, file_path=path_to_boxplot_duration)
+            ps.plot_boxplot_duration = sub_path + boxplot_duration_filename
+        except:
+            pass
 
-        hist_cum_duration_filename = 'hist_cum_duration.png'
-        path_to_hist_cum_duration = path + hist_cum_duration_filename
-        hist_cum_duration(data.df_activities, file_path=path_to_hist_cum_duration)
-        ps.plot_hist_cum_duration = sub_path + hist_cum_duration_filename
+        try:
+            hist_cum_duration_filename = 'hist_cum_duration.png'
+            path_to_hist_cum_duration = path + hist_cum_duration_filename
+            hist_cum_duration(data.df_activities, file_path=path_to_hist_cum_duration)
+            ps.plot_hist_cum_duration = sub_path + hist_cum_duration_filename
+        except:
+            pass
+ 
+        try:
+            heatmap_transitions_filename = 'heatmap_transitions.png'
+            path_to_heatmap_transitions = path + heatmap_transitions_filename
+            heatmap_transitions(data.df_activities, file_path=path_to_heatmap_transitions)
+            ps.plot_heatmap_transitions = sub_path + heatmap_transitions_filename
+        except:
+            pass
 
-        heatmap_transitions_filename = 'heatmap_transitions.png'
-        path_to_heatmap_transitions = path + heatmap_transitions_filename
-        heatmap_transitions(data.df_activities, file_path=path_to_heatmap_transitions)
-        ps.plot_heatmap_transitions = sub_path + heatmap_transitions_filename
-        
+       
         try:
             ridge_line_filename = 'ridge_line.png'
             path_to_ridge_line = path + ridge_line_filename
@@ -131,71 +169,101 @@ def gen_plots_persons(dataset, data, root_path):
 
         ps.save()
 
-def generate_device_analysis(dataset):
+def collect_person_statistics(ps):
+    """ gets the number of activities, number of recorded activities and activity file datasize
     """
+    activity_fp = ps.get_activity_fp()
+    num_activities = get_line_numbers_file(
+        ps.dataset.path_to_folder + settings.ACTIVITY_MAPPING_FILE_NAME) -1
+    num_recorded_activities = get_line_numbers_file(activity_fp) -1
+    data_size = get_folder_size(activity_fp)
+    return num_activities, num_recorded_activities, data_size
+
+def collect_device_statistics(dataset):
+    """ gets the number of devices, number of recorded events and device file datasize
     """
-    from frontend.util import get_line_numbers_file, get_folder_size
-    dataset.num_devices = get_line_numbers_file(
-        dataset.path_to_folder + 'device_mapping.csv') -1
-    dataset.num_recorded_events = get_line_numbers_file(
-        dataset.path_to_folder + 'devices.csv') -1
+    num_devices = get_line_numbers_file(
+        dataset.path_to_folder + settings.DATA_MAPPING_FILE_NAME) -1
+    num_recorded_events = get_line_numbers_file(
+        dataset.path_to_folder + settings.DATA_FILE_NAME) -1
     data_size = get_folder_size(
-        dataset.path_to_folder + 'devices.csv'
+        dataset.path_to_folder + settings.DATA_FILE_NAME
         )
+    return num_devices, num_recorded_events, data_size
+
+def collect_dataset_statistics(dataset):
+    num_devices, num_rec_events, data_size = collect_device_statistics(dataset)
+    dataset.num_devices = num_devices
+    dataset.num_recorded_events = num_rec_events
+
     for ps in dataset.person_statistics.all():
-        ps.num_activities = len(Activity.objects.all())
-        act_file_path = ps.person.activity_file.path
-        ps.num_recorded_activities = get_line_numbers_file(
-            act_file_path) -1
+        num_acts, num_rec_acts, act_data_size = collect_person_statistics(ps) 
+        ps.num_activities = num_acts
+        ps.num_recorded_activities = num_rec_acts
         ps.save()
-        data_size += get_folder_size(
-            act_file_path
-        )
+        data_size += act_data_size
 
     dataset.data_size = data_size
     dataset.save()
-
+    
+def generate_device_analysis(dataset):
+    """
+    """
     import pyadlml.dataset._datasets.activity_assistant as act_assist
     data = act_assist.load(dataset.path_to_folder, 'admin')
 
-    root_path = settings.MEDIA_ROOT + dataset.name + '/'
+    collect_dataset_statistics(dataset)
+    gen_plots_persons(dataset, data)
+    gen_plots_devices(dataset, data)
 
-    gen_plots_persons(dataset, data, root_path)
 
+def gen_plots_devices(dataset, data):
     from pyadlml.dataset.plot.devices import hist_trigger_time_diff, boxplot_on_duration, \
         heatmap_trigger_one_day, heatmap_trigger_time, heatmap_cross_correlation, \
         hist_on_off, hist_counts
 
-    logger.error(str(data.df_devices.head()))
     sub_path = dataset.name + '/plots/'
     path = settings.MEDIA_ROOT + sub_path
-    logger.error('path: ' + path)
-    logger.error('subpath: ' + sub_path)
 
-    hist_trigger_time_diff_filename = 'hist_trigger_time_diff.png'
-    path_to_hist_trigger_time_diff = path + hist_trigger_time_diff_filename
-    hist_trigger_time_diff(data.df_devices, file_path=path_to_hist_trigger_time_diff)
-    dataset.plot_hist_trigger_time_diff = sub_path + hist_trigger_time_diff_filename
+    try:
+        hist_trigger_time_diff_filename = 'hist_trigger_time_diff.png'
+        path_to_hist_trigger_time_diff = path + hist_trigger_time_diff_filename
+        hist_trigger_time_diff(data.df_devices, file_path=path_to_hist_trigger_time_diff)
+        dataset.plot_hist_trigger_time_diff = sub_path + hist_trigger_time_diff_filename
+    except:
+        pass
 
-    heatmap_trigger_time_filename = 'heatmap_trigger_time.png'
-    path_to_heatmap_trigger_time = path + heatmap_trigger_time_filename
-    heatmap_trigger_time(data.df_devices, file_path=path_to_heatmap_trigger_time)
-    dataset.plot_heatmap_trigger_time = sub_path + heatmap_trigger_time_filename
+    try:
+        heatmap_trigger_time_filename = 'heatmap_trigger_time.png'
+        path_to_heatmap_trigger_time = path + heatmap_trigger_time_filename
+        heatmap_trigger_time(data.df_devices, file_path=path_to_heatmap_trigger_time)
+        dataset.plot_heatmap_trigger_time = sub_path + heatmap_trigger_time_filename
+    except:
+        pass
 
-    heatmap_trigger_one_day_filename = 'heatmap_trigger_one_day.png'
-    path_to_heatmap_trigger_one_day = path + heatmap_trigger_one_day_filename
-    heatmap_trigger_one_day(data.df_devices, file_path=path_to_heatmap_trigger_one_day)
-    dataset.plot_heatmap_trigger_one_day = sub_path + heatmap_trigger_one_day_filename
 
-    hist_counts_filename = 'hist_counts.png'
-    path_to_hist_counts = path + hist_counts_filename
-    hist_counts(data.df_devices, file_path=path_to_hist_counts)
-    dataset.plot_hist_counts = sub_path + hist_counts_filename
+    try:
+        heatmap_trigger_one_day_filename = 'heatmap_trigger_one_day.png'
+        path_to_heatmap_trigger_one_day = path + heatmap_trigger_one_day_filename
+        heatmap_trigger_one_day(data.df_devices, file_path=path_to_heatmap_trigger_one_day)
+        dataset.plot_heatmap_trigger_one_day = sub_path + heatmap_trigger_one_day_filename
+    except:
+        pass
 
-    assign_plot_obj('boxplot_on_duration.png', boxplot_on_duration, dataset.plot_boxplot_on_duration,
-                        path, sub_path, data.df_devices)
-    assign_plot_obj('hist_on_off.png', hist_on_off, dataset.plot_hist_on_off,
-                        path, sub_path, data.df_devices)
+
+    try:
+        hist_counts_filename = 'hist_counts.png'
+        path_to_hist_counts = path + hist_counts_filename
+        hist_counts(data.df_devices, file_path=path_to_hist_counts)
+        dataset.plot_hist_counts = sub_path + hist_counts_filename
+    except:
+        pass
+
+
+    #assign_plot_obj('boxplot_on_duration.png', boxplot_on_duration, dataset.plot_boxplot_on_duration,
+    #                    path, sub_path, data.df_devices)
+    #assign_plot_obj('hist_on_off.png', hist_on_off, dataset.plot_hist_on_off,
+    #                    path, sub_path, data.df_devices)
 
     dataset.save()
 

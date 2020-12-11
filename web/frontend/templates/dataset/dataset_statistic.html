@@ -1,0 +1,38 @@
+<ul class="list-group list-group-flush">
+    <li class="list-group-item d-flex justify-content-between ">
+        Start time
+        <span>{{ ds.start_time }}</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between ">
+        End time
+        <span>{{ ds.end_time }}</span>
+    </li>
+    {% for ds_ps in datasets_perstats%}
+        {% if ds_ps.ds_name == ds.name %}
+            <li class="list-group-item d-flex justify-content-between ">
+                # persons 
+                <span> {{ ds_ps.num_persons }} </span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between ">
+                # activities
+                <span> {{ ds_ps.num_activities }} </span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between ">
+                # recorded activities
+                <span> {{ ds_ps.num_recorded_activities }} </span>
+            </li>
+        {% endif %}
+    {% endfor %}
+    <li class="list-group-item d-flex justify-content-between ">
+        # devices 
+        <span> {{ ds.num_devices }} </span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between ">
+        # recorded events
+        <span> {{ ds.num_recorded_events }} </span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between ">
+        Data size
+        <span> {{ ds.data_size | filesizeformat }}</span>
+    </li>
+</ul>

@@ -5,6 +5,7 @@ from frontend.util import get_server, get_device_names
 import logging
 from django.http import FileResponse
 logger = logging.getLogger(__name__)
+from frontend.views.dataset import get_datasets_personal_statistics
 
 class DatasetAnalyticsView(TemplateView):
     def create_context(self, request):
@@ -15,6 +16,7 @@ class DatasetAnalyticsView(TemplateView):
         context['dataset'] = dataset
         context['ds'] = dataset
         context['person_statistics'] = dataset.person_statistics.all()
+        context['datasets_perstats'] = get_datasets_personal_statistics()
         return context
 
     def _getDatasetId(self, request):

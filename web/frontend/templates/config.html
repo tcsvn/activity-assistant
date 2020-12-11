@@ -7,8 +7,8 @@
 
 
 {% block content %}
-<!-- DEBUG START-->
 <div class="container">
+<!-- DEBUG START
     <form class="form-inline" action="{%url url %}" method="post"> 
     {% csrf_token %}
       <button type="submit" name="intent" value="debug" class="btn btn-danger mb-2">
@@ -20,17 +20,21 @@
 
   <div class='row'>
     <h4>Server</h4>
-    {% include "config/server.html" %}
+    <div class="container">
+      {% include "config/server.html" %}
+    </div>
   </div>
   {% if experiment_active %}
-    <div class="alert alert-danger" role="alert">
-      An experiment is running. As such part of the configuration is disabled.
+    <div class="alert alert-warning mt-3" role="alert">
+      An experiment is running. As such part of the configuration is temporarily disabled.
     </div>
   {% endif %}
   <hr>
   <div class='row'>
     <h4>Activities</h4>
-    {% include "config/create_activities.html" %}
+    <div class="container">
+      {% include "config/create_activities.html" %}
+    </div>
   </div>
   <hr>
   <div class='row'>

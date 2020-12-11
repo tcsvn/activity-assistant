@@ -28,36 +28,7 @@
                     data-parent="#accordionExample">
                     <div class="card-body">
                         <div class="col-6">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex justify-content-between ">
-                                    Start time
-                                    <span>{{ ds.start_time }}</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between ">
-                                    End time
-                                    <span>{{ ds.end_time }}</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between ">
-                                    # devices 
-                                    <span> ... </span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between ">
-                                    # activities
-                                    <span> ... </span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between ">
-                                    # recorded events
-                                    <span> ... </span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between ">
-                                    # recorded activities
-                                    <span> ... </span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between ">
-                                    More to come
-                                    <span> ... </span>
-                                </li>
-                            </ul>
+                            {% include 'dataset/dataset_statistic.html'%}
                             <a href="../dataset/{{ ds.id }}"> go to see analytics </a>
                             <form class="form" action="{% url 'dataset' %}" method="POST">
                                 {% csrf_token %}

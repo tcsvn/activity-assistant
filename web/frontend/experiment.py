@@ -3,11 +3,11 @@ import os
 import signal
 from pathlib import Path
 from frontend.util import get_server, get_device_names, start_updater_service, \
-    stop_updater_service, get_current_time
+    stop_updater_service, get_current_time, get_activity_names
 import pandas as pd
 import logging
 from pyadlml.dataset._datasets.activity_assistant import _read_devices
-from pyadlml.dataset import DEVICE, TIME, VAL
+from pyadlml.dataset import DEVICE, TIME, VAL, ACTIVITY
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -58,6 +58,18 @@ def create_device_mapping_file(path_to_folder):
     df = pd.DataFrame(data=get_device_names(), columns=[DEVICE])
     df.to_csv(file_path, sep=',', index_label='id') 
 
+def create_activity_mapping_file(path_to_folder):
+    """ creates an activity mapping file with the current selected activities
+        for logging. 
+
+    Example
+        id,activities
+        0,eat
+        1,sleep
+    """
+    file_path = path_to_folder + settings.ACTIVITY_MAPPING_FILE_NAME
+    df = pd.DataFrame(data=get_activity_names(), columns=[ACTIVITY])
+    df.to_csv(file_path, sep=',', index_label='id')
 
 def load_device_mapping(path_to_folder, as_dict=False):
     fp = path_to_folder + settings.DATA_MAPPING_FILE_NAME
@@ -105,6 +117,7 @@ def start(request):
     Path(ds.path_to_folder).mkdir(mode=0o777, parents=True, exist_ok=False)
     create_data_file(ds.path_to_folder)
     create_device_mapping_file(ds.path_to_folder)
+    create_activity_mapping_file(ds.path_to_folder)
 
     # TODO save prior information about persons
     # TODO save room assignments of sensors and activities
