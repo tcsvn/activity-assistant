@@ -2,6 +2,7 @@ from backend.models import *
 import pandas as pd
 from pyadlml.dataset import DEVICE, TIME, VAL
 from django.utils.timezone import now
+from pyadlml.dataset import load_homeassistant_devices
 import logging
 
 # Get an instance of a logger
@@ -22,6 +23,12 @@ def get_person_names():
     aa_users = []
     for u in Person.objects.all():
         aa_users.append(u.name)
+    return aa_users
+
+def get_person_hass_names():
+    aa_users = []
+    for u in Person.objects.all():
+        aa_users.append(u.hass_name)
     return aa_users
 
 def get_server():
@@ -126,24 +133,72 @@ def stop_zero_conf_server():
 
 import pandas as pd
 
+
 def collect_data_from_hass():
     # this is the case where the data is pulled
     srv = get_server()
     ds = srv.dataset
-    import frontend.experiment as experiment
-    df_new = experiment.hass_db_2_data(settings.DB_URL, get_device_names())\
-                .drop_duplicates()
 
+    import frontend.experiment as experiment
     df_cur = experiment.load_data_file(ds.path_to_folder)
 
+    # use either the last timestamp from the dataframe or if it doesn't 
+    # exist the start timestamp of the dataset
+    try:
+        last_ts = format_timestamp(df_cur[TIME].values[-1])
+    except IndexError:
+        last_ts = format_timestamp(ds.start_time)
+    now_ts = get_current_time()
+
+    df_new = load_homeassistant_devices(
+        settings.DB_URL,
+        get_device_names(),
+        last_ts, now_ts
+    ).drop_duplicates()
+    
     df = pd.concat([df_cur, df_new], ignore_index=True)
 
     # save df
     dev_map = experiment.load_device_mapping(ds.path_to_folder, as_dict=True)
     df[DEVICE] = df[DEVICE].map(dev_map)
-    df = df.drop_duplicates()
+    df = df.drop_duplicates().sort_values(by=TIME, ascending=True)
     df.to_csv(ds.path_to_folder + 'devices.csv', sep=',', index=False)
 
+def format_timestamp(ts):
+    """ creates a timestamp in the format "YYYY-MM-DD HH:MM:SS:microseconds"
+        eg. 2020-12-09 16:35:13.12904
+    Returns
+    -------
+    current_time : str
+    """
+    if not isinstance(ts, pd.Timestamp):
+        ts = pd.Timestamp(ts)
+    if isinstance(ts, pd.Timestamp):
+        return ts.strftime("%Y-%m-%d %H:%M:%S.%f")
+    else:
+        raise ValueError
+
+def utc_to_localtime(ts, to_zone):
+    """ ts time string
+    """
+    tmp = pd.Timestamp(ts,tz='UTC').astimezone(to_zone)
+    return format_timestamp(tmp)
+    
+def get_current_time():
+    """ returns current time w.r.t to the timezone defined in 
+    Returns
+    -------
+    : str
+        time string of now()
+    """
+    import pytz
+    from datetime import datetime
+    srv = get_server()
+    if srv.time_zone is None:
+        time_zone = 'UTC'
+    else:
+        time_zone = srv.time_zone
+    return utc_to_localtime(datetime.now(), time_zone)
 
 def get_line_numbers_file(file_path):
     with open(file_path) as my_file:

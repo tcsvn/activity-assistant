@@ -2,13 +2,12 @@ from backend.models import *
 import os
 import signal
 from pathlib import Path
-from pyadlml.dataset._datasets.activity_assistant import _read_devices
-from pyadlml.dataset import TIME, DEVICE, VAL
 from frontend.util import get_server, get_device_names, start_updater_service, \
-    stop_updater_service
+    stop_updater_service, get_current_time
 import pandas as pd
-import django.utils.timezone
 import logging
+from pyadlml.dataset._datasets.activity_assistant import _read_devices
+from pyadlml.dataset import DEVICE, TIME, VAL
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -46,25 +45,6 @@ def create_data_file(path_to_folder):
     pd.DataFrame(columns=[TIME, DEVICE, VAL])\
         .to_csv(fp, sep=',', index=False)
 
-def create_activity_files(path_to_folder, person_list):
-    """ creates inital and assigns activity file for every person in dataset folder
-    Example
-        start_time, end_time, activity
-
-    """
-    from pyadlml.dataset.activities import _create_activity_df
-    from django.core.files import File
-
-    for person in person_list:
-        fp = path_to_folder + settings.ACTIVITY_FILE_NAME%(person.name)
-        _create_activity_df().to_csv(fp, sep=',', index=False)
-        logger.error('created fp: ' +  str(fp))
-
-        person.activity_file = File(open(fp))
-        person.save()
-        logger.error('person' +  str(person.activity_file))
-
-
 def create_device_mapping_file(path_to_folder):
     """ creates a device mapping file with the current devices selected
         for logging. 
@@ -85,19 +65,6 @@ def load_device_mapping(path_to_folder, as_dict=False):
         return pd.read_csv(fp, index_col=DEVICE).to_dict()['id']
     else:
         return pd.read_csv(fp, index_col='id').to_dict()[DEVICE]
-
-
-def hass_db_2_data(db_url, device_list):
-    from pyadlml.dataset._datasets.homeassistant import hass_db_2_df
-
-    df = hass_db_2_df(db_url)
-    df = df[df['entity_id'].isin(device_list)]
-    df[TIME] = pd.to_datetime(df['last_changed'])
-    df[VAL] = (df['state'] == 'on').astype(int)
-    df[DEVICE] = df['entity_id']
-    df = df[[TIME, DEVICE, VAL ]]
-    return df
-
 
 
 def start(request):
@@ -126,7 +93,8 @@ def start(request):
 
     # 1. create dataset 
     dataset_folder = settings.DATASET_PATH + ds_name +'/'
-    ds = Dataset(name=ds_name, path_to_folder=dataset_folder)
+    ds = Dataset(name=ds_name, start_time=get_current_time(), 
+        path_to_folder=dataset_folder)
     ds.save()
     # 
     srv = get_server()
@@ -186,7 +154,7 @@ def finish():
 
     # wrap up dataset
     ds.logging = False
-    ds.end_time = django.utils.timezone.now()
+    ds.end_time = get_current_time()
     ds.save()
 
     # dissacosiate person statistics from persons

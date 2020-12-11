@@ -37,7 +37,7 @@ class DatasetView(TemplateView):
         import shutil
         try:
             shutil.rmtree(path)
-        except FileNotFoundException:
+        except FileNotFoundError:
             pass
         ds.delete()
 
@@ -192,11 +192,10 @@ def generate_device_analysis(dataset):
     hist_counts(data.df_devices, file_path=path_to_hist_counts)
     dataset.plot_hist_counts = sub_path + hist_counts_filename
 
-    # TODO add conversion to pyadlml
-    #assign_plot_obj('boxplot_on_duration.png', boxplot_on_duration, dataset.plot_boxplot_on_duration,
-    #                    path, sub_path, data.df_devices)
-    #assign_plot_obj('hist_on_off.png', hist_on_off, dataset.plot_hist_on_off,
-    #                    path, sub_path, data.df_devices)
+    assign_plot_obj('boxplot_on_duration.png', boxplot_on_duration, dataset.plot_boxplot_on_duration,
+                        path, sub_path, data.df_devices)
+    assign_plot_obj('hist_on_off.png', hist_on_off, dataset.plot_hist_on_off,
+                        path, sub_path, data.df_devices)
 
     dataset.save()
 
