@@ -18,7 +18,7 @@ rm -rf /var/lib/apt/lists/*
 
 #RUN apk add --update python3-dev py3-pip expect \ 
 #    jpeg-dev zlib-dev gcc linux-headers musl-dev 
-
+RUN pip3 install --no-cache-dir Cython
 COPY build/prod_debian/requirements.txt .
 RUN pip3 install -r requirements.txt
 
