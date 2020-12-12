@@ -18,6 +18,7 @@ jobs:
       uses: tcsvn/builder@master
       with:
         args: |
-          --all \
+          --armv7 \
+          --file build/prod_armv7/Dockerfile \
           --no-cache \
           --target /data
