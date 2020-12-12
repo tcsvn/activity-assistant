@@ -19,6 +19,6 @@ jobs:
       with:
         args: |
           --armv7 \
-          --file buil/prod_armv7/Dockerfile \
+          --file build/prod_armv7/Dockerfile \
           --no-cache \
           --target /data
