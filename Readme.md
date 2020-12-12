@@ -52,7 +52,7 @@ _For a guide on how to use please refer to the Documentation (to come)_
 [![Buy me a coffee][buy-me-a-coffee-shield]][buy-me-a-coffee]
 
 ## How to cite
-If you are using activity-assistant, consider citing the package
+If you are using activity-assistant for puplications consider citing the package
 ```
 @software{activity-assistant,
   author = {Christian Meier},
