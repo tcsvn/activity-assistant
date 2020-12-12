@@ -19,5 +19,6 @@ jobs:
       with:
         args: |
           --all \
+          -- armv7 \
           --no-cache \
           --target /data
