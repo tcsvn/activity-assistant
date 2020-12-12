@@ -1,5 +1,6 @@
 wheel
 setuptools
+cython
 # django and rest framework
 django
 django-qr-code
