@@ -1,13 +1,10 @@
-name: 'Publish master CI'
+name: 'Publish armv7'
 on:
-  push:
-    branches: 
-      - master
   workflow_dispatch:
 
 jobs:
   build:
-    name: Publish to all Arcs
+    name: Publish to armv7 (check whats wrong:/)
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
@@ -22,5 +19,5 @@ jobs:
       with:
         args: |
           --all \
-           --no-cache \
+          --no-cache \
           --target /data
