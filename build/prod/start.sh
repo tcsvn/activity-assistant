@@ -13,7 +13,7 @@ if [ ! -e $CONTAINER_ALREADY_STARTED ]; then
     touch $CONTAINER_ALREADY_STARTED
     python3 manage.py makemigrations
     python3 manage.py migrate --run-syncdb
-    python3 manage.py loaddata /home/inital_server.json
+    python3 manage.py loaddata /home/initial_server.json
 fi
 
 

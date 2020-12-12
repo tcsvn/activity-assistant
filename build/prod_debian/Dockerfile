@@ -5,18 +5,21 @@ ENV LANG C.UTF-8
 
 # todo remove expect
 # to fix pillow error 
-RUN apk add --update python3-dev py3-pip expect \ 
-    jpeg-dev zlib-dev gcc linux-headers musl-dev 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 \
+    python3-pip \
+    python3-setuptools \
+    python3-wheel \
+    gcc \
+    python3-dev \
+    && \
+apt-get clean && \
+rm -rf /var/lib/apt/lists/*
 
-# pandas needs very long to intall over pip (has to be built)
-# therefore install from package repo
-# TODO remove --repository when this is in stable
-RUN apk add py3-wheel py3-pillow py3-pygments py3-numpy py3-django py3-zeroconf \
-    py3-sqlalchemy py3-aiohttp py3-gunicorn py3-pandas py3-kiwisolver \
-    py3-scipy py3-scikit-learn py3-matplotlib \
-    --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
+#RUN apk add --update python3-dev py3-pip expect \ 
+#    jpeg-dev zlib-dev gcc linux-headers musl-dev 
 
-COPY build/prod/requirements.txt .
+COPY build/prod_debian/requirements.txt .
 RUN pip3 install -r requirements.txt
 
 ENV DJANGO_ENV='production'

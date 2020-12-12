@@ -1,3 +1,6 @@
 {
-    "squash": false
+    "squash": false,
+    "build_from": {
+      "armv7": "armv7-base-debian:latest"
+    }
 }
