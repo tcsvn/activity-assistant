@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc gfortran\
     libopenblas-dev \
     liblapack-dev cython \
+    zlib jpeg-dev musl-dev \
     && \
 apt-get clean && \
 rm -rf /var/lib/apt/lists/*
