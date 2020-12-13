@@ -11,6 +11,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-setuptools \
     python3-wheel \
     python3-dev \
+    python3-pandas \
+    python3-scipy \
+    python3-sklearn \
     gcc gfortran\
     libopenblas-dev \
     liblapack-dev cython \
