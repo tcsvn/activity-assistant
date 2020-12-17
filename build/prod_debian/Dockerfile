@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pandas \
     python3-scipy \
     python3-sklearn \
-    zliblg \
+    zlib1g \
     gcc gfortran\
     libopenblas-dev \
     liblapack-dev cython \
