@@ -1,7 +1,4 @@
-wheel
-setuptools
 cython
-# django and rest framework
 django
 django-qr-code
 djangorestframework
@@ -9,8 +6,6 @@ pygments
 coreapi
 Pillow
 zeroconf
-
-# rt_node and data science stuff
 asyncws
 pyadlml
 sqlalchemy

@@ -88,9 +88,49 @@
             },
             "problemMatcher": []
         },{
-            "label": "AA shell",
+            "label": "AA build production amd ubuntu",
+            "type": "shell",
+            "command": "docker build -f build/prod_ubuntu/Dockerfile --build-arg BUILD_FROM=\"homeassistant/amd64-base-ubuntu:18.04\" -t tchr157/activity-assistant-amd64-ubuntu:18.04 .",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },{
+            "label": "AA build production amd with BUILDER",
+            "type": "shell",
+            "command": "docker run --rm --privileged -v ~/.docker:/root/.docker -v /var/run/docker.sock:/var/run/docker.sock:ro -v $PWD/:/data tchr157/amd64-builder --test --file build/prod_armv7/Dockerfile --no-cache --amd64 --target /data",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },{
+            "label": "AA build production armv7 with BUILDER",
+            "type": "shell",
+            "command": "docker run --rm --privileged -v ~/.docker:/root/.docker -v /var/run/docker.sock:/var/run/docker.sock:ro -v $PWD/:/data tchr157/armv7-builder --test --file build/prod_ubuntu/Dockerfile --no-cache --armv7 --target /data",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },{
+            "label": "AA dev shell",
             "type": "shell",
             "command": "docker exec -ti addon_7efcd0a6_act_assist_dev /bin/bash",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },{
+            "label": "AA prod shell",
+            "type": "shell",
+            "command": "docker exec -ti addon_7efcd0a6_act_assist /bin/bash",
             "group": "test",
             "presentation": {
                 "reveal": "always",

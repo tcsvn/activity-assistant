@@ -5,16 +5,15 @@ ENV LANG C.UTF-8
 
 # todo remove expect
 # to fix pillow error 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 \
+    python3.8 \
     python3-pip \
-    python3-setuptools \
-    python3-wheel \
-    python3-dev \
-    python3-pandas \
-    python3-scipy \
-    python3-sklearn \
-    libjpeg libjpeg-dev libfreetype6 libfreetype6-dev zlib1g-dev \
+    python3.8-dev \
+    libfreetype6 libfreetype6-dev zlib1g-dev \
     gcc gfortran\
     libopenblas-dev \
     liblapack-dev cython \
@@ -22,11 +21,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 apt-get clean && \
 rm -rf /var/lib/apt/lists/*
 
-#RUN apk add --update python3-dev py3-pip expect \ 
-#    jpeg-dev zlib-dev gcc linux-headers musl-dev 
-RUN pip3 install --no-cache-dir Cython
-COPY build/prod_debian/requirements.txt .
-RUN pip3 install -r requirements.txt
+#RUN update-alternatives --remove python /usr/bin/python2 \
+#    && update-alternatives --install /usr/bin/python python /usr/bin/python3.8 10
+RUN python3.8 -m pip install --upgrade pip 
+RUN pip install --no-cache-dir Cython setuptools wheel
+COPY build/prod_ubuntu/requirements.txt .
+RUN pip install -r requirements.txt
 
 ENV DJANGO_ENV='production'
 ENV DJANGO_DEBUG=false
@@ -45,11 +45,11 @@ COPY web/act_assist/settings.py  /etc/opt/activity_assistant/
 COPY web/act_assist/local_settings/ /etc/opt/activity_assistant/local_settings/
 
 WORKDIR /home
-COPY build/prod/start.sh build/prod/initial_server.json ./
+COPY build/prod_ubuntu/start.sh build/prod/initial_server.json ./
 RUN chmod a+x start.sh
 
 # copy static files
 RUN mkdir -p /var/cache/activity_assistant/static/
-RUN python3 /opt/activity_assistant/web/manage.py collectstatic
-
+RUN python3.8 /opt/activity_assistant/web/manage.py collectstatic
+#
 CMD [ "./start.sh" ]

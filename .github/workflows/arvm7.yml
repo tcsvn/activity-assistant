@@ -19,6 +19,6 @@ jobs:
       with:
         args: |
           --armv7 \
-          --file build/prod_debian/Dockerfile \
+          --file build/prod_ubuntu/Dockerfile \
           --no-cache \
           --target /data
