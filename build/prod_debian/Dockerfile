@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pandas \
     python3-scipy \
     python3-sklearn \
-    zlib1g \
+    libjpeg libjpeg-dev libfreetype6 libfreetype6-dev zlib1g-dev \
     gcc gfortran\
     libopenblas-dev \
     liblapack-dev cython \
