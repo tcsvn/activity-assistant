@@ -27,6 +27,7 @@ RUN python3.8 -m pip install --upgrade pip
 RUN pip install --no-cache-dir Cython setuptools wheel
 COPY build/prod_ubuntu/requirements.txt .
 RUN pip install -r requirements.txt
+RUN pip install pandas
 
 ENV DJANGO_ENV='production'
 ENV DJANGO_DEBUG=false

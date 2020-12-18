@@ -11,7 +11,7 @@ pyadlml
 sqlalchemy
 aiohttp
 gunicorn
-pandas
+#pandas
 kiwisolver
 scipy
 sklearn
