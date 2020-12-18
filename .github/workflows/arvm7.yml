@@ -20,5 +20,4 @@ jobs:
         args: |
           --armv7 \
           --file build/prod_ubuntu/Dockerfile \
-          --no-cache \
           --target /data
