@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-    <div class="container">
+    <div class="container mb-5">
         {% if experiment_running %}
             {% include 'dataset/active_data.html' %}
         {% else %}
@@ -12,7 +12,9 @@
             <div class="card-header"> 
                 <h5>Datasets </h5>
             </div>
-            {% include 'dataset/list2.html' %}
+            <div class="card-body">
+            {% include 'dataset/list.html' %}
+            </div>
         </div>
     </div>
 {% endblock %}

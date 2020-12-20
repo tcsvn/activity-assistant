@@ -116,6 +116,8 @@ class DashboardView(TemplateView):
         elif intent == "start experiment":
             if not experiment.start(request):
                 add_context['exp_duplicate_names'] = True
+            else:
+                add_context['started_experiment'] = True
         elif intent == "pause experiment":
             experiment.pause()
         elif intent == "continue experiment":

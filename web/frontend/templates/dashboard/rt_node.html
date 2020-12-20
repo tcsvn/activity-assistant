@@ -1,5 +1,5 @@
 <div class="row col-12">
-    <div class="card w-90">
+    <div class="card ">
         <div class="card-header">
             Real-time Activity Inference Node
         </div>
@@ -22,33 +22,31 @@
                     <button type="submit" class="btn btn-outline-warning ml-2"> stop</button>
                 </form>
             {% else %}
-                <form class="form-row align-items-center" action="{% url 'dashboard' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="intent" value="run">
-                    <div class="col-auto my-1">
-                        Model running predictions:
-                    </div>
-                    <div class="col-auto my-1">
-                        <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
-                        <select class="form-control mr-sm-2" id="inlineFormCustomSelect"
-                                name="model_select">
-                            {% for model in model_list %}
-                                {% if model.dataset.name == "homeassistant" %}
-                                    {% if foorloop.first %}
-                                        <option selected value="{{ model.pk }}">
-                                            {% else %}
-                                        <option value="{{ model.pk }}">
-                                    {% endif %}
-                                {{ model.algorithm.name }} with
-                                person {{ model.person.name }} </option>
+            <form class="row gy-2 gx-3 align-items-center">
+                <div class="col-auto">
+                    <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">asdfasdfPreference</label>
+                    <select class="form-control mr-sm-2" id="inlineFormCustomSelect"
+                            name="model_select">
+                        {% for model in model_list %}
+                                {% if foorloop.first %}
+                                    <option selected value="{{ model.pk }}">
+                                        {% else %}
+                                    <option value="{{ model.pk }}">
                                 {% endif %}
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-auto my-1 ml-2">
-                        <button type="submit" class="btn btn-outline-primary" disabled>Run</button>
-                    </div>
-                </form>
+                            {{ model.algorithm.name }} with
+                            person {{ model.person.name }} </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-auto">
+                  <div class="form-check form-switch">
+                    <label class="form-check-label" for="form11Example4"
+                      >Checked switch checkbox input</label
+                    >
+                    <input class="form-check-input" type="checkbox" id="form11Example4" checked />
+                  </div>
+                </div>
+              </form>
             {% endif %}
         </div>
     </div>

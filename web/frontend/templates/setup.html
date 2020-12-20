@@ -1,116 +1,165 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-{% load static %}
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title> Activity-assistant </title>
-    <link rel="shortcut icon" type="image/png" href="{% static 'images/icon.svg' %}"/>
+  {% load static %}
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Activity-assistant</title>
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="{% static 'images/icon.svg' %}"/>
     <!-- include bootstrap -->
-    <link rel="stylesheet" href="{% static 'mdbootstrap-4.5/mdb-v4.1.1.min.css' %}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
-</head>
+    <link
+      rel="stylesheet"
+      href="{% static 'mdbootstrap-5/mdb-v2.2.1.min.css'%}"/>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"/>
+  </head>
 
-<body>
-    <script src="{% static 'mdbootstrap-4.5/jquery-3.2.1.min.js' %}"></script>
-    <script src="{% static 'mdbootstrap-4.5/popper-v2.5.4.js' %}"></script>
-    <script src="{% static 'mdbootstrap-4.5/mdb-v4.1.1.bmd.js' %}"></script>
+  <body>
+    <script src="{% static 'mdbootstrap-5/mdb-v2.2.1.min.js' %}"></script>
+    <script src="{% static 'mdbootstrap-5/popper-v2.5.4.js' %}"></script>
+    <script src="{% static 'mdbootstrap-5/jquery-3.2.1.min.js' %}"></script>
 
-        <div class="container mt-3">
-        <!-- progress bar -->
-        <div class="row mb-4">
-            <div class="col-12">
-            setup progress
-            <div class="progress">
-                <div class="progress-bar progress-bar-striped bg-info" role="progressbar"
-                    style="width: {{ progress }}%" 
-                aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                </div>
-            </div>
-            </div>
+    <div class="container mt-2">
+      <!-- progress bar -->
+      <div class="row mb-4">
+        <div class="col-12">
+          Setup progress
+          <div class="progress">
+            <div
+              class="progress-bar progress-bar-striped bg-info"
+              role="progressbar"
+              style="width: {{ progress }}%"
+              aria-valuenow="50"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+          </div>
         </div>
+      </div>
 
-        <!--rest of content-->
-        <div class="row mb-4">
-            {% if step == "step 0" %}
-                <h3>Connect Home assistant component</h3>
-                Install the Activity assistant component on the home assistant side. If successfull
-                the Connect Button will bring you to the next step. 
-                <form action="{% url 'setup' %}" method="POST" class="mb-0">
-                    <input type="hidden" name="from" value="step 0">
-                    {% csrf_token %}
-                    {{ form }}
-                    <button type="submit" class="btn btn-outline-danger">Connect</button>
-                </form>
-            {% elif step == "step 1" %}
-                <h3>Configure Home assistant component</h3>
-                Activity-assistant has to update a local dataset with relevant entries of the homeassistant
-                database. Please set the interval in which the data is being polled. Recommended
-                is 30 minutes.
-                <form action="{% url 'setup' %}" method="POST" class="mb-0 mt-3">
-                    <div class="form-group">
-                      <label for="exampleFormControlSelect1">Select time interval</label>
-                      <select class="form-control" id="asdf" name="poll_interval">
-                        {% for opt in poll_int_list%}
-                          <option> {{ opt }}</option>
-                        {% endfor %}
-                      </select>
-                    </div>
-                    {% csrf_token %}
-                    {{ form }}
+      <!--rest of content-->
+      <div class="card">
+        <div class="card-body">
+          {% if step == "step 0" %}
+          <h4 class="card-title">Connect to Home Assistant</h4>
+          <p class="card-text">
+            By clicking the connect button activity-assistant will collect
+            relevant data from Home Assistant. It also try's to infer the 
+            address under which activity-assistant can be reached. This sometimes
+            goes wrong, so make sure to check the config afterwards for the correct address.
+          </p>
 
-                    <input type="hidden" name="from" value="step 1">
-                    <button type="submit" class="btn btn-outline-danger">Submit</button>
-                  </form>
+          <form action="{% url 'setup' %}" method="POST" class="mb-0">
+            <input type="hidden" name="from" value="step 0" />
+            {% csrf_token %} {{ form }}
+            <button type="submit" class="btn btn-outline-danger float-right">
+              Connect
+            </button>
+          </form>
 
+          {% elif step == "step 1" %}
+          <h4 class="card-title">Configure data collection</h4>
+          <p class="card-text">
+            Activity-assistant updates a local dataset with relevant entries
+            from the homeassistant database. Set the interval where the
+            data is being polled. Two hours are recommended.
+          </p>
+          <form action="{% url 'setup' %}" method="POST" class="mb-0 mt-3">
+            <div class="form-group mb-2">
+              <label for="exampleFormControlSelect1">Select time interval</label>
+              <select class="form-control" id="asdf" name="poll_interval">
+                {% for opt in poll_int_list%}
+                <option>{{ opt }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            {% csrf_token %} {{ form }}
 
+            <input type="hidden" name="from" value="step 1" />
+            <button type="submit" class="btn btn-outline-danger float-right">Submit</button>
+          </form>
 
-            {% elif step == "conf_devices" %}
-              <h3>Setup device database</h3>
-              {% include 'config/sel_device.html' %}
-              <form action="{% url 'setup' %}" method="POST" class="mb-0">
-                {% csrf_token %}
-                {{ form }}
-                <input type="hidden" name="from" value="conf_devices">
-                <button type="submit" name="intent" value="next_step" class="btn btn-outline-danger">Next Step</button>
-              </form>
+          {% elif step == "conf_devices" %}
+          <h4 class="card-title">Device selection</h4>
+          <p class="card-text">
+            Select one or multiple devices to track or not to track.
+          </p>
+          {% include 'config/sel_device.html' %}
+          <form action="{% url 'setup' %}" method="POST" class="mb-0">
+            {% csrf_token %} {{ form }}
+            <input type="hidden" name="from" value="conf_devices" />
+            <button
+              type="submit"
+              name="intent"
+              value="next_step"
+              class="btn btn-outline-danger mt-2 float-right">
+              Next Step
+            </button>
+          </form>
 
+          {% elif step == "conf_activities" %}
+          <h4 class="card-title">Create Activities</h4>
+          <p class="card-text">
+            Create activities that capture your style of living. Examples are eating,
+            sleeping, waking_up, leaving_home, entering_home, ....
+          </p>
+          <div class="container mt-3">
+            {% include 'config/create_activities.html' %}
+            <form action="{% url 'setup' %}" method="POST" class="mb-0">
+              {% csrf_token %} {{ form }}
+              <input type="hidden" name="from" value="conf_activities" />
+              <button
+                type="submit"
+                name="intent"
+                value="next_step"
+                class="btn btn-outline-danger mt-2 float-right"
+              >
+                Next Step
+              </button>
+            </form>
+          </div>
 
-            {% elif step == "conf_activities" %}
-                <h3>Create Activities</h3>
-                <div class="container mt-3">
-                  {% include 'config/create_activities.html' %}
-                  <form action="{% url 'setup' %}" method="POST" class="mb-0">
-                      {% csrf_token %}
-                      {{ form }}
-                      <input type="hidden" name="from" value="conf_activities">
-                      <button type="submit" name="intent" value="next_step" class="btn btn-outline-danger">Next Step</button>
-                  </form>
-                </div>
-                
-            {% elif step == "conf_persons" %}
-              <h3>Select Persons for tracking</h3>
-              <div class="container mt-3">
-                {% include 'config/sel_person.html' %}
-                <form action="{% url 'setup' %}" method="POST" class="mb-0">
-                    {% csrf_token %}
-                    {{ form }}
-                    <input type="hidden" name="from" value="conf_persons">
-                    <button type="submit" name="intent" value="next_step" class="btn btn-outline-danger">Next Step</button>
-                </form>
-              </div>
+          {% elif step == "conf_persons" %}
+          <h4 class="card-title">Person selection</h4>
+          <p class="card-text">Select one or multiple devices to track or not to track. </p>
+          <div class="container mt-3">
+            {% include 'config/sel_person.html' %}
+            <form action="{% url 'setup' %}" method="POST" class="mb-0">
+              {% csrf_token %} {{ form }}
+              <input type="hidden" name="from" value="conf_persons" />
+              <button
+                type="submit"
+                name="intent"
+                value="next_step"
+                class="btn btn-outline-danger mt-2 float-right"
+              >
+                Next Step
+              </button>
+            </form>
+          </div>
 
-            {% elif step == "step 5" %}
-                <h3>Setup complete</h3>
-                Where to go from here. Check out configuration 
-                <form action="{% url 'setup' %}" method="POST" class="mb-0">
-                    <input type="hidden" name="from" value="step 5">
-                    {% csrf_token %}
-                    {{ form }}
-                    <button type="submit" class="btn btn-outline-danger">Finish Setup</button>
-                </form>
-            {% endif %}
+          {% elif step == "step 5" %}
+          <h4 class="card-title">Setup complete</h4>
+          <p class="card-text">
+            Remember to check out the configuration. 
+          </p>
+          <form action="{% url 'setup' %}" method="POST" class="mb-0">
+            <input type="hidden" name="from" value="step 5" />
+            {% csrf_token %} {{ form }}
+            <button type="submit" class="btn btn-outline-danger float-right">
+              Finish Setup
+            </button>
+          </form>
+          {% endif %}
         </div>
+      </div>
     </div>
-</body>
+  </body>
+</html>

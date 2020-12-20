@@ -6,7 +6,7 @@
                         <form class="mr-2" action="{% url 'dataset' %}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="dataset_name" value="{{dataset.name}}">
-                                <button type="submit" class="btn btn-dark" name="intent" value="gen_analysis_for_experiment"> Run Analysis </button>
+                                <button type="submit" class="btn btn-dark" name="intent" value="gen_analysis_for_experiment"> Collect statistics </button>
                         </form>
                     </div>
                 </div>

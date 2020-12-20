@@ -1,94 +1,99 @@
 {% load qr_code %}
 
-<div class="container">
-  <div class="card text-center">
-    <div class="card-body">
-      <h5 class="card-title">Connect to Logger</h5>
-      <p class="card-text">
-        Annotate data collected by homeassistant with Activites of daily living.
-      </p>
+<div class="card text-center">
+  <div class="card-body">
+    <h5 class="card-title">Connect to Logger</h5>
+    <p class="card-text">
+      Annotate data collected by homeassistant with Activites of daily living.
+    </p>
 
-      <div class="row">
-        <div class="col-3">
-          <!-- Tab navs -->
-          <div
-            class="nav flex-column nav-pills text-center"
-            id="v-pills-tab"
-            role="tablist"
-            aria-orientation="vertical"
+    <div class="row">
+      <div class="col-3">
+        <!-- Tab navs -->
+        <div
+          class="nav flex-column nav-pills text-center"
+          id="v-pills-tab"
+          role="tablist"
+          aria-orientation="vertical"
+        >
+          <a
+            class="nav-link active"
+            id="v-pills-home-tab"
+            data-toggle="pill"
+            href="#v-pills-home"
+            role="tab"
+            aria-controls="v-pills-home"
+            aria-selected="true"
+            >Get companion app</a
           >
-            <a
-              class="nav-link active"
-              id="v-pills-home-tab"
-              data-toggle="pill"
-              href="#v-pills-home"
-              role="tab"
-              aria-controls="v-pills-home"
-              aria-selected="true"
-              >Get companion app</a
-            >
-            <a
-              class="nav-link"
-              id="v-pills-profile-tab"
-              data-toggle="pill"
-              href="#v-pills-profile"
-              role="tab"
-              aria-controls="v-pills-profile"
-              aria-selected="false"
-              >Connect smartphone</a
-            >
-          </div>
-          <!-- Tab navs -->
+          <a
+            class="nav-link"
+            id="v-pills-profile-tab"
+            data-toggle="pill"
+            href="#v-pills-profile"
+            role="tab"
+            aria-controls="v-pills-profile"
+            aria-selected="false"
+            >Connect smartphone</a
+          >
         </div>
+        <!-- Tab navs -->
+      </div>
 
-        <div class="col-9">
-          <!-- Tab content -->
-          <div class="tab-content" id="v-pills-tabContent">
-            <div
-              class="tab-pane fade show active"
-              id="v-pills-home"
-              role="tabpanel"
-              aria-labelledby="v-pills-home-tab"
-            >
-              <div class="row">
-                <div class="col">
-                  <div class="media">
-                    {% qr_from_text qr_code_sm_download size=6 version=6 error_correction=L %}
+      <div class="col-9">
+        <!-- Tab content -->
+        <div class="tab-content" id="v-pills-tabContent">
+          <div
+            class="tab-pane fade show active"
+            id="v-pills-home"
+            role="tabpanel"
+            aria-labelledby="v-pills-home-tab"
+          >
 
-                  </div>
-                </div>
-                <div class="col">
-                  <img
-                    src="https://f-droid.org/badge/get-it-on.png"
-                    alt="Get it on F-Droid"
-                    height="80"
-                  />
-                </div>
-                <div class="col">
-                  <img
-                    class="img-fluid col-12"
-                    alt="Get it on Google Play"
-                    src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
-                  />
+            <div class="row">
+              <div class="col">
+                <div class="media">
+                  {% qr_from_text qr_code_sm_download size=6 version=6 error_correction=L %}
+
                 </div>
               </div>
+              <div class="col">
+                <img
+                  src="https://f-droid.org/badge/get-it-on.png"
+                  alt="Get it on F-Droid"
+                  height="80"
+                />
+              </div>
+              <div class="col">
+                <img
+                  class="img-fluid col-12"
+                  alt="Get it on Google Play"
+                  src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
+                />
+              </div>
             </div>
-            <div
-              class="tab-pane fade"
-              id="v-pills-profile"
-              role="tabpanel"
-              aria-labelledby="v-pills-profile-tab"
-            >
-              <div class="media">
-                <div class="aligned-self-start mr-3">
-                  {% qr_from_text qr_code_data size=8 version=8 error_correction=L %}
-                </div>
-                <div class="media-body">
-                  <p class="mb-0">
-                    Open the activity-assistant application on your phone. Click
-                    the "scan" button and get the Qrcode into focus
-                  </p>
-                </div>
+            <div class="row">
+              <p>Scan the qr-code with a barcodescanner application to download the APK. In future the app will be available via 
+                the F-droid and google play store. Then proceed with connect smartphone.</p>
+            </div>
+          </div>
+          <div
+            class="tab-pane fade"
+            id="v-pills-profile"
+            role="tabpanel"
+            aria-labelledby="v-pills-profile-tab"
+          >
+            <div class="row">
+              <div class="col-6">
+                {% qr_from_text qr_code_data size=8 version=8 error_correction=L %}
+              </div>
+              <div class="col-6">
+                <p>
+                  Open the activity-assistant application on your phone. Click
+                  the "scan" button and get the qr-code into focus. A smartphone 
+                  can be decoupled by clicking "decouple". This automatically dissacosiates
+                  the device from the person.
+                </p>
               </div>
             </div>
           </div>

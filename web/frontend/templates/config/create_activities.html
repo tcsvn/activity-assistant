@@ -1,35 +1,59 @@
-<form action="{% url url %}" method="POST" class="mb-0">
-{% csrf_token %}
-{{ form }}
-<input type="hidden" name="from" value="conf_activities">
-<div class="form-group col-md-6">
-    <label for="act_sel">Tracked by Activity assistant</label>
-    <select multiple="multiple" class="form-control" name="act_select" id="act_sel">
-        {% for activity in activity_list %}
+<div class="container-sm">
+  <div class="col-md-6">
+    <div class="row">
+      <form action="{% url url %}" method="POST" class="mb-0">
+        {% csrf_token %} {{ form }}
+        <input type="hidden" name="from" value="conf_activities" />
+        <div class="form-group">
+          <label for="act_sel">Tracked by activity-assistant</label>
+          <select
+            multiple="multiple"
+            class="form-control"
+            name="act_select"
+            id="act_sel">
+            {% for activity in activity_list %}
             <option>{{ activity.name }}</option>
-        {% endfor %}
-    </select> 
-</div>
-<button type="submit" name="intent" value="delete" class="btn btn-primary mb-2"
-        {% if experiment_active %} disabled {% endif %}>
-    delete
-</button>
-</form>
-
-<div class="d-flex flex-row p-2 justify-content-between align-items-center">
-<div class="p-2">
-    <form class="form-inline" action="{%url url %}" method="post"> 
-    {% csrf_token %}
-    {{ form }}
-    <input type="hidden" name="from" value="conf_activities">
-    <div class="form-group mb-2">
-        <label for="inputPassword2" class="sr-only">Password</label>
-        <input class="form-control" name="name" type="text" required placeholder="Activityname">
+            {% endfor %}
+          </select>
+        </div>
+        <button
+          type="submit"
+          name="intent"
+          value="delete"
+          class="btn btn-danger mt-1 float-right"
+          {% if experiment_active %}
+            disabled
+          {% endif %}>
+          delete
+        </button>
+      </form>
     </div>
-    <button type="submit" name="intent" value="add" class="btn btn-primary mb-2"
-        {% if experiment_active %} disabled {% endif %}>
-        add
-    </button>
+    <form class="form-inline" action="{%url url %}" method="post">
+      {% csrf_token %} {{ form }}
+      <input type="hidden" name="from" value="conf_activities" />
+     <div class="input-group mt-2">
+        <input
+          type="text"
+          class="form-control"
+          name="name"
+          required
+          placeholder="Activity name"
+          aria-label="Recipient's username"
+          aria-describedby="button-addon2"
+        />
+        <button
+          class="btn btn-primary"
+          name="intent"
+          type="submit"
+          value="add"
+          id="button-addon2"
+          data-mdb-ripple-color="dark"
+          {% if experiment_active %}
+            disabled
+          {% endif %}>
+          Add
+        </button>
+      </div>
     </form>
-</div>
+  </div>
 </div>

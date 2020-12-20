@@ -1,42 +1,54 @@
-<div class="container mt-3">
-    <div class="row mb-1">
-    Select multiple devices to track or not to track.
-    </div>
-<form action="{% url url %}" method="POST" class="mb-0">
-    {% csrf_token %}
-    {{ form }}
-    <input type="hidden" name="from" value="conf_devices">
-    <div class="form-row">
-    <div class="form-group col-md-6">
-        <label for="hass_dev_select">Home assistant devices</label>
-        <select multiple="multiple" class="form-control" name="hass_select" id="hass_dev_select">
+<div class="container-sm">
+  <form action="{% url url %}" method="POST" class="mb-0">
+    {% csrf_token %} {{ form }}
+    <input type="hidden" name="from" value="conf_devices" />
+
+    <div class="row">
+      <div class="col-6">
+        <label for="hass_dev_select">Home Assistant devices</label>
+        <select
+            multiple="multiple"
+            class="form-control"
+            name="hass_select"
+            id="hass_dev_select">
             {% for hass_device in hass_dev_list %}
-                <option>{{ hass_device }} </option>
+            <option>{{ hass_device }}</option>
             {% endfor %}
         </select>
-    </div>
-    <div class="form-group col-md-6">
-        <label for="act_assist_dev_select">Tracked by Activity assistant</label>
-        <select multiple="multiple" class="form-control" name="act_assist_select" id="act_assist_dev_select">
-            {% for aa_dev in aa_dev_list %}
-                <option>{{ aa_dev }}</option>
-            {% endfor %}
-        </select> 
-    </div>
-    </div>
-    <div class="form-row">
-    <div class="form-group col-md-6">
-        <button type="submit" name="intent" value="track" class="btn btn-primary"
-        {% if experiment_active %} disabled {% endif %}>
-            Track
+        <button
+          type="submit"
+          name="intent"
+          value="track"
+          class="btn btn-primary mt-1 float-right"
+          {% if experiment_active %}
+            disabled
+          {% endif %}>
+          Track
         </button>
-    </div>
-    <div class="form-group col-md-4">
-        <button type="submit" name="intent" value="remove" class="btn btn-primary"
-            {% if experiment_active %} disabled {% endif %}>
-            Remove
+      </div>
+
+      <div class="col-6">
+        <label for="act_assist_dev_select">Selected for tracking</label>
+        <select
+          multiple="multiple"
+          class="form-control"
+          name="act_assist_select"
+          id="act_assist_dev_select">
+          {% for aa_dev in aa_dev_list %}
+          <option>{{ aa_dev }}</option>
+          {% endfor %}
+        </select>
+        <button
+          type="submit"
+          name="intent"
+          value="remove"
+          class="btn btn-danger mt-1 float-right"
+          {% if experiment_active %}
+            disabled
+          {% endif %}>
+          Remove
         </button>
+      </div>
     </div>
-    </div>
-</form>
+  </form>
 </div>

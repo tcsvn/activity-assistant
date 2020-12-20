@@ -7,7 +7,7 @@
 
 
 {% block content %}
-<div class="container">
+<div class="container d-flex align-items-center">
 <!-- DEBUG START
     <form class="form-inline" action="{%url url %}" method="post"> 
     {% csrf_token %}
@@ -17,9 +17,12 @@
       <input type="hidden" name="from" value="debug">
     </form>
 <!-- DEBUG END-->
-
+  <div class="col-sm-12 col-md-12 col-lg-10 col-xl-8 col-xxl-7">
   <div class='row'>
     <h4>Server</h4>
+    <p>
+      The ip address is needed for the android logger to connect to.
+    </p>
     <div class="container">
       {% include "config/server.html" %}
     </div>
@@ -30,21 +33,36 @@
     </div>
   {% endif %}
   <hr>
+
+
   <div class='row'>
     <h4>Activities</h4>
+    <p>
+      Create activities that capture your style of living. Examples are eating,
+      sleeping, waking_up, leaving_home, entering_home, ....
+    </p>
     <div class="container">
       {% include "config/create_activities.html" %}
     </div>
   </div>
   <hr>
+
+
   <div class='row'>
     <h4>Devices</h4>
+    <p>
+      Select one or multiple devices to track or not to track.
+    </p>
     {% include "config/sel_device.html" %}
-  </div>
+    </div>
   <hr>
-  <div class='row'>
+
+
+  <div class='row mb-5'>
     <h4>Persons</h4>
+    <p>Select one or multiple devices to track or not to track. </p>
     {% include "config/sel_person.html" %}
   </div>
+</div>
 </div>
 {% endblock %}

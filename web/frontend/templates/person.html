@@ -1,41 +1,43 @@
 {% extends "base_bootstrap.html" %}
-
 {% load static %}
+
 {% block head %}
-    <meta charset='utf-8'/>
-    <script src="{% static 'js.cookie.js' %}"></script>
+  <meta charset="utf-8" />
+  <script src="{% static 'js.cookie.js' %}"></script>
 
-    <link href="{% static 'fullcalendar/packages/core/main.css' %}" rel='stylesheet'/>
-    <link href="{% static 'fullcalendar/packages/daygrid/main.css' %}" rel='stylesheet'/>
-    <link href="{% static 'fullcalendar/packages/timegrid/main.css' %}" rel='stylesheet'/>
-    <link href="{% static 'fullcalendar/packages/list/main.css' %}" rel='stylesheet'/>
-    <link href="{% static 'fullcalendar/packages/bootstrap/main.css' %}" rel='stylesheet'/>
+  <!--
+  <link href="{% static 'fullcalendar/packages/core/main.css' %}" rel="stylesheet"/>
+  <link href="{% static 'fullcalendar/packages/daygrid/main.css' %}" rel="stylesheet"/>
+  <link href="{% static 'fullcalendar/packages/timegrid/main.css' %}" rel="stylesheet"/>
+  <link href="{% static 'fullcalendar/packages/list/main.css' %}" rel="stylesheet"/>
+  <link href="{% static 'fullcalendar/packages/bootstrap/main.css' %}" rel="stylesheet"/>
 
-    <script src="{% static 'fullcalendar/packages/core/main.js' %}"></script>
-    <script src="{% static 'fullcalendar/packages/daygrid/main.js' %}"></script>
-    <script src="{% static 'fullcalendar/packages/timegrid/main.js' %}"></script>
-    <script src="{% static 'fullcalendar/packages/list/main.js' %}"></script>
-    <script src="{% static 'fullcalendar/packages/interaction/main.js' %}"></script>
-    <script src="{% static 'fullcalendar/packages/bootstrap/main.js' %}"></script>
+  <script src="{% static 'fullcalendar/packages/core/main.js' %}"></script>
+  <script src="{% static 'fullcalendar/packages/daygrid/main.js' %}"></script>
+  <script src="{% static 'fullcalendar/packages/timegrid/main.js' %}"></script>
+  <script src="{% static 'fullcalendar/packages/list/main.js' %}"></script>
+  <script src="{% static 'fullcalendar/packages/interaction/main.js' %}"></script>
+  <script src="{% static 'fullcalendar/packages/bootstrap/main.js' %}"></script>
+  -->
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-
-    {% include 'person/status.html' %}
+  <div class="container">
+    <div class="mb-2">
+      {% include 'person/status.html' %} 
+    </div>
 
     {% if not smartphone %}
+      <div class="mb-2">
         {% include 'person/register_smartphone.html' %}
+      </div>
     {% endif %}
 
     {% if person.person_statistic %}
-    <div class="card">
-        <div class="card-header">
-            Current behavior
-        </div>
+      <div class="card mb-2">
         <div class="card-body col-sm12 col-md12 col-lg-8 col-xl-6">
-          <h5 class="card-title"></h5>
-            {% include 'person/person_statistics.html' %}
+          <h5 class="card-title">Current behavior</h5>
+          {% include 'person/person_statistics.html' %}
           <a href="../dataset/{{ps.dataset.id}}" class="btn btn-link">go to analytics</a>
         </div>
       </div>
@@ -43,11 +45,11 @@
 
     <!-- TODO include this when the feature is ready, also include person/calendar_script.html
 
-            <div class="card-body col-sm-12 col-md-12 col-lg-9 col-xl-7">
-    {% include 'person/calendar.html' %}
-    {% if person.prediction %}
-        {% include 'person/activity_prediction.html' %}
-    {% endif %}
-    -->
-    </div>
+              <div class="card-body col-sm-12 col-md-12 col-lg-9 col-xl-7">
+      {% include 'person/calendar.html' %}
+      {% if person.prediction %}
+          {% include 'person/activity_prediction.html' %}
+      {% endif %}
+      -->
+  </div>
 {% endblock %}

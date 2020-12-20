@@ -22,12 +22,19 @@ def get_datasets_personal_statistics():
             continue
         tmp = {}
         tmp['ds_name'] = ds.name
-        num_rec_acts = 0
         tmp['num_persons'] = len(ds.person_statistics.all())
         for ps in ds.person_statistics.all():
             tmp['num_activities']  = ps.num_activities
-            num_rec_acts += ps.num_recorded_activities
-        tmp['num_recorded_activities'] = num_rec_acts
+        try:
+            num_rec_acts = 0
+            for ps in ds.person_statistics.all():
+                tmp['num_activities']  = ps.num_activities
+                num_rec_acts += ps.num_recorded_activities
+            tmp['num_recorded_activities'] = num_rec_acts
+        except TypeError:
+            # this is catches the case when somebody has not evaluated the statistic
+            # and therefore this quantitiy shouldn't be set
+            tmp['num_recorded_activities'] = None
         hackdct.append(tmp)
     return hackdct
 
@@ -42,7 +49,10 @@ class DatasetView(TemplateView):
 
         srv = get_server()
 
-        context['datasets_perstats'] = get_datasets_personal_statistics()
+        try:
+            context['datasets_perstats'] = get_datasets_personal_statistics()
+        except:
+            pass
 
         if srv.dataset is not None:
             context['dataset'] = srv.dataset

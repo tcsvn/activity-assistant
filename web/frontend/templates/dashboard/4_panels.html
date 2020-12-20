@@ -5,7 +5,7 @@
                 <div class="card-body text-dark">
                         <h5 class="card-title">{{ count_person }}</h5>
                     <p class="card-text">
-                        Person registered
+                        Person{% if count_person > 1 %}s{% endif %} registered
                     </p>
                 </div>
                 <div class="card-footer">
@@ -18,7 +18,7 @@
                 <div class="card-body text-dark">
                         <h5 class="card-title"> #x</h5>
                     <p class="card-text">
-                        Models registered
+                        Model{% if count_models > 1 %}s{% endif %} registered
                     </p>
                 </div>
                 <div class="card-footer">
@@ -31,7 +31,7 @@
                 <div class="card-body text-dark">
                         <h5 class="card-title">#x</h5>
                     <p class="card-text">
-                        Dask runners connected
+                        Dask runner{% if count_dask_runners > 1 %}s{% endif %} connected
                     </p>
                 </div>
                 <div class="card-footer">
@@ -44,7 +44,7 @@
             <div class="card-body text-dark">
               <h5 class="card-title">{{ count_dataset }}</h5>
               <p class="card-text">
-                Datasets created
+                Dataset{% if count_dataset > 1 %}s{% endif %} created
               </p>
             </div>
                 <div class="card-footer">
