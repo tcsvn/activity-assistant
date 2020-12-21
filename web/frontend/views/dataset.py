@@ -135,14 +135,15 @@ def gen_plots_persons(dataset, data):
     for ps in dataset.person_statistics.all():
         sub_path = dataset.name + '/plots/' + ps.name + '/'
         path = settings.MEDIA_ROOT + sub_path
+        df_activities = getattr(data, 'df_activities_{}'.format(ps.name))
 
         try:
             hist_counts_filename = 'hist_counts.png'
             path_to_hist_counts = path + hist_counts_filename
-            hist_counts(data.df_activities, file_path=path_to_hist_counts)
+            hist_counts(df_activities, file_path=path_to_hist_counts)
             ps.plot_hist_counts = sub_path + hist_counts_filename
         except:
-            pass
+            logger.error("couldn't create histogram counts")
 
         try:
             boxplot_duration_filename = 'boxplot_duration.png'
@@ -150,7 +151,7 @@ def gen_plots_persons(dataset, data):
             boxplot_duration(data.df_activities, file_path=path_to_boxplot_duration)
             ps.plot_boxplot_duration = sub_path + boxplot_duration_filename
         except:
-            pass
+            logger.error("couldn't create boxplot_duration")
 
         try:
             hist_cum_duration_filename = 'hist_cum_duration.png'
@@ -158,7 +159,7 @@ def gen_plots_persons(dataset, data):
             hist_cum_duration(data.df_activities, file_path=path_to_hist_cum_duration)
             ps.plot_hist_cum_duration = sub_path + hist_cum_duration_filename
         except:
-            pass
+            logger.error("couldn't create hist_cum_duration")
  
         try:
             heatmap_transitions_filename = 'heatmap_transitions.png'
@@ -166,16 +167,15 @@ def gen_plots_persons(dataset, data):
             heatmap_transitions(data.df_activities, file_path=path_to_heatmap_transitions)
             ps.plot_heatmap_transitions = sub_path + heatmap_transitions_filename
         except:
-            pass
+            logger.error("couldn't create heatmap_transitions")
 
-       
         try:
             ridge_line_filename = 'ridge_line.png'
             path_to_ridge_line = path + ridge_line_filename
             ridge_line(data.df_activities, file_path=path_to_ridge_line)
             ps.plot_ridge_line = sub_path + ridge_line_filename
         except:
-            pass
+            logger.error("couldn't create ridge_line")
 
         ps.save()
 
@@ -219,8 +219,9 @@ def collect_dataset_statistics(dataset):
 def generate_device_analysis(dataset):
     """
     """
-    import pyadlml.dataset._datasets.activity_assistant as act_assist
-    data = act_assist.load(dataset.path_to_folder, 'admin')
+    from pyadlml.dataset import load_act_assist
+    from frontend.util import get_person_names
+    data = load_act_assist(dataset.path_to_folder, get_person_names())
 
     collect_dataset_statistics(dataset)
     gen_plots_persons(dataset, data)
