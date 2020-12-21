@@ -29,3 +29,6 @@ RUN pip install --upgrade --no-cache-dir Cython setuptools wheel
 RUN pip install cython --upgrade
 RUN pip install numpy --upgrade
 RUN pip install pandas sklearn
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt

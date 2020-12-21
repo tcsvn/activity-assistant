@@ -7,7 +7,7 @@ ENV DJANGO_DEBUG=false
 ENV PYTHONPATH=/etc/opt/activity_assistant:/opt/activity_assistant
 
 
-COPY requirements.txt .
+COPY build/prod_ubuntu/requirements.txt .
 RUN pip install -r requirements.txt
 RUN pip install pyadlml
 
