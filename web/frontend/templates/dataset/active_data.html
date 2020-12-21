@@ -32,15 +32,31 @@
                         </div>
                     </div>
                     <div class="d-flex flex-row p-2 justify-content-between align-items-center">
-                        <div class="p-2"> # devices </div>
+                        <div class="p-2"> # persons </div>
                         <div class="p-2">
                              <p class="text-muted mb-0">
-                                 {{ dataset.num_devices}}
+                                 {{ num_persons }}
                             </p>
                         </div>
                     </div>
                     <div class="d-flex flex-row p-2 justify-content-between align-items-center">
-                        <div class="p-2"> # rows </div>
+                        <div class="p-2"> # activities </div>
+                        <div class="p-2">
+                             <p class="text-muted mb-0">
+                                 {{ num_activities}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                        <div class="p-2"> # devices </div>
+                        <div class="p-2">
+                             <p class="text-muted mb-0">
+                                 {{ dataset.num_devices }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                        <div class="p-2"> # events </div>
                         <div class="p-2">
                              <p class="text-muted mb-0">
                                  {{ dataset.num_recorded_events}}

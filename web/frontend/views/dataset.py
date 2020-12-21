@@ -58,6 +58,8 @@ class DatasetView(TemplateView):
             context['dataset'] = srv.dataset
             context['experiment_running'] = True
             context['polling'] = srv.is_polling
+            context['num_persons'] = len(context['person_list'])
+            context['num_activities'] = len(context['activity_list'])
         else:
             context['experiment_running'] = False
             dev_lst = get_device_names()

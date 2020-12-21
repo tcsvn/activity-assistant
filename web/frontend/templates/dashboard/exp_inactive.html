@@ -1,12 +1,9 @@
 <div class="card w-90 mb-2">
     <div class="card-body">
         <h5 class="card-title">Experiment</h5>
-            <p class="card-text">Start an experiment. Notice that the configuration is frozen to ensure
-                consistency. It is not possible to change device or person assignments running experiment
-                during the run. Furthermore the option to run predictions is not avaliable.
-                Information about the current experiment can be looked up under 
-                <a href="../dataset">datasets</a>.
-                
+            <p class="card-text"> Collect data for a fixed time interval with the current <a href="../dataset">setup</a>.
+                Notice the configuration is frozen to ensure consistency. This means it is not possible to change device 
+                or person assignments during an experiment. Furthermore the option to run predictions is not avaliable.
             </p>
             <form class="form row" action="{% url 'dashboard' %}" method="POST">
                 {% csrf_token %}

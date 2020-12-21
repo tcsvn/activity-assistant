@@ -32,7 +32,6 @@ class DashboardView(TemplateView):
         count_models = 0
         count_activity = len(activity_list)
         count_device = len(device_list)
-        count_dataset = len(dataset_list)
         srv = get_server()
         setup_complete = srv.setup == 'complete'
         experiment_stat = experiment.get_status()
@@ -48,7 +47,7 @@ class DashboardView(TemplateView):
             'count_models' : count_models,
             'count_activity' : count_activity,
             'count_device' : count_device,
-            'count_dataset' : count_dataset,
+            'count_dataset' : len(dataset_list),
             'setup_complete' : setup_complete,
             'experiment_status':experiment_stat,
             'experiment_active': is_exp_active,
@@ -57,6 +56,9 @@ class DashboardView(TemplateView):
         }
         if is_exp_active:
             context['dataset'] = srv.dataset
+            context['num_persons'] = len(person_list)
+            context['num_activities'] = len(activity_list)
+            context['num_devices'] = len(device_list)
         if add_context is not None:
             context.update(add_context)
         return context

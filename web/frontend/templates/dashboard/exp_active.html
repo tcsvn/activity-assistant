@@ -1,16 +1,19 @@
 <div class="card w-90 mb-2">
     <div class="card-body">
-        <h5 class="card-title">Experiment: {{ dataset.name }} </h5>
+        <h5 class="card-title">Experiment: {{ dataset.name | title}} </h5>
             <p class="card-text">
                 An experiment is currently conducted. Pausing the experiment adds a device
                 in the data that marks the beginning and end of the time interval not ment to be include in 
-                the data analysis.  
+                the data analysis (to come).  
                 <ul>
-                    <li>start time:  {{ dataset.start_time }}</li>
-                    <li># devices:  3 </li>
+                    <li>Start time:  {{ dataset.start_time }}</li>
+                    <li># persons: {{ num_persons }} </li>
+                    <li># activities: {{ num_activities }} </li>
+                    <li># devices:  {{ dataset.num_devices }} </li>
+                    <li>Size:  {{ dataset.data_size | filesizeformat }} </li>
                 </ul>
             </p>
-            To get insights go to <a href="../dataset">dataset</a> and analyse stuff
+            For generating plots or further information visit <a href="../dataset">datasets</a>.
     </div>
     <div class="card-footer">
             <div class="btn-group shadow-0 float-right" role="group" aria-label="Basic example">

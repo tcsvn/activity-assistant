@@ -105,8 +105,13 @@ def start(request):
 
     # 1. create dataset 
     dataset_folder = settings.DATASET_PATH + ds_name +'/'
-    ds = Dataset(name=ds_name, start_time=get_current_time(), 
-        path_to_folder=dataset_folder)
+    ds = Dataset(name=ds_name, 
+                start_time=get_current_time(), 
+                path_to_folder=dataset_folder,
+                num_devices=len(Device.objects.all()),
+                num_recorded_events=0,
+                data_size=0
+    )
     ds.save()
     # 
     srv = get_server()
@@ -130,7 +135,11 @@ def start(request):
             person.smartphone.save()
         
         # create new personstatistic
-        ps = PersonStatistic(name=person.name, dataset=ds)
+        ps = PersonStatistic(name=person.name, 
+                            dataset=ds,
+                            num_activities=len(Activity.objects.all()),
+                            num_recorded_activities=0
+        )
         person.person_statistic = ps
         person.person_statistic.save()
         person.save()
