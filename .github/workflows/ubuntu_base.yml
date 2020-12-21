@@ -1,4 +1,4 @@
-name: 'Publish armv7'
+name: 'Build ubuntu base'
 on:
   workflow_dispatch:
 
