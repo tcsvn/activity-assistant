@@ -1,0 +1,6 @@
+{
+  "name": "ubuntu-base",
+  "version": "latest",
+  "arch": ["armv7", "aarch64", "armhf"],
+  "image": "tchr157/{arch}-base-ubuntu"
+}

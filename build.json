@@ -1,6 +1,6 @@
 {
     "squash": true,
     "build_from": {
-      "armv7": "homeassistant/armv7-base-ubuntu:18.04"
+      "armv7": "tchr157/armv7-base-ubuntu:latest"
     }
 }

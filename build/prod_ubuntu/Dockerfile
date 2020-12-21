@@ -1,37 +1,15 @@
 ARG BUILD_FROM
 FROM $BUILD_FROM
-
 ENV LANG C.UTF-8
-
-# todo remove expect
-# to fix pillow error 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-    software-properties-common \
-    && add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3.8 \
-    python3-pip \
-    python3.8-dev \
-    libfreetype6 libfreetype6-dev zlib1g-dev \
-    gcc gfortran\
-    libopenblas-dev \
-    liblapack-dev cython \
-    && \
-apt-get clean && \
-rm -rf /var/lib/apt/lists/*
-
-#RUN update-alternatives --remove python /usr/bin/python2 \
-#    && update-alternatives --install /usr/bin/python python /usr/bin/python3.8 10
-RUN python3.8 -m pip install --upgrade pip 
-RUN pip install --no-cache-dir Cython setuptools wheel
-COPY build/prod_ubuntu/requirements.txt .
-RUN pip install -r requirements.txt
-RUN pip install pandas
 
 ENV DJANGO_ENV='production'
 ENV DJANGO_DEBUG=false
 ENV PYTHONPATH=/etc/opt/activity_assistant:/opt/activity_assistant
+
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+RUN pip install pyadlml
 
 # copy program files
 COPY web/ /opt/activity_assistant/web/ 

@@ -7,12 +7,14 @@ coreapi
 Pillow
 zeroconf
 asyncws
-pyadlml
 sqlalchemy
 aiohttp
 gunicorn
-#pandas
 kiwisolver
-scipy
-sklearn
 matplotlib
+
+# ml
+#pandas
+#sklearn
+#scipy
+#pyadlml

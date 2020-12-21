@@ -1,0 +1,6 @@
+{
+    "squash": true,
+    "build_from": {
+      "armv7": "homeassistant/armv7-base-ubuntu:18.04"
+    }
+}
