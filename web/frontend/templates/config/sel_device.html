@@ -9,10 +9,13 @@
         <select
             multiple="multiple"
             class="form-control"
+            size="9"
             name="hass_select"
             id="hass_dev_select">
             {% for hass_device in hass_dev_list %}
-            <option>{{ hass_device }}</option>
+              <option>{{ hass_device }}</option>
+            {% empty %}
+              <option value="">&nbsp;</option>
             {% endfor %}
         </select>
         <button
@@ -32,10 +35,13 @@
         <select
           multiple="multiple"
           class="form-control"
+          size="9"
           name="act_assist_select"
           id="act_assist_dev_select">
           {% for aa_dev in aa_dev_list %}
-          <option>{{ aa_dev }}</option>
+            <option>{{ aa_dev }}</option>
+            {% empty %}
+              <option value="">&nbsp;</option>
           {% endfor %}
         </select>
         <button

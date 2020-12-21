@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 import os 
 import hass_api.rest as hass_rest
 from frontend.util import get_server, refresh_hass_token, \
-    get_device_names, get_activity_names, get_person_names 
+    get_device_names, get_activity_names, get_person_hass_names 
 import frontend.experiment as experiment
 
 
@@ -27,7 +27,8 @@ class ConfigView(TemplateView):
         # get hass users
         hass_users = hass_rest.get_user_names(
             settings.HASS_API_URL, srv.hass_api_token,)
-        hass_users = list(set(hass_users).difference(set(get_person_names())))
+
+        hass_users = list(set(hass_users).difference(set(get_person_hass_names())))
 
         return {'server': srv,
                 'url': url,
@@ -87,10 +88,16 @@ def conf_devices(request):
     assert intent in ['track', 'remove']
     dev_lst = request.POST.getlist('devices')
     if intent == 'track':
-        for name in request.POST.getlist('hass_select'):
+        lst = request.POST.getlist('hass_select')
+        if len(lst) == 1 and lst[0] == "":
+            return
+        for name in lst:
             Device(name=name).save()
     else:
-        for name in request.POST.getlist('act_assist_select'):
+        lst = request.POST.getlist('act_assist_select')
+        if len(lst) == 1 and lst[0] == "":
+            return
+        for name in lst:
             Device.objects.get(name=name).delete()
 
 def conf_activities(request):
@@ -109,11 +116,17 @@ def conf_persons(request):
     assert intent in ['track', 'remove', 'add']
     dev_lst = request.POST.getlist('devices')
     if intent == 'track':
-        for hass_name in request.POST.getlist('hass_select'):
+        lst = request.POST.getlist('hass_select')
+        if len(lst) == 1 and lst[0] == "":
+            return
+        for hass_name in lst:
             name = hass_name.split('.')[1]
             Person(name=name, hass_name=hass_name).save()
     elif intent == 'remove':
-        for col in request.POST.getlist('act_assist_select'):
+        lst = request.POST.getlist('act_assist_select')
+        if len(lst) == 1 and lst[0] == "":
+            return
+        for col in lst:
             name = col.split(' ')[0]
             Person.objects.get(name=name).delete()
     else:
