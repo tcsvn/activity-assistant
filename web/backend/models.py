@@ -51,6 +51,14 @@ class Dataset(models.Model):
     plot_hist_trigger_time_diff = models.ImageField(null=True)
     plot_heatmap_cross_correlation = models.ImageField(null=True)
 
+    def delete(self, *args, **kwargs):
+        """ perform additional cleanup when deleting a dataset
+        """
+        import shutil 
+        # cleanup the mediafiles/plots associated with the person statistics and dataset
+        shutil.rmtree(settings.MEDIA_ROOT + self.name)
+        super().delete(*args, **kwargs) 
+
 class PersonStatistic(models.Model):
     name = models.CharField(null=True, max_length=100)
     dataset = models.ForeignKey(Dataset, related_name="person_statistics", on_delete=models.CASCADE)
