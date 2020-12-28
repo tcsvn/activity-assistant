@@ -9,6 +9,7 @@ from frontend.views.dataset import get_datasets_personal_statistics
 
 class DatasetAnalyticsView(TemplateView):
     def create_context(self, request):
+        srv = get_server()
         context = {}
         dataset = Dataset.objects.get(pk=int(self._getDatasetId(request)))
 
@@ -17,6 +18,8 @@ class DatasetAnalyticsView(TemplateView):
         context['ds'] = dataset
         context['person_statistics'] = dataset.person_statistics.all()
         context['datasets_perstats'] = get_datasets_personal_statistics()
+
+        context['service_plot_gen'] = (srv.plot_gen_service_pid is not None)
         return context
 
     def _getDatasetId(self, request):

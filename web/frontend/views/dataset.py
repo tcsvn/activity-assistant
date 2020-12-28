@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from frontend.util import get_server, get_device_names
 from zipfile import ZipFile 
 import pathlib
+import shutil
 import logging
 from django.http import FileResponse
 from frontend.experiment import copy_actfiles2dataset
@@ -48,7 +49,7 @@ class DatasetView(TemplateView):
         context['activity_list'] = Activity.objects.all()
 
         srv = get_server()
-
+        context['service_plot_gen'] = (srv.plot_gen_service_pid is not None)
         try:
             context['datasets_perstats'] = get_datasets_personal_statistics()
         except:
@@ -100,6 +101,7 @@ class DatasetView(TemplateView):
         ds = Dataset.objects.get(name=name)
 
         collect_dataset_statistics(ds)
+        set_placeholder_images(ds)
         start_plot_gen_service(ds)
 
     def generate_analysis_for_exp(self, request):
@@ -109,6 +111,8 @@ class DatasetView(TemplateView):
         copy_actfiles2dataset(ds)
         collect_data_from_hass()
         collect_dataset_statistics(ds)
+
+        set_placeholder_images(ds)
         start_plot_gen_service(ds)
 
 
@@ -181,6 +185,37 @@ def savefig(fig, file_path):
     plt.savefig(file_path)
 
 
+def set_placeholder_images(dataset):
+    """ sets all plots to a grey placeholder image
+    """
+    filename = 'plot_placeholder.png'
+    placeholder_image_path = settings.STATIC_ROOT + 'images/' + filename
+    placeholder_media_path = settings.MEDIA_ROOT + '/' +  filename
+
+    # copy from static to media  
+    if not Path(placeholder_media_path).is_file():
+        from_file = pathlib.Path(placeholder_image_path)
+        to_file = pathlib.Path(placeholder_media_path)
+        shutil.copy(from_file, to_file) 
+
+    logger.error(placeholder_image_path)
+    for ps in dataset.person_statistics.all():
+        ps.plot_hist_counts = filename
+        ps.plot_boxplot_duration = filename
+        ps.plot_hist_cum_duration = filename
+        ps.plot_heatmap_transitions = filename
+        ps.plot_ridge_line = filename
+        ps.save()
+    
+    dataset.plot_hist_trigger_time_diff = filename
+    dataset.plot_heatmap_trigger_time = filename
+    dataset.plot_heatmap_trigger_one_day = filename
+    dataset.plot_hist_counts = filename
+    dataset.plot_hist_on_off = filename
+    dataset.plot_boxplot_on_duration = filename
+    dataset.plot_heatmap_cross_correlation = filename
+    dataset.save()
+
 def create_zip(folder_to_zip, dest_path):
     """ zips a folder with all files at the base and saves it at given location
     Parameters
@@ -215,7 +250,22 @@ def start_plot_gen_service(dataset):
     srv = get_server()
     command = ["python3", settings.PLOT_GEN_SERVICE_PATH]
     command += ['--dataset-id', str(dataset.id)]
+    if settings.DEBUG:
+        command += ['--debug']
 
     proc = subprocess.Popen(command, close_fds=True)
     srv.plot_gen_service_pid = proc.pid 
     srv.save()
+
+def kill_plot_get_service(dataset):
+    import os
+    import signal
+    srv = get_server()
+    pid = srv.plot_gen_service_pid
+    if pid is not None:
+        try:
+            os.kill(pid, signal.SIGTERM)
+        except ProcessLookupError:
+            logger.error('process plot gen allready deleted')
+        srv.plot_gen_service_pid = None
+        srv.save()

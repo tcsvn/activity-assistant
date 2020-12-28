@@ -8,6 +8,14 @@
         {% else %}
             {% include 'dataset/no_data.html' %}
         {% endif %}
+        {% if service_plot_gen %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                Plots and statistics are being generated. Running another analysis requires 
+                the current to be completed. Refresh the page to know whether the task is finished.  
+                <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+            </div>       
+        {% endif %}
+
         <div class="card mt-3">
             <div class="card-header"> 
                 <h5>Datasets </h5>
