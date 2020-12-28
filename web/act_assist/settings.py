@@ -142,6 +142,21 @@ URL_PERSONS = r'/person/'
 URL_SYNTHETIC_ACTIVITY = r'syntheticactivity'
 URL_DEVICE_COMPONENT = r'devcomp'
 
+# plot filenames
+PLOT_ACT_HIST_COUNTS_FN = 'hist_counts.png'
+PLOT_ACT_BP_DURATION_FN = 'boxplot_duration.png'
+PLOT_ACT_CUM_DUR_FN = 'hist_cum_duration.png'
+PLOT_ACT_HM_TRANS_FN = 'heatmap_transitions.png'
+PLOT_ACT_RIDGE_FN = 'ridge_line.png'
+
+PLOT_DEV_HIST_TRIG_TIME_FN = 'hist_trigger_time_diff.png'
+PLOT_DEV_HM_TRIG_TIME_FN = 'heatmap_trigger_time.png'
+PLOT_DEV_HM_TRIG_ONE_DAY_FN = 'heatmap_trigger_one_day.png'
+PLOT_DEV_HIST_COUNTS_FN = 'hist_counts.png'
+PLOT_DEV_BP_ON_DUR_FN = 'boxplot_on_duration.png'
+PLOT_DEV_HIST_ON_OFF_FN = 'hist_on_off.png'
+PLOT_DEV_HM_CROSS_CORR_FN = 'heatmap_cross_corr.png'
+
 # qrcode cache
 CACHES = {
     'default': {

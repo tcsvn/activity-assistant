@@ -1,36 +1,36 @@
-                    {% if ds.plot_hist_on_off %}
-                        <figure class="figure">
-                            <img class="figure-img img-fluid" src="{{ ds.plot_hist_on_off.url }}"/>
-                            <figcaption class="figure-caption">There are a total of ## number of devices</figcaption>
-                        </figure>
-                    {% endif %}
-                    {% if ds.plot_heatmap_trigger_one_day %}
-                        <figure class="figure ">
-                            <img class="figure-img img-fluid mw-20" src="{{ ds.plot_heatmap_trigger_one_day.url }}"/>
-                            <figcaption class="figure-caption">There are a total of ## number of devices</figcaption>
-                        </figure>
-                    {% endif %}
-                    {% if ds.plot_hist_trigger_time_diff %}
-                        <figure class="figure">
-                            <img class="figure-img img-fluid" src="{{ ds.plot_hist_trigger_time_diff.url }}"/>
-                            <figcaption class="figure-caption">There are a total of ## number of devices</figcaption>
-                        </figure>
-                    {% endif %}
-                    {% if ds.plot_heatmap_trigger_time %}
-                        <figure class="figure">
-                            <img class="figure-img img-fluid" src="{{ ds.plot_heatmap_trigger_time.url }}"/>
-                            <figcaption class="figure-caption">There are a total of ## number of devices</figcaption>
-                        </figure>
-                    {% endif %}
-                    {% if ds.plot_heatmap_cross_correlation %}
-                        <figure class="figure">
-                            <img class="figure-img img-fluid" src="{{ ds.plot_heatmap_cross_correlation.url }}"/>
-                            <figcaption class="figure-caption">There are a total of ## number of devices</figcaption>
-                        </figure>
-                    {% endif %}
-                    {% if ds.plot_hist_counts %}
-                        <figure class="figure">
-                            <img class="figure-img img-fluid" src="{{ ds.plot_hist_counts.url }}"/>
-                            <figcaption class="figure-caption">There are a total of ## number of devices</figcaption>
-                        </figure>
-                    {% endif %}
+{% if ds.plot_hist_counts %}
+    <figure class="figure">
+        <img class="figure-img img-fluid" src="{{ ds.plot_hist_counts.url }}"/>
+    <!--    <figcaption class="figure-caption">There are a total of ## number of devices</figcaption> -->
+    </figure>
+{% endif %}
+{% if ds.plot_hist_on_off %}
+    <figure class="figure">
+        <img class="figure-img img-fluid" src="{{ ds.plot_hist_on_off.url }}"/>
+    </figure>
+{% endif %}
+{% if ds.plot_boxplot_on_duration %}
+    <figure class="figure">
+        <img class="figure-img img-fluid" src="{{ ds.plot_boxplot_on_duration.url }}"/>
+    </figure>
+{% endif %}
+{% if ds.plot_hist_trigger_time_diff %}
+    <figure class="figure">
+        <img class="figure-img img-fluid" src="{{ ds.plot_hist_trigger_time_diff.url }}"/>
+    </figure>
+{% endif %}
+{% if ds.plot_heatmap_trigger_one_day %}
+    <figure class="figure ">
+        <img class="figure-img img-fluid mw-20" src="{{ ds.plot_heatmap_trigger_one_day.url }}"/>
+    </figure>
+{% endif %}
+{% if ds.plot_heatmap_trigger_time %}
+    <figure class="figure">
+        <img class="figure-img img-fluid" src="{{ ds.plot_heatmap_trigger_time.url }}"/>
+    </figure>
+{% endif %}
+{% if ds.plot_heatmap_cross_correlation %}
+    <figure class="figure">
+        <img class="figure-img img-fluid" src="{{ ds.plot_heatmap_cross_correlation.url }}"/>
+    </figure>
+{% endif %}

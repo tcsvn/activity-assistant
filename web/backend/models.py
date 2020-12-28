@@ -205,5 +205,6 @@ class Server(models.Model):
     dataset = models.ForeignKey(Dataset, null=True, blank=True, on_delete=models.CASCADE, related_name='synthetic_activities')
     zero_conf_pid = models.IntegerField(null=True)
     poll_service_pid = models.IntegerField(null=True)
+    plot_gen_service_pid = models.IntegerField(null=True)
     time_zone = models.CharField(max_length=20, null=True)
     webhook_count = models.IntegerField(default=0)

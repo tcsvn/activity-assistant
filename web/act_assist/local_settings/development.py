@@ -13,3 +13,4 @@ STATICFILES_DIRS = [
 
 ZERO_CONF_MAIN_PATH = "/share/services/zero_conf_server.py"
 UPDATER_SERVICE_PATH = "/share/services/dataset_updater_service.py"
+PLOT_GEN_SERVICE_PATH = "/share/services/plot_generator_service.py"

@@ -98,15 +98,18 @@ class DatasetView(TemplateView):
     def generate_analysis(self, request):
         name = request.POST.get("dataset_name","")
         ds = Dataset.objects.get(name=name)
-        generate_device_analysis(ds)
 
+        collect_dataset_statistics(ds)
+        start_plot_gen_service(ds)
 
     def generate_analysis_for_exp(self, request):
         name = request.POST.get("dataset_name","")
         ds = Dataset.objects.get(name=name)
+
         copy_actfiles2dataset(ds)
         collect_data_from_hass()
-        generate_device_analysis(ds)
+        collect_dataset_statistics(ds)
+        start_plot_gen_service(ds)
 
 
     def get(self, request):
@@ -128,58 +131,6 @@ class DatasetView(TemplateView):
 
         context = self.create_context(request)
         return render(request, 'dataset.html', context)
-
-def gen_plots_persons(dataset, data):
-    from pyadlml.dataset.plot.activities import hist_counts, boxplot_duration, \
-        hist_cum_duration, heatmap_transitions, ridge_line
-
-    root_path = settings.MEDIA_ROOT + dataset.name + '/'
-    for ps in dataset.person_statistics.all():
-        sub_path = dataset.name + '/plots/' + ps.name + '/'
-        path = settings.MEDIA_ROOT + sub_path
-        df_activities = getattr(data, 'df_activities_{}'.format(ps.name))
-
-        try:
-            hist_counts_filename = 'hist_counts.png'
-            path_to_hist_counts = path + hist_counts_filename
-            hist_counts(df_activities, file_path=path_to_hist_counts)
-            ps.plot_hist_counts = sub_path + hist_counts_filename
-        except:
-            logger.error("couldn't create histogram counts")
-
-        try:
-            boxplot_duration_filename = 'boxplot_duration.png'
-            path_to_boxplot_duration = path + boxplot_duration_filename
-            boxplot_duration(data.df_activities, file_path=path_to_boxplot_duration)
-            ps.plot_boxplot_duration = sub_path + boxplot_duration_filename
-        except:
-            logger.error("couldn't create boxplot_duration")
-
-        try:
-            hist_cum_duration_filename = 'hist_cum_duration.png'
-            path_to_hist_cum_duration = path + hist_cum_duration_filename
-            hist_cum_duration(data.df_activities, file_path=path_to_hist_cum_duration)
-            ps.plot_hist_cum_duration = sub_path + hist_cum_duration_filename
-        except:
-            logger.error("couldn't create hist_cum_duration")
- 
-        try:
-            heatmap_transitions_filename = 'heatmap_transitions.png'
-            path_to_heatmap_transitions = path + heatmap_transitions_filename
-            heatmap_transitions(data.df_activities, file_path=path_to_heatmap_transitions)
-            ps.plot_heatmap_transitions = sub_path + heatmap_transitions_filename
-        except:
-            logger.error("couldn't create heatmap_transitions")
-
-        try:
-            ridge_line_filename = 'ridge_line.png'
-            path_to_ridge_line = path + ridge_line_filename
-            ridge_line(data.df_activities, file_path=path_to_ridge_line)
-            ps.plot_ridge_line = sub_path + ridge_line_filename
-        except:
-            logger.error("couldn't create ridge_line")
-
-        ps.save()
 
 def collect_person_statistics(ps):
     """ gets the number of activities, number of recorded activities and activity file datasize
@@ -217,75 +168,6 @@ def collect_dataset_statistics(dataset):
 
     dataset.data_size = data_size
     dataset.save()
-    
-def generate_device_analysis(dataset):
-    """
-    """
-    from pyadlml.dataset import load_act_assist
-    from frontend.util import get_person_names
-    data = load_act_assist(dataset.path_to_folder, get_person_names())
-
-    collect_dataset_statistics(dataset)
-    gen_plots_persons(dataset, data)
-    gen_plots_devices(dataset, data)
-
-
-def gen_plots_devices(dataset, data):
-    from pyadlml.dataset.plot.devices import hist_trigger_time_diff, boxplot_on_duration, \
-        heatmap_trigger_one_day, heatmap_trigger_time, heatmap_cross_correlation, \
-        hist_on_off, hist_counts
-
-    sub_path = dataset.name + '/plots/'
-    path = settings.MEDIA_ROOT + sub_path
-
-    try:
-        hist_trigger_time_diff_filename = 'hist_trigger_time_diff.png'
-        path_to_hist_trigger_time_diff = path + hist_trigger_time_diff_filename
-        hist_trigger_time_diff(data.df_devices, file_path=path_to_hist_trigger_time_diff)
-        dataset.plot_hist_trigger_time_diff = sub_path + hist_trigger_time_diff_filename
-    except:
-        pass
-
-    try:
-        heatmap_trigger_time_filename = 'heatmap_trigger_time.png'
-        path_to_heatmap_trigger_time = path + heatmap_trigger_time_filename
-        heatmap_trigger_time(data.df_devices, file_path=path_to_heatmap_trigger_time)
-        dataset.plot_heatmap_trigger_time = sub_path + heatmap_trigger_time_filename
-    except:
-        pass
-
-
-    try:
-        heatmap_trigger_one_day_filename = 'heatmap_trigger_one_day.png'
-        path_to_heatmap_trigger_one_day = path + heatmap_trigger_one_day_filename
-        heatmap_trigger_one_day(data.df_devices, file_path=path_to_heatmap_trigger_one_day)
-        dataset.plot_heatmap_trigger_one_day = sub_path + heatmap_trigger_one_day_filename
-    except:
-        pass
-
-
-    try:
-        hist_counts_filename = 'hist_counts.png'
-        path_to_hist_counts = path + hist_counts_filename
-        hist_counts(data.df_devices, file_path=path_to_hist_counts)
-        dataset.plot_hist_counts = sub_path + hist_counts_filename
-    except:
-        pass
-
-
-    #assign_plot_obj('boxplot_on_duration.png', boxplot_on_duration, dataset.plot_boxplot_on_duration,
-    #                    path, sub_path, data.df_devices)
-    #assign_plot_obj('hist_on_off.png', hist_on_off, dataset.plot_hist_on_off,
-    #                    path, sub_path, data.df_devices)
-
-    dataset.save()
-
-def assign_plot_obj(filename, func, attr, total_path, rel_path, df_acts):
-    path_to_file = total_path + filename
-    func(df_acts, file_path=path_to_file)
-    attr = rel_path + filename
-    logger.error('hc path: ' + path_to_file)
-    logger.error('hc subpath: ' + rel_path + filename)
 
 
 def savefig(fig, file_path):
@@ -297,7 +179,6 @@ def savefig(fig, file_path):
     if not os.path.isdir(folder_path):
         os.makedirs(folder_path)
     plt.savefig(file_path)
-
 
 
 def create_zip(folder_to_zip, dest_path):
@@ -322,3 +203,19 @@ def create_zip(folder_to_zip, dest_path):
         # writing each file one by one 
         for f in file_paths: 
             zip.write(f, arcname=basename(f)) 
+
+
+def start_plot_gen_service(dataset):
+    """ starts a process that generates plots for a given dataset
+    Parameters
+    ----------
+    dataset : model.Dataset
+    """
+    import subprocess
+    srv = get_server()
+    command = ["python3", settings.PLOT_GEN_SERVICE_PATH]
+    command += ['--dataset-id', str(dataset.id)]
+
+    proc = subprocess.Popen(command, close_fds=True)
+    srv.plot_gen_service_pid = proc.pid 
+    srv.save()
