@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from backend.serializers import DatasetSerializer
 from frontend.util import get_device_names
 from frontend.util import collect_data_from_hass
+import frontend.experiment as experiment
 
 class WebhookView(TemplateView):
     def enable_hass_comp(self):

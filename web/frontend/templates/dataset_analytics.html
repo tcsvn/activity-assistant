@@ -8,14 +8,14 @@
     <div class="card-header">
       <div class="btn-toolbar justify-content-between" role="toolbar">
         <h5>Dataset: {{ dataset.name }}</h5>
-        <form class="mr-2" action="{% url 'dataset' %}" method="POST">
+        <form class="mr-2" action="" method="POST">
           {% csrf_token %}
           <input type="hidden" name="dataset_name" value="{{dataset.name}}" />
           <button
             type="submit"
             class="btn btn-dark"
             name="intent"
-            value="gen_analysis_for_experiment"
+            value="generate_analysis"
             {% if service_plot_gen %} disabled {% endif %}>
             Run Analysis
           </button>

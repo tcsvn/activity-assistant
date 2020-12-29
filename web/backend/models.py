@@ -56,7 +56,10 @@ class Dataset(models.Model):
         """
         import shutil 
         # cleanup the mediafiles/plots associated with the person statistics and dataset
-        shutil.rmtree(settings.MEDIA_ROOT + self.name)
+        try:
+            shutil.rmtree(settings.MEDIA_ROOT + self.name)
+        except FileNotFoundError:
+            pass
         super().delete(*args, **kwargs) 
 
 class PersonStatistic(models.Model):
