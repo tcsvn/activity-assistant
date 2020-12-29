@@ -17,5 +17,8 @@ if [ ! -e $CONTAINER_ALREADY_STARTED ]; then
 fi
 
 
-# Start Gunicorn processes
-exec gunicorn act_assist.wsgi:application --bind 0.0.0.0:8000
+# Start Gunicorn processes in background
+exec gunicorn act_assist.wsgi:application --bind 0.0.0.0:8000 &
+
+# start nginx in foreground
+/usr/sbin/nginx -g "daemon off; pid /tmp/nginx.pid;"

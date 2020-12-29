@@ -183,7 +183,7 @@ if ENV_SETTINGS == 'development':
 
 elif ENV_SETTINGS == 'production':
     try:
-        from act_assist.local_settings.production import *
+        from local_settings.production import *
     except ImportError:
-        logger.error('couldn\'t import development settings')
+        logger.error('couldn\'t import production settings')
         raise 
