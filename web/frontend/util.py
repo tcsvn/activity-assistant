@@ -8,6 +8,10 @@ import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+
+def input_is_empty(input):
+    return input.strip() == ""
+
 def get_device_names():
     res = []
     for dev in Device.objects.all():

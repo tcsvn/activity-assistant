@@ -3,7 +3,7 @@ import os
 import signal
 from pathlib import Path
 from frontend.util import get_server, get_device_names, start_updater_service, \
-    stop_updater_service, get_current_time, get_activity_names
+    stop_updater_service, get_current_time, get_activity_names, input_is_empty
 import pandas as pd
 import logging
 from pyadlml.dataset._datasets.activity_assistant import _read_devices
@@ -96,8 +96,10 @@ def start(request):
     -------
         True if it was successfull
     """
-    ds_name = request.POST.get("name","")
+    ds_name = request.POST.get("name","").strip()
     try:
+        if input_is_empty(ds_name):
+            return False
         Dataset.objects.get(name=ds_name)
         return False
     except:
