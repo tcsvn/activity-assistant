@@ -165,8 +165,8 @@ if __name__ == "__main__":
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'act_assist.settings')
     else:
         logger.info('running in production mode')
-        sys.path.append('/opt/activity-assistant/web')
-        sys.path.append('/etc/opt/activity-assistant/')
+        sys.path.append('/opt/activity_assistant/web')
+        sys.path.append('/etc/opt/activity_assistant/')
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
 
     import django
