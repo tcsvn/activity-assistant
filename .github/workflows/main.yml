@@ -7,7 +7,7 @@ on:
 
 jobs:
   build_alpine:
-    name: Publish alpine builds for amd64, armhf, aarch64
+    name: Publish alpine builds for amd64 and i386
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
@@ -27,8 +27,8 @@ jobs:
           --no-cache \
           --target /data
 
-  build_debian:
-    name: Publish debian build for armv7
+  build_ubuntu:
+    name: Publish ubuntu build for armv7, armhf and aarch64
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
