@@ -91,7 +91,8 @@ class SetupView(TemplateView):
         # only advance if the component was installed at hass site
         #if srv.hass_comp_installed:
         stop_zero_conf_server()
-        self._increment_one_step()
+        #self._increment_one_step()
+        
 
 
     def post_step1(self, request):

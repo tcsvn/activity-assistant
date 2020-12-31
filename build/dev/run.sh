@@ -2,7 +2,7 @@
 cd /share/
 
 CONTAINER_ALREADY_STARTED="/data/cont_already_started_file"
-export PYTHONPATH=/share/web/act_assist
+export PYTHONPATH=/share/web/act_assist:/share/:/share/web
 
 if [ ! -e $CONTAINER_ALREADY_STARTED ]; then
     mkdir -p /data/

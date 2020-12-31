@@ -3,32 +3,34 @@ FROM $BUILD_FROM
 ENV LANG C.UTF-8
 
 ENV DJANGO_ENV='production'
-ENV DJANGO_DEBUG=false
 ENV PYTHONPATH=/etc/opt/activity_assistant:/opt/activity_assistant
 
-
-COPY build/prod_ubuntu/requirements.txt .
-RUN pip install -r requirements.txt
-RUN pip install pyadlml
+# install relevant files
+RUN pip install --no-cache pyadlml
 
 # copy program files
 COPY web/ /opt/activity_assistant/web/ 
 COPY hass_api/ /opt/activity_assistant/hass_api/
-
-#COPY web/frontend/static/ /var/cache/activity_assistant/static/
-#COPY web/frontend/templates/ /var/cache/activity_assistant/static/templates/
 COPY services/* /opt/activity_assistant/
 
 # copy configuration files
 COPY web/act_assist/settings.py  /etc/opt/activity_assistant/
 COPY web/act_assist/local_settings/ /etc/opt/activity_assistant/local_settings/
 
+# configure nginx & gunicorn
+COPY build/prod_ubuntu/nginx.conf /etc/nginx/conf.d
+
 WORKDIR /home
 COPY build/prod_ubuntu/start.sh build/prod/initial_server.json ./
 RUN chmod a+x start.sh
-
-# copy static files
-RUN mkdir -p /var/cache/activity_assistant/static/
-RUN python3.8 /opt/activity_assistant/web/manage.py collectstatic
 #
+## copy static files
+RUN mkdir -p /var/cache/activity_assistant/static/ \
+ && python3.8 /opt/activity_assistant/web/manage.py collectstatic \
+ && ln -sf /usr/bin/python3.8 /usr/bin/python3
+# link python3 to python3.8 because starting a python script in ubuntu
+# launches 3.6 system python and doesn't work
+
 CMD [ "./start.sh" ]
+
+RUN apt-get update && apt-get install -y vim

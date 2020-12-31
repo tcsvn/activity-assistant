@@ -18,4 +18,7 @@ fi
 
 
 # Start Gunicorn processes
-exec gunicorn act_assist.wsgi:application --bind 0.0.0.0:8000
+exec gunicorn act_assist.wsgi:application --bind unix:/tmp/gunicorn.sock &
+
+# start nginx in foreground
+/usr/sbin/nginx -g "daemon off;"
