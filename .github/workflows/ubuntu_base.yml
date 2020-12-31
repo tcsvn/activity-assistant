@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build_armv7:
     name: Build ubuntu base armv7
     runs-on: ubuntu-latest
     steps:
@@ -21,8 +21,8 @@ jobs:
           --armv7 \
           --file build/prod_ubuntu/Dockerfile.base \
           --target /data/build/prod_ubuntu
-  build:
-    name: Build ubuntu base armhf
+  build_aarch64:
+    name: Build ubuntu base aarch64
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
@@ -39,8 +39,8 @@ jobs:
           --aarch64 \
           --file build/prod_ubuntu/Dockerfile.base \
           --target /data/build/prod_ubuntu
-  build:
-    name: Build ubuntu base aarch64
+  build_armhf:
+    name: Build ubuntu base armhf 
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
