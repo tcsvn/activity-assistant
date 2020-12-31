@@ -19,8 +19,8 @@ jobs:
       with:
         args: |
           --armv7 \
-          --file build/prod_ubuntu/Dockerfile.base \
-          --target /data/build/prod_ubuntu
+          --file build/base_ubuntu/Dockerfile \
+          --target /data/build/base_ubuntu
   build_aarch64:
     name: Build ubuntu base aarch64
     runs-on: ubuntu-latest
@@ -37,8 +37,8 @@ jobs:
       with:
         args: |
           --aarch64 \
-          --file build/prod_ubuntu/Dockerfile.base \
-          --target /data/build/prod_ubuntu
+          --file build/base_ubuntu/Dockerfile \
+          --target /data/build/base_ubuntu
   build_armhf:
     name: Build ubuntu base armhf 
     runs-on: ubuntu-latest
@@ -55,5 +55,5 @@ jobs:
       with:
         args: |
           --armhf \
-          --file build/prod_ubuntu/Dockerfile.base \
-          --target /data/build/prod_ubuntu
+          --file build/base_ubuntu/Dockerfile \
+          --target /data/build/base_ubuntu
