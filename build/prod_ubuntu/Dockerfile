@@ -32,5 +32,3 @@ RUN mkdir -p /var/cache/activity_assistant/static/ \
 # launches 3.6 system python and doesn't work
 
 CMD [ "./start.sh" ]
-
-RUN apt-get update && apt-get install -y vim

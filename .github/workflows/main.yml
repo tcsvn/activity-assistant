@@ -22,8 +22,7 @@ jobs:
       with:
         args: |
           --amd64 \
-          --armhf \
-          --aarch64 \
+          --i386 \
           --file build/prod/Dockerfile \
           --no-cache \
           --target /data
@@ -44,6 +43,8 @@ jobs:
       with:
         args: |
           --armv7 \
+          --armhf \
+          --aarch64 \
           --file build/prod_ubuntu/Dockerfile \
           --no-cache \
           --target /data

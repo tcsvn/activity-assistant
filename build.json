@@ -1,6 +1,8 @@
 {
     "squash": true,
     "build_from": {
-      "armv7": "tchr157/armv7-base-ubuntu:latest"
+      "armv7": "tchr157/armv7-base-ubuntu:latest",
+      "aarch64": "tchr157/aarch64-base-ubuntu:latest",
+      "armhf": "tchr157/armhf-base-ubuntu:latest"
     }
 }
