@@ -19,6 +19,7 @@ jobs:
       with:
         args: |
           --armv7 \
+          --no-cache \
           --file build/base_ubuntu/Dockerfile \
           --target /data/build/base_ubuntu
   build_aarch64:
@@ -37,6 +38,7 @@ jobs:
       with:
         args: |
           --aarch64 \
+          --no-cache \
           --file build/base_ubuntu/Dockerfile \
           --target /data/build/base_ubuntu
   build_armhf:
@@ -55,5 +57,6 @@ jobs:
       with:
         args: |
           --armhf \
+          --no-cache \
           --file build/base_ubuntu/Dockerfile \
           --target /data/build/base_ubuntu
