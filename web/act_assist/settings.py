@@ -118,6 +118,10 @@ DATABASES = {
     }
 }
 
+# REST API
+REST_API_URL='api'
+REST_API_TITLE='Activity-assistant API'
+
 # experiment
 POLL_INTERVAL_LST = ['5s', '1m', '10m', '30m', '2h', '6h']
 DATASET_PATH = DATA_ROOT + 'datasets/' # path where all the datasets lie

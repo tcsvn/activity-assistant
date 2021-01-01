@@ -6,8 +6,6 @@ from rest_framework.schemas import get_schema_view
 from backend import views
 import settings
 
-API_TITLE='Activity-assistant API'
-API_LINK='api/v1'
 
 router = DefaultRouter()
 router.register(settings.URL_SERVER, views.ServerViewSet)
@@ -29,19 +27,19 @@ urlpatterns = []
 
 
 urlpatterns += [
-    url(r'^%s/'%(API_LINK), include(router.urls)),
+    url(r'^%s/'%(settings.REST_API_URL), include(router.urls)),
 ]
 
 
 # add coreapi suppoert
-schema_view = get_schema_view(title=API_TITLE)
+schema_view = get_schema_view(title=settings.REST_API_TITLE)
 urlpatterns+=[
-   url(r'^%s/schema/$'%(API_LINK), schema_view),
+   url(r'^%s/schema/$'%(settings.REST_API_URL), schema_view),
 ]
 
 # add auth support
 urlpatterns += [
-    url(r'^%s/auth/'%(API_LINK), include('rest_framework.urls')),
+    url(r'^%s/auth/'%(settings.REST_API_URL), include('rest_framework.urls')),
 ]
 
 # serve media
