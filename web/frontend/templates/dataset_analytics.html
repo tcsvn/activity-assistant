@@ -8,18 +8,32 @@
     <div class="card-header">
       <div class="btn-toolbar justify-content-between" role="toolbar">
         <h5>Dataset: {{ dataset.name }}</h5>
-        <form class="mr-2" action="" method="POST">
-          {% csrf_token %}
-          <input type="hidden" name="dataset_name" value="{{dataset.name}}" />
-          <button
-            type="submit"
-            class="btn btn-dark"
-            name="intent"
-            value="generate_analysis"
-            {% if service_plot_gen %} disabled {% endif %}>
-            collect statistics
-          </button>
-        </form>
+          <div class="btn-group shadow-0">
+            <form class="form mr-1" action="" method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="dataset_name" value="{{ds.name}}" />
+              <button
+                type="submit"
+                class="btn btn-link"
+                name="intent"
+                value="export_dataset"
+              >
+                export data
+              </button>
+            </form>
+            <form class="mr-2" action="" method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="dataset_name" value="{{dataset.name}}" />
+              <button
+                type="submit"
+                class="btn btn-dark"
+                name="intent"
+                value="generate_analysis"
+                {% if service_plot_gen %} disabled {% endif %}>
+                collect statistics
+              </button>
+            </form>
+          </div>
       </div>
     </div>
     <div class="card-body">

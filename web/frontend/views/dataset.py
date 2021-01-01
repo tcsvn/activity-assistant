@@ -2,11 +2,9 @@ from backend.models import *
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 from frontend.util import get_server, get_device_names
-from zipfile import ZipFile 
 import pathlib
 import shutil
 import logging
-from django.http import FileResponse
 from frontend.experiment import copy_actfiles2dataset
 from frontend.util import collect_data_from_hass, get_line_numbers_file, get_folder_size
 logger = logging.getLogger(__name__)
@@ -82,19 +80,8 @@ class DatasetView(TemplateView):
     def export_dataset(self, request):
         name = request.POST.get("dataset_name","")
         ds = Dataset.objects.get(name=name)
+        return ds.get_fileResponse()
 
-        # create zip at location
-        path_to_zip = settings.MEDIA_ROOT + ds.name + ".zip"
-        create_zip(ds.path_to_folder, path_to_zip)
-
-        # create response
-        zip_file = open(path_to_zip, 'rb')
-        response = FileResponse(zip_file)
-
-        # cleanup zip file
-        rem_file = pathlib.Path(path_to_zip)
-        rem_file.unlink()
-        return response
 
     def generate_analysis(self, request):
         name = request.POST.get("dataset_name","")
@@ -216,28 +203,7 @@ def set_placeholder_images(dataset):
     dataset.plot_heatmap_cross_correlation = filename
     dataset.save()
 
-def create_zip(folder_to_zip, dest_path):
-    """ zips a folder with all files at the base and saves it at given location
-    Parameters
-    ----------
-    folder_to_zip : String
-        the path to the folder that is going to be zipped
-    dest_path : String
-        the path where the resulting zip file is going to be stored
-    """
-        # collect recursively all files in subfolder
-    file_paths = []
-    for root, directories, files in os.walk(folder_to_zip):
-        for filename in files:
-            filepath = os.path.join(root, filename)
-            file_paths.append(filepath)
 
-    # writing files to a zipfile 
-    from os.path import basename
-    with ZipFile(dest_path,'w') as zip: 
-        # writing each file one by one 
-        for f in file_paths: 
-            zip.write(f, arcname=basename(f)) 
 
 
 def start_plot_gen_service(dataset):

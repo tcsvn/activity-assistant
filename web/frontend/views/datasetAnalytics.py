@@ -44,12 +44,29 @@ class DatasetAnalyticsView(TemplateView):
         collect_dataset_statistics(ds)
         set_placeholder_images(ds)
         start_plot_gen_service(ds)
+    
+    def export_data(self, request):
+        name = request.POST.get("dataset_name","")
+        ds = Dataset.objects.get(name=name)
+        srv = get_server()
+
+        try:
+            if ds.id == srv.dataset.id:
+                copy_actfiles2dataset(ds)
+                collect_data_from_hass()
+        except AttributeError:
+            pass
+
+        return ds.get_fileResponse()
+
 
     def post(self, request):
         intent = request.POST.get("intent","")
-        assert intent in ['generate_analysis']
+        assert intent in ['generate_analysis', 'export_dataset']
         if intent == 'generate_analysis':
             self.generate_analysis(request)
+        elif intent == 'export_dataset':
+            return self.export_data(request)
 
         context = self.create_context(request)
         return render(request, 'dataset_analytics.html', context)

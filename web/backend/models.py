@@ -10,9 +10,11 @@ from django.core.files.storage import FileSystemStorage
 import os
 import logging
 from pathlib import Path
+import pathlib
 from pyadlml.dataset.activities import _create_activity_df
 from django.core.files import File
-
+from django.http import FileResponse
+from backend.util import create_zip
 
 logger = logging.getLogger(__name__)
 #from django.db.models.signals import post_save
@@ -61,6 +63,27 @@ class Dataset(models.Model):
         except FileNotFoundError:
             pass
         super().delete(*args, **kwargs) 
+
+    def get_fileResponse(self):
+        """ zips the dataset and returns a fileResponse object that is served to the user
+        Returns
+        -------
+        fp : FileResponse
+            a reponse object that servers a ZIP file
+        """
+        # create zip at location
+        path_to_zip = settings.MEDIA_ROOT + self.name + ".zip"
+        create_zip(self.path_to_folder, path_to_zip)
+
+        # create response
+        zip_file = open(path_to_zip, 'rb')
+        response = FileResponse(zip_file)
+
+        # cleanup zip file
+        rem_file = pathlib.Path(path_to_zip)
+        rem_file.unlink()
+        return response
+
 
 class PersonStatistic(models.Model):
     name = models.CharField(null=True, max_length=100)
