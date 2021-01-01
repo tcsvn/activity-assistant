@@ -21,12 +21,31 @@
   <div class='row'>
     <h4>Server</h4>
     <p>
-      The ip address is needed for the android logger to connect to.
+      Activity-assistant exposes a <a href="../api/">REST API</a>. 
+      The android logger needs the server address to connect to the API. Fill in 
+      an address where activity-assistant can be reached. The recommended way is to use the IP address of 
+      Home Assistant in your local network. If you access activity-assistant from the internet
+      make sure to set <a href="https://en.wikipedia.org/wiki/Port_forwarding">port forwarding</a>
+      to the respective address in your router. 
     </p>
     <div class="container">
       {% include "config/server.html" %}
     </div>
   </div>
+  {% if server_local_url_provided %}
+      <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+          <strong>Invalid server url.</strong> Android is not able to connect to a .local address.
+          Use Home Assistants IP address instead.
+          <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+      </div>
+  {% endif %}
+
+  {% if server_invalid_address_provided %}
+      <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+          <strong>Invalid server url.</strong> Check please use a correct <a href="https://en.wikipedia.org/wiki/URL">schema</a>.
+          <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+      </div>
+  {% endif %}
   {% if experiment_active %}
     <div class="alert alert-warning mt-3" role="alert">
       An experiment is running. As such part of the configuration is temporarily disabled.

@@ -8,9 +8,11 @@ from frontend.util import get_server, refresh_hass_token, \
     get_person_names, input_is_empty
 import frontend.experiment as experiment
 
+LOCAL_URL_PROVIDED = 'server_local_url_provided'
+INVALID_ADDRESS_PROVIDED = 'server_invalid_address_provided'
 
 class ConfigView(TemplateView):
-    def get_context(self):
+    def get_context(self, add_to_context):
         srv = get_server()
         person_list = Person.objects.all()
         act_list = Activity.objects.all()
@@ -30,8 +32,7 @@ class ConfigView(TemplateView):
             settings.HASS_API_URL, srv.hass_api_token,)
 
         hass_users = list(set(hass_users).difference(set(get_person_hass_names())))
-
-        return {'server': srv,
+        context = {'server': srv,
                 'url': url,
                 'person_list':person_list,
                 'hass_dev_list' : hass_devices,
@@ -42,13 +43,17 @@ class ConfigView(TemplateView):
                 'poll_int_list' : settings.POLL_INTERVAL_LST,
                 'experiment_active':exp_active,
                 }
+        context.update(add_to_context)
+        return context
 
     def get(self, request, *args, **kwargs):
-        context = self.get_context()
+        context = self.get_context({})
+        logger.error(context)
         return render(request, 'config.html', context)
 
     def post(self, request):
         from_section = request.POST.get("from", "")
+        add_to_context = {}
         assert from_section in ["conf_devices", "conf_persons",\
              "conf_activities", "conf_server", "debug"]
         if from_section == 'conf_devices': 
@@ -58,11 +63,17 @@ class ConfigView(TemplateView):
         elif from_section == 'conf_activities': 
             conf_activities(request)
         elif from_section == 'conf_server':
-            conf_server(request)
+            success, reason = conf_server(request)
+            if not success and reason:
+                add_to_context[reason] = True
+            if not success and reason:
+                add_to_context[reason] = True
+
+
         elif from_section == 'debug':
             debug(request)
 
-        context = self.get_context()
+        context = self.get_context(add_to_context)
         return render(request, 'config.html', context)
 
 def debug(request):
@@ -70,19 +81,49 @@ def debug(request):
     collect_data_from_hass()
 
 def conf_server(request):
+    """ sets server related stuff
+    """
+    logger.error('test')
     srv = get_server()
     try:
         pol_int = request.POST.get("poll_interval", "")
         srv.poll_interval = pol_int
     except: 
         pass
+
+    srv.save()
     try:
         address = request.POST.get("address", "")
-        if not input_is_empty(address):
+        if input_is_valid_address(address):
+            if input_is_local_address(address):
+                return False, LOCAL_URL_PROVIDED
+            address = url_strip_appendix(address)
             srv.server_address = address
+            srv.save()
+            return (True, None)
+        else:
+            return False, INVALID_ADDRESS_PROVIDED
     except:
-        pass
-    srv.save()
+        return (True, None)
+
+def url_strip_appendix(url):
+    """ removes trailing stuff behind a url definition
+    """
+    lst = url.split('/')
+    return lst[0] + '//' + lst[2]
+
+def input_is_valid_address(address):
+    """ checks whether the given address is either a valid ipv4 or a valid url
+    """
+    from django.core.validators import URLValidator
+    try:
+        URLValidator()(address)
+        return True
+    except:
+        return False
+
+def input_is_local_address(address):
+    return '.local' in address
 
 def conf_devices(request):
     intent = request.POST.get("intent","")
