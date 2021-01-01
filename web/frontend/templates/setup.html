@@ -53,7 +53,7 @@
             By clicking the connect button activity-assistant will collect
             relevant data from Home Assistant. It also try's to infer the 
             address under which activity-assistant can be reached. This sometimes
-            goes wrong, so make sure to check the config afterwards for the correct address.
+            fails. Make sure to validate the config after the setup.
           </p>
 
           <form action="{% url 'setup' %}" method="POST" class="mb-0">
@@ -68,8 +68,8 @@
           <h4 class="card-title">Configure data collection</h4>
           <p class="card-text">
             Activity-assistant updates a local dataset with relevant entries
-            from the homeassistant database. Set the interval where the
-            data is being polled. Two hours are recommended.
+            from the homeassistant database. Set the interval the
+            data is being polled. 2 hours are recommended.
           </p>
           <form action="{% url 'setup' %}" method="POST" class="mb-0 mt-3">
             <div class="form-group mb-2">
@@ -107,8 +107,8 @@
           {% elif step == "conf_activities" %}
           <h4 class="card-title">Create Activities</h4>
           <p class="card-text">
-            Create activities that capture your style of living. Examples are eating,
-            sleeping, waking_up, leaving_home, entering_home, ....
+            Create activities that capture your style of living. Reasonable examples are eating,
+            sleeping, waking_up, leaving_home, entering_home, etc.
           </p>
           <div class="container mt-3">
             {% include 'config/create_activities.html' %}

@@ -48,7 +48,6 @@ class ConfigView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context({})
-        logger.error(context)
         return render(request, 'config.html', context)
 
     def post(self, request):

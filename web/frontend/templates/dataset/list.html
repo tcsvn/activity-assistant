@@ -59,7 +59,7 @@
           {% include 'dataset/dataset_statistic.html'%}
           <div class="row">
             <p>
-              For plots and other insights see <a href="../dataset/{{ ds.id }}"> specifc statistics </a>
+              For visualizations and details look <a href="../dataset/{{ ds.id }}">here</a>.
             </p>
               <form class="form" action="{% url 'dataset' %}" method="POST">
                 {% csrf_token %}

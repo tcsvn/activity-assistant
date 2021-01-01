@@ -17,7 +17,7 @@
             name="intent"
             value="generate_analysis"
             {% if service_plot_gen %} disabled {% endif %}>
-            Run Analysis
+            collect statistics
           </button>
         </form>
       </div>
@@ -26,10 +26,20 @@
       <div class="col-6">{% include 'dataset/dataset_statistic.html'%}</div>
     </div>
     <div class="card-footer">
-      return to <a href="{% url 'dataset' %}">datasets</a> or to the
-      <a href="{% url 'dashboard' %}">dashboard</a>.
+      <p>
+        Be sure to checkout <a href="https://github.com/tcsvn/pyadlml">pyadlml</a> for 
+        a lot more visualizations and data processing methods.
+        Return to <a href="{% url 'dataset' %}">datasets</a> or to the <a href="{% url 'dashboard' %}">dashboard</a>.
+      </p>
     </div>
   </div>
+
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          Ok it turns out matplotlib is not the greatest tool to generate plots dynamically. If you aren't 
+          satisfied, export your data and use <a href="https://github.com/tcsvn/pyadlml">pyadlml</a> to get 
+          the visualizations right. In future I plan on using bokeh or plotly for this page.
+          <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+      </div>       
   {% if service_plot_gen %}
       <div class="alert alert-secondary alert-dismissible fade show" role="alert">
           Plots and statistics are being generated. Running another analysis requires 
