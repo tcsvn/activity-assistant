@@ -1,0 +1,18 @@
+<h4 class="card-title">Person selection</h4>
+<p class="card-text">Select one or multiple devices to track or not to track. </p>
+
+<div class="container mt-3">
+    {% include 'config/sel_person.html' %}
+    <form action="{% url 'setup' %}" method="POST" class="mb-0">
+        {% csrf_token %} {{ form }}
+        <input type="hidden" name="from" value="conf_persons" />
+        <button
+        type="submit"
+        name="intent"
+        value="next_step"
+        class="btn btn-outline-danger mt-2 float-right"
+        >
+        Next Step
+        </button>
+    </form>
+</div>

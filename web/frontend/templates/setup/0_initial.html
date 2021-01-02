@@ -1,0 +1,15 @@
+<h4 class="card-title">Connect to Home Assistant</h4>
+<p class="card-text">
+    By clicking the connect button activity-assistant will collect
+    relevant data from Home Assistant. It also try's to infer the 
+    address under which activity-assistant can be reached. This sometimes
+    fails. Make sure to validate the config after the setup.
+</p>
+
+<form action="{% url 'setup' %}" method="POST" class="mb-0">
+    <input type="hidden" name="from" value="initial" />
+    {% csrf_token %} {{ form }}
+    <button type="submit" class="btn btn-outline-danger float-right">
+        Connect
+    </button>
+</form>

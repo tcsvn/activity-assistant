@@ -1,0 +1,21 @@
+<h4 class="card-title">Configure data collection</h4>
+<p class="card-text">
+    Activity-assistant updates a local dataset with relevant entries
+    from the homeassistant database. Set the interval the
+    data is being polled. 2 hours are recommended.
+</p>
+
+<form action="{% url 'setup' %}" method="POST" class="mb-0 mt-3">
+    <div class="form-group mb-2">
+        <label for="exampleFormControlSelect1">Select time interval</label>
+        <select class="form-control" id="asdf" name="poll_interval">
+        {% for opt in poll_int_list%}
+        <option>{{ opt }}</option>
+        {% endfor %}
+        </select>
+    </div>
+    {% csrf_token %} {{ form }}
+
+    <input type="hidden" name="from" value="poll_interval" />
+    <button type="submit" class="btn btn-outline-danger float-right">Submit</button>
+</form>

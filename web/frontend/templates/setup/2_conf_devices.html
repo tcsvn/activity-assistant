@@ -1,0 +1,18 @@
+<h4 class="card-title">Device selection</h4>
+<p class="card-text">
+    Select one or multiple devices to track or not to track.
+</p>
+{% include 'config/sel_device.html' %}
+
+<form action="{% url 'setup' %}" method="POST" class="mb-0">
+    {% csrf_token %}
+    <input type="hidden" name="from" value="conf_devices" />
+    <button
+        type="submit"
+        name="intent"
+        value="next_step"
+        class="btn btn-outline-danger mt-2 float-right">
+        Next Step
+    </button>
+</form>
+

@@ -43,120 +43,27 @@
           </div>
         </div>
       </div>
-
-      <!--rest of content-->
+      {{ step }}
       <div class="card">
         <div class="card-body">
-          {% if step == "step 0" %}
-          <h4 class="card-title">Connect to Home Assistant</h4>
-          <p class="card-text">
-            By clicking the connect button activity-assistant will collect
-            relevant data from Home Assistant. It also try's to infer the 
-            address under which activity-assistant can be reached. This sometimes
-            fails. Make sure to validate the config after the setup.
-          </p>
+          {% if step == "initial" %}
+            {% include 'setup/0_initial.html' %}
 
-          <form action="{% url 'setup' %}" method="POST" class="mb-0">
-            <input type="hidden" name="from" value="step 0" />
-            {% csrf_token %} {{ form }}
-            <button type="submit" class="btn btn-outline-danger float-right">
-              Connect
-            </button>
-          </form>
-
-          {% elif step == "step 1" %}
-          <h4 class="card-title">Configure data collection</h4>
-          <p class="card-text">
-            Activity-assistant updates a local dataset with relevant entries
-            from the homeassistant database. Set the interval the
-            data is being polled. 2 hours are recommended.
-          </p>
-          <form action="{% url 'setup' %}" method="POST" class="mb-0 mt-3">
-            <div class="form-group mb-2">
-              <label for="exampleFormControlSelect1">Select time interval</label>
-              <select class="form-control" id="asdf" name="poll_interval">
-                {% for opt in poll_int_list%}
-                <option>{{ opt }}</option>
-                {% endfor %}
-              </select>
-            </div>
-            {% csrf_token %} {{ form }}
-
-            <input type="hidden" name="from" value="step 1" />
-            <button type="submit" class="btn btn-outline-danger float-right">Submit</button>
-          </form>
+          {% elif step == "poll_interval" %}
+            {% include 'setup/1_poll_interval.html' %}
 
           {% elif step == "conf_devices" %}
-          <h4 class="card-title">Device selection</h4>
-          <p class="card-text">
-            Select one or multiple devices to track or not to track.
-          </p>
-          {% include 'config/sel_device.html' %}
-          <form action="{% url 'setup' %}" method="POST" class="mb-0">
-            {% csrf_token %} {{ form }}
-            <input type="hidden" name="from" value="conf_devices" />
-            <button
-              type="submit"
-              name="intent"
-              value="next_step"
-              class="btn btn-outline-danger mt-2 float-right">
-              Next Step
-            </button>
-          </form>
+            {% include 'setup/2_conf_devices.html' %}
 
           {% elif step == "conf_activities" %}
-          <h4 class="card-title">Create Activities</h4>
-          <p class="card-text">
-            Create activities that capture your style of living. Reasonable examples are eating,
-            sleeping, waking_up, leaving_home, entering_home, etc.
-          </p>
-          <div class="container mt-3">
-            {% include 'config/create_activities.html' %}
-            <form action="{% url 'setup' %}" method="POST" class="mb-0">
-              {% csrf_token %} {{ form }}
-              <input type="hidden" name="from" value="conf_activities" />
-              <button
-                type="submit"
-                name="intent"
-                value="next_step"
-                class="btn btn-outline-danger mt-2 float-right"
-              >
-                Next Step
-              </button>
-            </form>
-          </div>
+            {% include 'setup/3_conf_activities.html' %}
 
           {% elif step == "conf_persons" %}
-          <h4 class="card-title">Person selection</h4>
-          <p class="card-text">Select one or multiple devices to track or not to track. </p>
-          <div class="container mt-3">
-            {% include 'config/sel_person.html' %}
-            <form action="{% url 'setup' %}" method="POST" class="mb-0">
-              {% csrf_token %} {{ form }}
-              <input type="hidden" name="from" value="conf_persons" />
-              <button
-                type="submit"
-                name="intent"
-                value="next_step"
-                class="btn btn-outline-danger mt-2 float-right"
-              >
-                Next Step
-              </button>
-            </form>
-          </div>
+            {% include 'setup/4_conf_persons.html' %}
 
-          {% elif step == "step 5" %}
-          <h4 class="card-title">Setup complete</h4>
-          <p class="card-text">
-            Remember to check out the configuration. 
-          </p>
-          <form action="{% url 'setup' %}" method="POST" class="mb-0">
-            <input type="hidden" name="from" value="step 5" />
-            {% csrf_token %} {{ form }}
-            <button type="submit" class="btn btn-outline-danger float-right">
-              Finish Setup
-            </button>
-          </form>
+          {% elif step == "final" %}
+            {% include 'setup/5_final.html' %}
+
           {% endif %}
         </div>
       </div>

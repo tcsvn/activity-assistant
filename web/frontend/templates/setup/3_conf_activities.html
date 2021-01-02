@@ -1,0 +1,21 @@
+<h4 class="card-title">Create Activities</h4>
+<p class="card-text">
+Create activities that capture your style of living. Reasonable examples are eating,
+sleeping, waking_up, leaving_home, entering_home, etc.
+</p>
+
+<div class="container mt-3">
+    {% include 'config/create_activities.html' %}
+    <form action="{% url 'setup' %}" method="POST" class="mb-0">
+        {% csrf_token %} {{ form }}
+        <input type="hidden" name="from" value="conf_activities" />
+        <button
+        type="submit"
+        name="intent"
+        value="next_step"
+        class="btn btn-outline-danger mt-2 float-right"
+        >
+        Next Step
+        </button>
+    </form>
+</div>

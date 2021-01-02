@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 this view connects to homeassistant and gets all the relevant data to 
 setup activity assistant
 """
-SETUP_STEPS = ["step 0", "step 1", "conf_devices", "conf_activities",
-                 "conf_persons", "step 5", "completed"]
+SETUP_STEPS = ["initial", "poll_interval", "conf_devices", "conf_activities",
+                 "conf_persons", "final", "completed"]
 
 class SetupView(TemplateView):
 
@@ -37,8 +37,10 @@ class SetupView(TemplateView):
         }
         if srv.setup == SETUP_STEPS[0]:
             start_zero_conf_server()
+
         if srv.setup == SETUP_STEPS[1]:
             context['poll_int_list'] = settings.POLL_INTERVAL_LST
+
         elif srv.setup == SETUP_STEPS[2]:
             hass_devices = hass_rest.get_device_list(
                 settings.HASS_API_URL , srv.hass_api_token)
@@ -48,8 +50,10 @@ class SetupView(TemplateView):
 
             context['hass_dev_list'] = hass_devices
             context['aa_dev_list'] = get_device_names()
+
         elif srv.setup == SETUP_STEPS[3]:
             context['activity_list'] = Activity.objects.all()
+
         elif srv.setup == SETUP_STEPS[4]:
             hass_users = hass_rest.get_user_names(
                 settings.HASS_API_URL, srv.hass_api_token,
@@ -57,6 +61,7 @@ class SetupView(TemplateView):
             hass_users = list(set(hass_users).difference(set(get_person_hass_names())))
             context['hass_user_list'] = hass_users
             context['aa_user_list'] = Person.objects.all()
+
         return context
 
     def _increment_one_step(self):
@@ -138,6 +143,9 @@ class SetupView(TemplateView):
 
     def post(self, request):
         from_step = request.POST.get("from","")
+        logger.error(str(from_step))
+        assert from_step in SETUP_STEPS
+
         if from_step == SETUP_STEPS[0]:
             self.post_step0(request)
         elif from_step == SETUP_STEPS[1]:
