@@ -133,7 +133,7 @@ PRIOR_ACTIVITY_FILE_NAME = "prior_activities_subject_%s.csv"
 DEV_ROOM_ASSIGNMENT_FILE_NAME = "devices_and_areas.csv"
 ACT_ROOM_ASSIGNMENT_FILE_NAME = "activities_and_areas.csv"
 
-DB_URL = 'sqlite:////config/home-assistant_v2.db' 
+HASS_CONFIG_URL = '/config/configuration.yaml'
 
 ACT_ASSIST_VERSION = "v0.0.1-alpha"
 ACT_ASSIST_RELEASE_LINK = "https://github.com/tcsvn/activity-assistant-logger/releases/download/{}/activity-assistant.apk".format(ACT_ASSIST_VERSION)

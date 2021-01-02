@@ -17,10 +17,11 @@ logger = logging.getLogger(__name__)
 this view connects to homeassistant and gets all the relevant data to 
 setup activity assistant
 """
-SETUP_STEPS = ["initial", "poll_interval", "conf_devices", "conf_activities",
+SETUP_STEPS = ["initial", "data_collection", "conf_devices", "conf_activities",
                  "conf_persons", "final", "completed"]
 
 class SetupView(TemplateView):
+
 
     def create_context(self):
         srv = get_server()
@@ -52,19 +53,35 @@ class SetupView(TemplateView):
 
         return context
 
+
     def _increment_one_step(self):
         srv = get_server()
         index = SETUP_STEPS.index(srv.setup)
         srv.setup = SETUP_STEPS[index+1]
         srv.save()
 
+
     def get_step0(self, context):
         start_zero_conf_server()
  
     def get_step1(self, context):
+        srv = get_server()
         context['poll_int_list'] = settings.POLL_INTERVAL_LST
-        logger.error(str(context))
+        # TODO add pip install ruamel.yaml to dependencies
+        from frontend.hass_db import url_from_hass_config
+        try: 
+            url, db_type = url_from_hass_config('/config')
+            context['hass_db_success'] = True
+            srv.hass_db_url = url
+            srv.save()
+        except Exception as e:
+            context['hass_db_success'] = False
+            context['error_text'] = e
+        context['db_type'] = db_type
+        logger.error(url)
 
+
+    
     def get_step2(self, context):
         srv = get_server()
         hass_devices = hass_rest.get_device_list(
@@ -76,8 +93,10 @@ class SetupView(TemplateView):
         context['hass_dev_list'] = hass_devices
         context['aa_dev_list'] = get_device_names()
 
+
     def get_step3(self, context):
         context['activity_list'] = Activity.objects.all()
+
 
     def get_step4(self, context):
         srv = get_server()
@@ -87,6 +106,7 @@ class SetupView(TemplateView):
         hass_users = list(set(hass_users).difference(set(get_person_hass_names())))
         context['hass_user_list'] = hass_users
         context['aa_user_list'] = Person.objects.all()
+
 
     def post_step0(self, request):
         """ reads api key from environment 
@@ -114,7 +134,6 @@ class SetupView(TemplateView):
         #if srv.hass_comp_installed:
         stop_zero_conf_server()
         self._increment_one_step()
-        
 
 
     def post_step1(self, request):
@@ -125,7 +144,9 @@ class SetupView(TemplateView):
         srv = get_server()
         srv.poll_interval = p_int
         srv.save()
+        # TODO
         self._increment_one_step()
+
 
     def post_step2(self, request):
         """ select devices to track
@@ -138,6 +159,7 @@ class SetupView(TemplateView):
         else:
             conf_devices(request)
 
+
     def post_step3(self, request):
         """ create activities
         """
@@ -148,6 +170,7 @@ class SetupView(TemplateView):
         else:
             conf_activities(request)
 
+
     def post_step4(self, request):
         """ track persons
         """
@@ -157,6 +180,7 @@ class SetupView(TemplateView):
             self._increment_one_step()
         else:
             conf_persons(request)
+
 
     def post(self, request):
         from_step = request.POST.get("from","")
@@ -179,6 +203,7 @@ class SetupView(TemplateView):
             return return_var(str(request.POST)) 
         context = self.create_context()
         return render(request, 'setup.html', context)
+
 
     def get(self, request):
         srv = Server.objects.all()[0]

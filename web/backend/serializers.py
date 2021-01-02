@@ -32,9 +32,10 @@ class RealTimeNodeSerializer(serializers.HyperlinkedModelSerializer):
 class ServerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Server
-        fields = ('server_address', 'hass_api_token', 'setup',
-                  'selected_model', 'realtime_node', 'dataset', 'is_polling', 
-                  'poll_interval', 'hass_comp_installed', 'time_zone', 
+        fields = ('server_address', 'setup', 'time_zone', 
+                  'hass_api_token', 'hass_db_url', 'hass_comp_installed',  
+                  'selected_model', 'realtime_node', 'dataset', 
+                  'poll_interval', 'is_polling', 
                   'zero_conf_pid', 'poll_service_pid', 'plot_gen_service_pid', 
                   'webhook_count')
 

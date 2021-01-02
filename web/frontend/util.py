@@ -155,7 +155,7 @@ def collect_data_from_hass():
     now_ts = get_current_time()
 
     df_new = load_homeassistant_devices(
-        settings.DB_URL,
+        srv.hass_db_url,
         get_device_names(),
         last_ts, now_ts
     ).drop_duplicates()
