@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pip \
     python3.8-dev \
     libfreetype6 libfreetype6-dev zlib1g-dev \
+    libmysqlclient-dev \
     gcc gfortran\
     libopenblas-dev \
     liblapack-dev cython \

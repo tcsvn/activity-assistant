@@ -11,7 +11,7 @@ RUN apk add --update python3-dev py3-pip \
 # TODO remove --repository when this is in stable
 RUN apk add py3-wheel py3-pillow py3-pygments py3-django py3-zeroconf \
     py3-sqlalchemy py3-aiohttp py3-gunicorn py3-pandas py3-kiwisolver \
-    py3-scipy py3-scikit-learn py3-matplotlib \
+    py3-scipy py3-scikit-learn py3-matplotlib py3-mysqlclient\
     --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
 
 COPY requirements.txt .

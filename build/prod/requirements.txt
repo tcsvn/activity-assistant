@@ -11,5 +11,6 @@ coreapi
 # rt_node and data science stuff
 asyncws
 pyadlml
+ruamel.yaml
 #sqlalchemy
 #aiohttp

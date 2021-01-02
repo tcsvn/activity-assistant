@@ -12,4 +12,5 @@ zeroconf
 asyncws
 pyadlml
 sqlalchemy
+ruamel.yaml
 aiohttp

@@ -12,6 +12,8 @@ aiohttp
 gunicorn
 kiwisolver
 matplotlib
+ruamel.yaml
+mysqlclient
 
 # ml
 #pandas
