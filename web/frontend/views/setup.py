@@ -36,31 +36,19 @@ class SetupView(TemplateView):
             'url':'setup'
         }
         if srv.setup == SETUP_STEPS[0]:
-            start_zero_conf_server()
+            self.get_step0(context)
 
         if srv.setup == SETUP_STEPS[1]:
-            context['poll_int_list'] = settings.POLL_INTERVAL_LST
+            self.get_step1(context)
 
         elif srv.setup == SETUP_STEPS[2]:
-            hass_devices = hass_rest.get_device_list(
-                settings.HASS_API_URL , srv.hass_api_token)
-
-            dev_list = get_device_names()
-            hass_devices = list(set(hass_devices).difference(set(dev_list)))
-
-            context['hass_dev_list'] = hass_devices
-            context['aa_dev_list'] = get_device_names()
+            self.get_step2(context)
 
         elif srv.setup == SETUP_STEPS[3]:
-            context['activity_list'] = Activity.objects.all()
+            self.get_step3(context)
 
         elif srv.setup == SETUP_STEPS[4]:
-            hass_users = hass_rest.get_user_names(
-                settings.HASS_API_URL, srv.hass_api_token,
-            )
-            hass_users = list(set(hass_users).difference(set(get_person_hass_names())))
-            context['hass_user_list'] = hass_users
-            context['aa_user_list'] = Person.objects.all()
+            self.get_step4(context)
 
         return context
 
@@ -70,6 +58,35 @@ class SetupView(TemplateView):
         srv.setup = SETUP_STEPS[index+1]
         srv.save()
 
+    def get_step0(self, context):
+        start_zero_conf_server()
+ 
+    def get_step1(self, context):
+        context['poll_int_list'] = settings.POLL_INTERVAL_LST
+        logger.error(str(context))
+
+    def get_step2(self, context):
+        srv = get_server()
+        hass_devices = hass_rest.get_device_list(
+            settings.HASS_API_URL , srv.hass_api_token)
+
+        dev_list = get_device_names()
+        hass_devices = list(set(hass_devices).difference(set(dev_list)))
+
+        context['hass_dev_list'] = hass_devices
+        context['aa_dev_list'] = get_device_names()
+
+    def get_step3(self, context):
+        context['activity_list'] = Activity.objects.all()
+
+    def get_step4(self, context):
+        srv = get_server()
+        hass_users = hass_rest.get_user_names(
+            settings.HASS_API_URL, srv.hass_api_token,
+        )
+        hass_users = list(set(hass_users).difference(set(get_person_hass_names())))
+        context['hass_user_list'] = hass_users
+        context['aa_user_list'] = Person.objects.all()
 
     def post_step0(self, request):
         """ reads api key from environment 
@@ -143,7 +160,6 @@ class SetupView(TemplateView):
 
     def post(self, request):
         from_step = request.POST.get("from","")
-        logger.error(str(from_step))
         assert from_step in SETUP_STEPS
 
         if from_step == SETUP_STEPS[0]:
@@ -164,11 +180,9 @@ class SetupView(TemplateView):
         context = self.create_context()
         return render(request, 'setup.html', context)
 
-    # list all persons and render them into the frontend
     def get(self, request):
         srv = Server.objects.all()[0]
         if srv.setup == "completed":
             return redirect('/dashboard/')
         else:
-            context = self.create_context()
-            return render(request, 'setup.html', context)
+            return render(request, 'setup.html', self.create_context())
