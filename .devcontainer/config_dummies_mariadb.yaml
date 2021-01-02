@@ -1,0 +1,32 @@
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+recorder:
+  db_url: mysql://homeassistant:asdf@core-mariadb/homeassistant?charset=utf8
+
+# from here on its different
+input_boolean:
+  light_01:
+    name: Light 1
+  light_02:
+    name: Light 2
+  light_03:
+    name: Light 3
+  light_04:
+    name: Light 4
+  motion_01:
+    name: Motion 1
+  motion_02:
+    name: Motion 2 
+  motion_03:
+    name: Motion 3
+  motion_04:
+    name: Motion 4

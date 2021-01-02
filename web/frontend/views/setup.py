@@ -68,6 +68,7 @@ class SetupView(TemplateView):
         srv = get_server()
         context['poll_int_list'] = settings.POLL_INTERVAL_LST
         # TODO add pip install ruamel.yaml to dependencies
+        # mysql-client
         from frontend.hass_db import url_from_hass_config
         try: 
             url, db_type = url_from_hass_config('/config')
