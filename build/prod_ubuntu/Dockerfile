@@ -5,6 +5,16 @@ ENV LANG C.UTF-8
 ENV DJANGO_ENV='production'
 ENV PYTHONPATH=/etc/opt/activity_assistant:/opt/activity_assistant
 
+# TO DELETE START
+# do this to look if things work out for arm
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libmysqlclient-dev \
+    && \
+apt-get clean && \
+rm -rf /var/lib/apt/lists/*
+RUN pip install ruamel.yaml mysqlclient
+# TO DELETE END
+
 # install relevant files
 RUN pip install --no-cache pyadlml
 
