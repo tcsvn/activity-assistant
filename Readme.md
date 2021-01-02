@@ -2,11 +2,11 @@
 > Collect, evaluate and predict Activities of Daily living from within homeassistant.
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/tcsvn/activity-assistant/Publish%20master%20CI?style=flat-square)
-![Supports aarch64 Architecture](https://img.shields.io/badge/aarch64-yes-green?style=flat-square)
 ![Supports amd64 Architecture](https://img.shields.io/badge/amd64-yes-green?style=flat-square)
-![Supports armhf Architecture](https://img.shields.io/badge/armhf-yes-green?style=flat-square)
+![Supports i386 Architecture](https://img.shields.io/badge/i386-no-orange?style=flat-square)
+![Supports armhf Architecture](https://img.shields.io/badge/armhf-no-orange?style=flat-square)
 ![Supports armv7 Architecture](https://img.shields.io/badge/armv7-yes-green?style=flat-square)
-![Supports i386 Architecture](https://img.shields.io/badge/i386-yes-green?style=flat-square)
+![Supports aarch64 Architecture](https://img.shields.io/badge/aarch64-yes-green?style=flat-square)
 ![License](https://img.shields.io/pypi/l/pyadlml?style=flat-square)
 
 
@@ -31,11 +31,12 @@ _For a guide on how to use please refer to the Documentation (to come)_
 
 ## Features
   - [x] Creating experiments for recording ADLs
-  - [x] Data is labeled in company with the android app
-  - [X] A running experiment can be visualized yielding insights into the current data collection process
+  - [x] Activity annotation using the android app
+  - [X] Visualization for an experiment in progress using matplotlib
+  - [ ] Visualization for an experiment in progress using bokeh/plotly
   - [ ] Creating prior activities filling out an example week via a calendar widget
   - [ ] Upload and deployment of trained models via the web-interface
-  - [ ] Home assistant custom entity card for each person 
+  - [ ] Home Assistant custom entity card for each person 
 
 ## Contributing 
 1. Fork it (<https://github.com/tcsvn/activity-assistant/fork>)
@@ -46,13 +47,14 @@ _For a guide on how to use please refer to the Documentation (to come)_
 
 ## Related projects
   - [activity-assistant-logger](https://github.com/tcsvn/act_assist_logger) - The android companion app for labeling activities
-  - [pyadlml](https://github.com/tcsvn/pyadlml) - A python library for data exploration of ADL datatasets.
+  - [pyadlml](https://github.com/tcsvn/pyadlml) - A python library offering data exploration methods for ADL datatasets.
   - [homeassistant](https://www.home-assistant.io/) - Homeautomation platform
+  
 ## Support 
 [![Buy me a coffee][buy-me-a-coffee-shield]][buy-me-a-coffee]
 
 ## How to cite
-If you are using activity-assistant for puplications consider citing the package
+If you are using activity-assistant for puplications please consider citing the package
 ```
 @software{activity-assistant,
   author = {Christian Meier},

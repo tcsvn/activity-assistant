@@ -135,10 +135,10 @@ class PersonView(TemplateView):
     def generate_qr_code_data(self, person):
         url = get_server().server_address
         data = "{"
-        data += "\"person\" : \"%s\" , "%(person.name)
-        data += "\"username\" : \"%s\" , "%('admin')
-        data += "\"password\" : \"%s\" , "%('asdf')
-        data += "\"url_person\" : \"%s\" ,"%('persons/' + str(person.id) + '/')
-        data += "\"url_api\" : \"%s\""%(url + '/api/v1/')
+        data += "\"person\" : \"{}\" , ".format(person.name)
+        data += "\"username\" : \"{}\" , ".format('admin')
+        data += "\"password\" : \"{}\" , ".format('asdf')
+        data += "\"url_person\" : \"persons/{}/\" ,".format(str(person.id))
+        data += "\"url_api\" : \"{}/{}/\"".format(url, settings.REST_API_URL)
         data += "}"
         return data
