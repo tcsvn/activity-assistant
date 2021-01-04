@@ -219,3 +219,13 @@ def refresh_hass_token():
     srv = get_server()
     srv.hass_api_token = os.environ.get('SUPERVISOR_TOKEN')
     srv.save()
+
+def ping_db(db_url):
+    """ pings a mysql database with the url and tests can connectivitiy 
+    """
+    import sqlalchemy
+    from sqlalchemy import create_engine
+    engine = sqlalchemy.create_engine(db_url)
+    with engine.connect() as connection:
+        pass
+

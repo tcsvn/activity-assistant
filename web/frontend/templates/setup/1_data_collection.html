@@ -1,10 +1,10 @@
 <h4 class="card-title">Configure data collection</h4>
 
+{% if hass_db_success %}
 <p>
     Activity-assistant updates a local dataset with relevant entries
-    from the homeassistant database. A {{ db_type }} database was successfully detected.
+    from the Home Assistant database. A {{ db_type }} database was successfully detected.
 </p>
-{% if hass_db_success %}
     <hr>
 
     <p class="card-text">
@@ -26,5 +26,20 @@
         <button type="submit" class="btn btn-outline-danger float-right">Submit</button>
     </form>
 {% else %}
-    Activity-assistiant was not able to detect your database. You can try and 
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alter-heading">Well this didn't go as planned :/</h4>
+        <p>
+            Activity-assistant was not able to infer the url of your database. Do you have the recorder 
+            integration installed? If not please install the integration and try again. If the problem 
+            persists please open an <a href="https://github.com/tcsvn/activity-assistant/issues">issue</a>, 
+            specify the database type, platform, recorder db_url, output of the log and I will try to fix it 
+            as fast possible.
+        </p>
+        <hr>
+        <p class="mb-0">
+            If you're brave you can set the url manually at the <a href="/api/server/1">REST API</a> by updating 
+            the "Hass_db_url" field with your value. To move on to the setup's next step enter this string 'conf_devices' in the 
+            "Setup" field.
+        </p>
+    </div>       
 {% endif %}

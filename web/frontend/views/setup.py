@@ -6,7 +6,8 @@ import os
 import hass_api.rest as hass_rest
 from frontend.util import get_server, start_zero_conf_server,\
     get_device_names, get_activity_names, get_person_names,\
-    stop_zero_conf_server, refresh_hass_token, get_person_hass_names
+    stop_zero_conf_server, refresh_hass_token, get_person_hass_names,\
+    ping_db
 
 from frontend.views.config import conf_devices, conf_activities, conf_persons
 import logging
@@ -72,10 +73,12 @@ class SetupView(TemplateView):
         from frontend.hass_db import url_from_hass_config
         try: 
             url, db_type = url_from_hass_config('/config')
+            ping_db(url)
             context['hass_db_success'] = True
             srv.hass_db_url = url
             srv.save()
         except Exception as e:
+            logger.error(str(e))
             context['hass_db_success'] = False
             context['error_text'] = e
         context['db_type'] = db_type

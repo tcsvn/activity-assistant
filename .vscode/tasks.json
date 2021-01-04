@@ -17,7 +17,7 @@
             },
             "problemMatcher": []
         },{
-            "label": "Run Home Assistant CLI",
+            "label": "HASS CLI",
             "type": "shell",
             "command": "docker exec -ti hassio_cli /usr/bin/cli.sh",
             "group": "test",
@@ -27,7 +27,7 @@
             },
             "problemMatcher": []
         },{
-            "label": "Cp hass_component 2 HASS container",
+            "label": "CP hass_component 2 HASS container",
             "type": "shell",
             "command": "/workspaces/test_hassio/share/build/dev/copy_hass_comp.sh",
             "group": "test",
@@ -37,7 +37,17 @@
             },
             "problemMatcher": []
         },{
-            "label": "cp hass_config 2 hass container",
+            "label": "CP hass_config_mariadb 2 hass container",
+            "type": "shell",
+            "command": "/workspaces/test_hassio/share/.devcontainer/cp_hass_config_mdb.sh",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },{
+            "label": "CP hass_config 2 hass container",
             "type": "shell",
             "command": "/workspaces/test_hassio/share/.devcontainer/copy_hass_config.sh",
             "group": "test",
@@ -47,7 +57,7 @@
             },
             "problemMatcher": []
         },{
-            "label": "reset hassconfig",
+            "label": "Reset hassconfig",
             "type": "shell",
             "command": "/workspaces/test_hassio/share/.devcontainer/copy_hass_config.sh",
             "group": "test",
@@ -60,7 +70,7 @@
         {
             "label": "AA migrate django",
             "type": "shell",
-            "command": "docker exec -ti addon_7efcd0a6_act_assist_dev bash -c \"export PYTHONPATH=/share/web/act_assist; cd /share; python3 web/manage.py makemigrations; python3 web/manage.py migrate\"",
+            "command": "docker exec -ti addon_709d7dbe_act_assist_dev bash -c \"export PYTHONPATH=/share/web/act_assist:/share/web; cd /share; python3 web/manage.py makemigrations; python3 web/manage.py migrate\"",
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -80,7 +90,17 @@
         },{
             "label": "AA build production amd",
             "type": "shell",
-            "command": "docker build -f Dockerfile --build-arg BUILD_FROM=\"homeassistant/amd64-base:latest\" -t tchr157/activity-assistant-amd64:latest .",
+            "command": "docker build -f build/prod/Dockerfile --build-arg BUILD_FROM=\"homeassistant/amd64-base:latest\" -t tchr157/activity-assistant-amd64:latest .",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },{
+            "label": "AA build production i386",
+            "type": "shell",
+            "command": "docker build -f build/prod/Dockerfile --build-arg BUILD_FROM=\"homeassistant/i386-base:latest\" -t tchr157/activity-assistant-i386:latest .",
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -110,7 +130,7 @@
         },{
             "label": "AA build production armv7 with BUILDER",
             "type": "shell",
-            "command": "docker run --rm --privileged -v ~/.docker:/root/.docker -v /var/run/docker.sock:/var/run/docker.sock:ro -v $PWD/:/data tchr157/armv7-builder --test --file build/prod_ubuntu/Dockerfile --no-cache --armv7 --target /data",
+            "command": "/workspaces/test_hassio/share/.devcontainer/build_armv7_prod.sh",
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -118,9 +138,9 @@
             },
             "problemMatcher": []
         },{
-            "label": "AA dev shell",
+            "label": "AA shell dev",
             "type": "shell",
-            "command": "docker exec -ti addon_7efcd0a6_act_assist_dev /bin/bash",
+            "command": "docker exec -ti addon_709d7dbe_act_assist_dev /bin/bash",
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -128,9 +148,9 @@
             },
             "problemMatcher": []
         },{
-            "label": "AA prod shell",
+            "label": "AA shell prod",
             "type": "shell",
-            "command": "docker exec -ti addon_7efcd0a6_act_assist /bin/bash",
+            "command": "docker exec -ti addon_709d7dbe_act_assist /bin/bash",
             "group": "test",
             "presentation": {
                 "reveal": "always",
