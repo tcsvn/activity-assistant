@@ -73,16 +73,16 @@ class SetupView(TemplateView):
         from frontend.hass_db import url_from_hass_config
         try: 
             url, db_type = url_from_hass_config('/config')
+            logger.error('url: ' + str(url) )
             ping_db(url)
             context['hass_db_success'] = True
             srv.hass_db_url = url
             srv.save()
         except Exception as e:
-            logger.error(str(e))
+            logger.error('Exception catched: ' + str(e))
             context['hass_db_success'] = False
             context['error_text'] = e
         context['db_type'] = db_type
-        logger.error(url)
 
 
     
