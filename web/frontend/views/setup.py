@@ -123,6 +123,8 @@ class SetupView(TemplateView):
 
         # get server_address
         srv = get_server()
+        # debug
+        logger.error('post_step0')
         disc_url = settings.HASS_API_URL + '/discovery_info'
         tmp = hass_rest.get(disc_url, srv.hass_api_token)
         srv.server_address = tmp['base_url']
@@ -148,6 +150,8 @@ class SetupView(TemplateView):
         srv = get_server()
         srv.poll_interval = p_int
         srv.save()
+        # debug
+        logger.error('post_step1')
         # TODO
         self._increment_one_step()
 
@@ -158,6 +162,8 @@ class SetupView(TemplateView):
         intent = request.POST.get("intent","")
         assert intent in ['track', 'remove', 'next_step']
 
+        # debug
+        logger.error('post_step2')
         if intent == 'next_step':
             self._increment_one_step()
         else:
@@ -214,4 +220,6 @@ class SetupView(TemplateView):
         if srv.setup == "completed":
             return redirect('/dashboard/')
         else:
+            # debug
+            logger.error('get')
             return render(request, 'setup.html', self.create_context())

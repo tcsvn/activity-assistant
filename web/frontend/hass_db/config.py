@@ -10,7 +10,8 @@ from typing import Optional
 
 from ruamel.yaml import YAML
 from ruamel.yaml.constructor import SafeConstructor
-
+import logging
+logger = logging.getLogger(__name__)
 
 _CONFIGURATION_PATH: Optional[Path] = None
 
@@ -118,7 +119,10 @@ def db_url_from_hass_config(path):
     """Find the recorder database url from a HASS config dir."""
     global _CONFIGURATION_PATH
     _CONFIGURATION_PATH = Path(path).resolve()
+    # debug
     logger.error('trying to load config')
+    import os
+    logger.error('config_dir' + str(os.listdir('/config/')))
     config = load_hass_config(path)
     logger.error('successfully loaded config')
     default_path = os.path.join(path, "home-assistant_v2.db")
