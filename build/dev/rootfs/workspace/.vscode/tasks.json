@@ -1,0 +1,18 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Migrate django",
+            "type": "shell",
+            "command": "bash -c \"export PYTHONPATH=/share/web/act_assist:/share/web; cd /share; python3 web/manage.py makemigrations; python3 web/manage.py migrate\"",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+    ]
+}

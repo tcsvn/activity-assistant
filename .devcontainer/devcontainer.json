@@ -1,21 +1,40 @@
-// Based on https://github.com/issacg/hassio-addon-devcontainer
 {
-	"name": "Home Assistant Add-Ons",
-	"context": "..",
-	"dockerFile": "Dockerfile",
-	"appPort": ["8123:8123", "8000:8000"],
-	"runArgs": [
-		"-e",
-		"GIT_EDITOR=code --wait",
-		"--privileged"
-	],
-	"extensions": [
-		"timonwong.shellcheck",
-		"esbenp.prettier-vscode"
-	],
-	"settings": { 
-		"terminal.integrated.shell.linux": "/bin/bash"
-	},
-	"workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/test_hassio/share,type=bind,consistency=delegated",
-	"workspaceFolder": "/workspaces/test_hassio/share"
+    "name": "Example devcontainer for add-on repositories",
+    "image": "ghcr.io/home-assistant/devcontainer:addons",
+    "appPort": [
+        "8000:8000",
+        "8123:8123",
+        "7357:4357",
+        "433:433"
+    ],
+    "postStartCommand": "bash devcontainer_bootstrap",
+    "runArgs": [
+        "-e",
+        "GIT_EDITOR=code --wait",
+        "--privileged"
+    ],
+    "containerEnv": {
+        "WORKSPACE_DIRECTORY": "${containerWorkspaceFolder}"
+    },
+    "extensions": [
+        "timonwong.shellcheck",
+        "esbenp.prettier-vscode"
+    ],
+	"workspaceFolder": "/workspaces/supervisor_data/share",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/supervisor_data/share,consistency=delegated,type=bind",
+    "mounts": [
+        "type=volume,target=/var/lib/docker"
+    ],
+    "settings": {
+        "terminal.integrated.profiles.linux": {
+            "zsh": {
+                "path": "/usr/bin/zsh"
+            }
+        },
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "editor.formatOnPaste": false,
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "files.trimTrailingWhitespace": true
+    }
 }

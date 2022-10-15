@@ -1,0 +1,23 @@
+name: activity-assistant
+version: dev
+slug: act_assist
+description: "Record, evaluate and predict Activities of Daily living (ADL)"
+arch:
+  - amd64
+startup: "application"
+init: false
+webui: "http://[HOST]:[PORT:8000]"
+boot: "auto"
+image: "tchr157/activity-assistant-{arch}"
+homeassistant_api: true
+hassio_api: true
+ingress: true
+ingress_port: 8000
+panel_icon: "mdi:account-reactivate"
+ports:
+  8000/tcp: 8000
+  433/tcp: 433
+map:
+  - share:rw
+ports_description:
+  8000/tcp: "Required for API access of mobile devices"

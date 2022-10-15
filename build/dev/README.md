@@ -1,18 +1,29 @@
-# activity-assistant
-Activity assistant provides a platform for logging and predicting Activities of Daily Living (ADLs) in realtime for home assistant users. 
+# Activity-assistant
 
-
+Activity assistant provides a platform for logging and predicting Activities of Daily Living (ADLs) in realtime for home assistant users. This addon version is used for developing the web application.
 
 ## Development
-##### Steps
-    - in vscode type the command `remote-container open folder in container` in the directory root. This opens up the station
-    - go to folder `/workspaces/test_hassio/addons/local` to find all the project related files
-    - make start_ha.sh executable with `chmod +x /usr/local/bin/start_ha.sh`
-    - start supervisor with `strg+umschalt+B` and run task `run Homeassistant`
 
-### workflow
-    - with `docker exec -ti hassio_cli /usr/bin/cli.sh` open ha 
-    1. change sth with the addon
-    2. update version number in config.json
-    3. in cli type `addons reload`
-    4. goto 1. 
+#### Setup
+
+- Clone the github repository and navigate into the repos root directory
+- Open the folder in vscode and type the command `Dev Containers: Open Folder in Container...`
+- Run the task `Start homeassistant`
+- Append your public-key (`~/.ssh/id_rsa.pub`) to the build/dev/rootfs/root/.ssh/authorized_keys file
+- Install the addon from the [addon store](https://my.home-assistant.io/redirect/supervisor_store/)
+- Add the following entry to your ssh config (`~/.ssh/config`):
+  ```
+    Host aa_dev
+      Hostname 0.0.0.0
+      Port 433
+      User root
+      ForwardAgent yes
+      IdentityFile ~/.ssh/id_rsa
+      StrictHostKeyChecking no
+      UserKnownHostsFile /dev/null
+  ```
+- Using the remote explorers `aa_dev` ssh entry, attach vscode to the container
+
+#### Notes
+
+- To add a few dummy devices to homeassistant execute the task `Ha cp hass_config into container`
