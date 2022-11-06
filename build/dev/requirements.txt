@@ -4,7 +4,6 @@ django
 django-qr-code
 djangorestframework
 pygments
-coreapi
 Pillow
 zeroconf
 
@@ -14,3 +13,5 @@ pyadlml
 sqlalchemy
 ruamel.yaml
 aiohttp
+django_plotly_dash
+dash_daq

@@ -1,0 +1,15 @@
+<h4 class="card-title">Connect to Home Assistant</h4>
+<p class="card-text">
+    By clicking the connect button activity-assistant collects 
+    relevant data from Home Assistant. Furthermore, the process fetches Home Assistants Ip address 
+    of the interfaces. Sometimes the interfaces ip address does not match the real one. 
+    Therefore, make sure to validate the setup later inside the config.
+</p>
+
+<form action="{% url 'setup' %}" method="POST" class="mb-0">
+    <input type="hidden" name="from" value="initial" />
+    {% csrf_token %} {{ form }}
+    <button type="submit" class="btn btn-outline-danger float-right">
+        Connect
+    </button>
+</form>

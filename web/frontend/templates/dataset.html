@@ -5,8 +5,6 @@
     <div class="container mb-5">
         {% if experiment_running %}
             {% include 'dataset/active_data.html' %}
-        {% else %}
-            {% include 'dataset/no_data.html' %}
         {% endif %}
         {% if service_plot_gen %}
             <div class="alert alert-warning alert-dismissible fade show" role="alert">

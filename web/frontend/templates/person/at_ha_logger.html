@@ -1,0 +1,122 @@
+<div class="row w-100">
+    <div class="col-3">
+      <!-- Tab navs -->
+      <div
+        class="nav flex-column nav-tabs text-center"
+        id="v-tabs-tab"
+        role="tablist"
+        aria-orientation="vertical"
+      >
+        <a
+          class="nav-link active"
+          id="v-tabs-home-tab1"
+          data-bs-toggle="tab"
+          href="#v-tabs-home1"
+          role="tab"
+          aria-controls="v-tabs-home1"
+          aria-selected="true"
+          >Motivation</a
+        >
+        <a
+          class="nav-link"
+          id="v-tabs-messages-tab1"
+          data-bs-toggle="tab"
+          href="#v-tabs-messages1"
+          role="tab"
+          aria-controls="v-tabs-messages1"
+          aria-selected="false"
+          >Add helpers</a
+        >
+      </div>
+      <!-- Tab navs -->
+    </div>
+  
+    <div class="col-9">
+      <!-- Tab content -->
+      <div class="tab-content" id="v-tabs-tabContent">
+        <div
+          class="tab-pane fade show active"
+          id="v-tabs-home1"
+          role="tabpanel"
+          aria-labelledby="v-tabs-home-tab1"
+        >
+          For people that do not own a proper android phone, version or simply do not want to use the 
+          logger, activity-assistant offers the alternative to register an 
+          <a href="https://www.home-assistant.io/integrations/input_select/">input select</a>
+          and an input_boolean in Home Assistant for activity tracking. The idea is to download the 
+          Home Assistant Companion App from the 
+          <a href="https://apps.apple.com/app/home-assistant/id1099568401">iOS App Store </a>
+          or 
+          <a href="https://play.google.com/store/apps/details?id=io.homeassistant.companion.android">Play Store</a>
+          , create an own 
+          <a href="https://my.home-assistant.io/redirect/lovelace_dashboards/"> dashboard</a> containing
+          the input_select and input_boolean and then by toggling the input_booleans state signal the beginning or ending
+          of a recording with the selected activities.
+        </div>
+        <div
+          class="tab-pane fade"
+          id="v-tabs-messages1"
+          role="tabpanel"
+          aria-labelledby="v-tabs-messages-tab1"
+        >
+        <div class='row'>
+          <p class='text-start'>
+            Head over to <a href="https://my.home-assistant.io/redirect/helpers/">Home Assistant</a>
+            click "add helper" and create a <b>Dropdown</b> named <i>activities_{{person.name}}</i> with 
+            some irrelevant option. Next, click again "add helper" to create a <b>Toggle</b> named <i>recording_{{person.name}}</i>. 
+          </p>
+        </div>
+          <p class='text-start'>
+            Afterwards refresh this page and select the respective helpers, i.e <i>input_select.activities_{{person.name}}</i>.
+            and <i>input_boolean.recording_{{person.name}}</i> below.
+            By submitting, activity-assistant registers the given helpers and the input_select
+            is populated with the activities. When an experiment runs, the activity-assistant 
+            polling service will automatically log the input_selects 
+            values as user activities for the time the input_boolean is "on".
+          <p>
+          <form action="" method="POST" class="mb-0">
+            {% csrf_token %} {{ form }}
+            <input type="hidden" name="pk" value="{{ person.id }}">
+            <div class="input-group mb-1">
+              <span class="input-group-text" id="inputGroup-sizing-default">input_boolean</span>
+              <select class="form-select" 
+                      name='input_boolean'
+                      aria-describedby="inputGroup-sizing-default"
+                      id="inputGroupSelect">
+                {% for helper in ha_input_boolean_list %}
+                    <option 
+                    {% if forloop.first %} selected {% endif %}
+                    value="{{ helper }}"> {{helper }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="input-group mb-1">
+              <span class="input-group-text" id="inputGroup-sizing-default1">input_select &#09;</span>
+              <select class="form-select" 
+                      name='input_select'
+                      aria-describedby="inputGroup-sizing-default1"
+                      id="inputGroupSelect01">
+                {% for helper in ha_input_select_list %}
+                    <option 
+                    {% if forloop.first %} selected {% endif %}
+                    value="{{ helper }}"> {{helper }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class='d-flex'>
+              <div class="p-2 w-100"></div>
+                <button type="submit" 
+                        value="add_inputx"
+                        name="intent"
+                        class="btn btn-primary flex-shrink-1">
+                  Submit
+                </button>
+            </div>
+        </form>
+
+        </div>
+      </div>
+      <!-- Tab content -->
+    </div>
+  </div>

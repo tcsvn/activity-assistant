@@ -57,4 +57,34 @@
       </div>
     </div>
   </form>
+
+
+  <div class="row  mt-2">
+    <div class="col-6">
+    <form class="form-inline" action="{%url url %}" method="post">
+      {% csrf_token %} {{ form }}
+      <input type="hidden" name="from" value="conf_devices">
+      <div class="input-group">
+        <select name="hass_select" class="selectpicker" data-live-search="true">
+            {% for aa_dev in hass_dev_list %}
+                <option data-tokens="{{aa_dev}}">{{ aa_dev }}</option>
+            {% endfor %}
+        </select>
+        <button
+          class="btn btn-primary"
+          name="intent"
+          type="submit"
+          value="track"
+          id="button-addon2"
+          data-ripple-color="dark"
+          {% if experiment_active %}
+            disabled
+          {% endif %}>
+          Add
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="col-6"></div>
+  </div>
 </div>

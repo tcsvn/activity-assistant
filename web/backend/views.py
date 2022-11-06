@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from django.views.generic import TemplateView
 from django.shortcuts import render
-import settings
+import web.act_assist.settings
 import logging
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
@@ -236,14 +236,14 @@ class EdgeViewSet(viewsets.ModelViewSet):
     #    serializer.save(owner=self.request.user)
 
 
-class LocationViewSet(viewsets.ModelViewSet):
+class AreaViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions.
     Additionally we also provide an extra `highlight` action.
     """
-    queryset = Location.objects.all()
-    serializer_class = LocationSerializer
+    queryset = Area.objects.all()
+    serializer_class = AreaSerializer
     #permission_classes = (
     #    permissions.IsAuthenticatedOrReadOnly,
     #    IsOwnerOrReadOnly, )
@@ -266,7 +266,8 @@ class LocationViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         self.flag_all_smartphones_unsyc()
-        serializer.save(owner=self.request.user)
+        #serializer.save(owner=self.request.user)
+        serializer.save()
 
 class DeviceViewSet(viewsets.ModelViewSet):
     """

@@ -5,10 +5,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title> Activity-assistant </title>
+    <title> Activity Assistant </title>
     <link rel="shortcut icon" type="image/png" href="{% static 'images/icon.svg' %}"/>
-    <link rel="stylesheet" href="{% static 'mdbootstrap-5/mdb-v2.2.1.min.css'%}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css'%}">
+    <link rel="stylesheet" href="{% static 'bootstrap-select.min.css'%}">
+
 
     {% block head %} {% endblock %}
 </head>
@@ -17,10 +19,10 @@
 <body>
 {% block navbar %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
-        <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'dashboard' %}">activity-assistant</a>
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'dashboard' %}">Activity Assistant</a>
     <!-- Toggle button -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -28,33 +30,37 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
+                    <a class="nav-link" href="">Nodes</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="">Models</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../dataset/">Dataset</a>
+                    <a class="nav-link" href="../dataset/">Datasets</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPerson" role="button"
+                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Persons
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownPerson">
                         {% for temp_person in person_list %}
                             <a class="dropdown-item" href="../person/{{ temp_person.id }}">{{ temp_person.name }}</a>
                         {% endfor %}
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         config
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="../config">basic</a>
-                        <!--
                         <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../config/assign_devices2areas">assign devices to areas</a>
+                        <!--
+                        <a class="dropdown-item" href="../config/assign_devices2areas">assign activities to areas</a>
                         <a class="dropdown-item" href="../map_editor">connect locations</a>
-                        <a class="dropdown-item" href="../assign_activities_to_locations">assign activities to locations</a>
                         <a class="dropdown-item" href="../algorithms/">create models</a>
                         -->
                     </div>
@@ -66,8 +72,34 @@
     {% endblock %}
 
     {% block content %}{% endblock %} 
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'jquery-3.2.1.min.js' %}"></script> 
+    <script src="{% static 'bootstrap-select.min.js' %}"></script> 
 
-    <script src="{% static 'mdbootstrap-5/mdb-v2.2.1.min.js' %}"></script>
-    <script src="{% static 'mdbootstrap-5/popper-v2.5.4.js' %}"></script>
-    <script src="{% static 'mdbootstrap-5/jquery-3.2.1.min.js' %}"></script>
+    <script>
+        $(window).scroll(function() {
+            localStorage.scrollPosition = $(this).scrollTop();
+         });
+         $(document).ready(function() {
+            var position = localStorage.scrollPosition;
+            if (position != 'undefined') {
+               $(window).scrollTop(position);
+            }
+         });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) { 
+            var scrollpos = localStorage.getItem('scrollpos');
+            if (scrollpos) window.scrollTo({left:0, top:scrollpos, behavior: 'instant'});
+        });
+
+        window.onbeforeunload = function(e) {
+            localStorage.setItem('scrollpos', window.scrollY);
+        };
+    </script>
+    <script>
+        $(document).ready(function(){
+            $('.my-select').selectpicker();
+            });
+    </script>
 </body>

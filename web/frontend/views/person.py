@@ -1,4 +1,5 @@
 from backend.models import *
+from hass_api.rest import HARest
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 from frontend.util import get_server
@@ -17,21 +18,45 @@ class PersonView(TemplateView):
         pred_acts = person.predicted_activities.all()
         activity_list = Activity.objects.all()
         syn_act_list = SyntheticActivity.objects.filter(person=person)
-        person_list = Person.objects.all()
         try:
             smartphone = person.smartphone
         except:
             smartphone = None
+        try:
+            ha_tracker = person.hatracker
+        except:
+            ha_tracker = None
+
+        try:
+            ha_tracker.update_attributes()
+        except Exception:
+            pass
+
+        if ha_tracker is not None:
+            if not ha_tracker.inputxs_exist_at_ha():
+                ha_tracker.delete()
+                ha_tracker = None
+                person.hatracker = None
+                person.save()
+
+
         qr_code_data = self.generate_qr_code_data(person)
         sm_download_link = settings.ACT_ASSIST_RELEASE_LINK
+
+        ha_input_selects = self.get_input_selects()
+        ha_input_booleans = self.get_input_booleans()
+
         context = {
                 'person' : person,
-                'smartphone' : smartphone, 
+                'smartphone' : smartphone,
+                'hatracker' : ha_tracker,
                 'person_list' : person_list,
                 'activity_list' : activity_list,
                 'synthetic_activity_list':  syn_act_list,
                 'qr_code_data' : qr_code_data,
                 'qr_code_sm_download' : sm_download_link,
+                'ha_input_select_list': ha_input_selects,
+                'ha_input_boolean_list': ha_input_booleans,
                 }
         if person.person_statistic is not None:
             context['ps'] = person.person_statistic
@@ -49,7 +74,18 @@ class PersonView(TemplateView):
         else:
             return pk
 
+    def get_input_booleans(self):
+        from hass_api.rest import HARest
+        devices = \
+            [d for d in HARest().get_device_list() if 'input_boolean' in d]
+        return devices
 
+
+    def get_input_selects(self):
+        from hass_api.rest import HARest
+        devices = \
+            [d for d in HARest().get_device_list() if 'input_select' in d]
+        return devices
 
     def get(self, request):
         context = self.create_context(request)
@@ -114,31 +150,64 @@ class PersonView(TemplateView):
         resp = {'activity_data': act_data, 'loc_data': loc_data}
         return JsonResponse(resp)
 
+
+    def create_input_select(self, request):
+        person = self._get_person_from_request(request)
+        raise NotImplementedError
+
+    def add_input_x(self, request):
+        """ Create an HA tracker for a given input_select and input_boolean
+        """
+        person = self._get_person_from_request(request)
+        input_select = request.POST['input_select']
+        input_boolean = request.POST['input_boolean']
+
+        # Populate input_select with current activities
+        act_list = list(Activity.objects.all().values_list('name', flat=True))
+        HARest().populate_input_selects(input_select, act_list)
+
+        # Update persons model for the poll stuff
+        HATracker(
+            person=person,
+            logging=False,
+            logged_activity=None,
+            input_select=input_select,
+            input_boolean=input_boolean
+        ).save()
+
     def post(self, request):
+
         intent = request.POST.get("intent","")
         #create object not through serialzier
-        if (intent == "create_syn_act"):
+        if intent == "create_syn_act":
             self.create_syn_act(request)
 
-        elif (intent == "delete_syn_act"):
+        elif intent == "delete_syn_act":
             self.delete_syn_act(request)
 
-        elif (intent == "update_syn_act"):
+        elif intent == "update_syn_act":
             self.update_syn_act(request)
 
-        elif (intent == "export_data"):
+        elif intent == "export_data":
             return self.retrieve_retrieve_syn_acts(request)
+        elif intent ==  'create_input_select':
+            self.create_input_select(request)
+        elif intent == 'add_inputx':
+            self.add_input_x(request)
 
         context = self.create_context(request)
         return render(request, 'person.html', context)
 
-    def generate_qr_code_data(self, person):
+    def generate_qr_code_data(self, person) -> str:
+        """ Creates string of an dictionary describing the person for the
+            activity logger.
+        """
         url = get_server().server_address
         data = "{"
-        data += "\"person\" : \"{}\" , ".format(person.name)
-        data += "\"username\" : \"{}\" , ".format('admin')
-        data += "\"password\" : \"{}\" , ".format('asdf')
-        data += "\"url_person\" : \"persons/{}/\" ,".format(str(person.id))
-        data += "\"url_api\" : \"{}/{}/\"".format(url, settings.REST_API_URL)
+        data += f"\"person\" : \"{person.name}\" , "
+        data += f"\"username\" : \"{'admin'}\" , "
+        data += f"\"password\" : \"{'asdf'}\" , "
+        data += f"\"url_person\" : \"persons/{str(person.id)}/\" ,"
+        data += f"\"url_api\" : \"{url}/{settings.REST_API_URL}/\""
         data += "}"
         return data

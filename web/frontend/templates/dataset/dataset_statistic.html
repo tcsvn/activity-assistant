@@ -7,28 +7,24 @@
         End time
         <span>{{ ds.end_time }}</span>
     </li>
-    {% for ds_ps in datasets_perstats%}
-        {% if ds_ps.ds_name == ds.name %}
-            <li class="list-group-item d-flex justify-content-between ">
-                # persons 
-                <span> {{ ds_ps.num_persons }} </span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between ">
-                # activities
-                <span> {{ ds_ps.num_activities }} </span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between ">
-                # recorded activities
-                <span> {{ ds_ps.num_recorded_activities }} </span>
-            </li>
-        {% endif %}
-    {% endfor %}
     <li class="list-group-item d-flex justify-content-between ">
-        # devices 
+        # Persons
+        <span> {{ ds.num_persons }} </span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between ">
+        # Activities
+        <span> {{ ds.num_activities }} </span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between ">
+        # Recorded activities
+        <span> {{ ds.num_recorded_activities }} </span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between ">
+        # Devices
         <span> {{ ds.num_devices }} </span>
     </li>
     <li class="list-group-item d-flex justify-content-between ">
-        # recorded events
+        # Recorded events
         <span> {{ ds.num_recorded_events }} </span>
     </li>
     <li class="list-group-item d-flex justify-content-between ">

@@ -764,11 +764,7 @@ class AlgorithmView(TemplateView):
         django_img_fp.name = folder_name + "/" + file_name
         return django_img_fp
 
-    def _create_django_file(self, file_path, folder_name, file_name):
-        from django.core.files.base import File
-        django_file = File(open(file_path, "rb"))
-        django_file.name = folder_name + "/" + file_name
-        return django_file
+
 
     def upload_model(self, request):
         form = ModelForm(request.POST, request.FILES)

@@ -1,24 +1,22 @@
+{%load plotly_dash%}
+
 <div class="card w-90 mb-2">
     <div class="card-body">
         <h5 class="card-title">Experiment: {{ dataset.name | title}} </h5>
             <p class="card-text">
                 An experiment is currently conducted. Pausing the experiment adds a device
                 in the data that marks the beginning and end of the time interval not ment to be include in 
-                the data analysis (to come).  
-                <ul>
-                    <li>Start time:  {{ dataset.start_time }}</li>
-                    <li># persons: {{ num_persons }} </li>
-                    <li># activities: {{ num_activities }} </li>
-                    <li># devices:  {{ dataset.num_devices }} </li>
-                    <li>Size:  {{ dataset.data_size | filesizeformat }} </li>
-                </ul>
+                the data analysis (not implemented yet). Head over to experiments 
+                <a href="{% url 'dataset' %}{{ dataset.id }}">dashboard</a>
+                for further analysis.  
             </p>
-            For generating plots or further information visit <a href="../dataset">datasets</a>.
     </div>
+
+    {%plotly_app name="experiment" initial_arguments=dash_context ratio=0.4%}
     <div class="card-footer">
-            <div class="btn-group shadow-0 float-right" role="group" aria-label="Basic example">
+            <div class="hstack gap-2 float-end" role="group" aria-label="Basic example">
                 {% if experiment_status == 'running' %}
-                    <form class="form mr-1" action="{% url 'dashboard' %}" method="POST">
+                    <form class="form" action="{% url 'dashboard' %}" method="POST">
                             {% csrf_token %}
                         <input type="hidden" name="intent" value="pause experiment">
                         <button type="submit" class="btn btn-outline-primary">Pause experiment</button>
@@ -38,3 +36,4 @@
             </div> 
     </div>
 </div>
+

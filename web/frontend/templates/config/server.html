@@ -2,6 +2,7 @@
   <div class="col-sm-6">
     <form action="{% url url %}" method="POST" class="mb-0">
       {% csrf_token %} {{ form }}
+      <input type="hidden" name="intent" value="configure_server" />
       <input type="hidden" name="from" value="conf_server" />
       Server address
         <input
@@ -9,7 +10,7 @@
           class="form-control mb-2"
           id="inputEmail3"
           name="address"
-          placeholder="{{ server.server_address }}"/>
+          value="{{ server.server_address | default_if_none:"http://[ip-address]:[port]" }}"/>
       Poll interval
       <select class="form-control" id="asdf" name="poll_interval">
         {% for opt in poll_int_list%} {% if opt == server.poll_interval %}
@@ -18,9 +19,71 @@
         <option>{{ opt }}</option>
         {% endif %} {% endfor %}
       </select>
+      Time zone
+      <select class="form-control selectpicker" data-live-search="true" id="asdf2" name="time_zone">
+        {% for tz in time_zones%} {% if tz == server.time_zone %}
+          <option selected>{{ tz }}</option>
+        {% else %}
+          <option>{{ tz }}</option>
+        {% endif %} {% endfor %}
+      </select>
       <button type="submit" class="btn btn-primary mt-1 float-right">
         Submit
       </button>
     </form>
+  </div>
+  <hr>
+  <div class='col-sm-6'>
+    <div class="hstack gap-3 mb-1">
+      <span class="align-middle">HA polling service: </span>
+      <div  class="me-auto"></div>
+      {%if server.poll_service_pid %}
+      <span class="align-middle">running</span>
+      {% else %}
+      <span class="align-middle">stopped</span>
+      {% endif %}
+
+      <form action="", method="POST">
+        {% csrf_token %} {{ form }}
+        <input type="hidden" name="from" value="conf_server" />
+        {%if server.poll_service_pid %}
+          <input type="hidden" name="intent" value="service_stop_polling" />
+          <div class="form-check form-switch">
+            <input class="form-check-input" onChange="this.form.submit()" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+          </div>
+        {% else %}
+          <input type="hidden" name="intent" value="service_start_polling" />
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" onChange="this.form.submit()" role="switch" id="flexSwitchCheckDefault">
+          </div>
+        {% endif %}
+      </form>
+    </div>
+    <div class="hstack gap-3">
+      <span>ZeroConf service: </span>
+      <div  class="ms-auto"></div>
+      {%if server.zero_conf_pid %}
+      <span>running</span>
+      {% else %}
+      <span>stopped</span>
+      {% endif %}
+      <form action="", method="POST">
+        {% csrf_token %} {{ form }}
+        <input type="hidden" name="from" value="conf_server" />
+        {%if server.zero_conf_pid %}
+          <input type="hidden" name="intent" value="service_stop_zeroconf" />
+          <div class="form-check form-switch">
+            <input class="form-check-input" onChange="this.form.submit()" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+          </div>
+        {% else %}
+          <input type="hidden" name="intent" value="service_start_zeroconf" />
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" onChange="this.form.submit()" role="switch" id="flexSwitchCheckDefault">
+          </div>
+        {% endif %}
+
+      </form>
+
+    </div>
   </div>
 </div>

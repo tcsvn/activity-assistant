@@ -14,8 +14,7 @@
           "panel": "new"
         },
         "problemMatcher": []
-      },
-      {
+      },{
         "label": "AA build dev addon",
         "type": "shell",
         "command": "docker build -f build/dev/Dockerfile --build-arg BUILD_FROM=\"homeassistant/amd64-base:latest\" -t tchr157/activity-assistant-amd64:dev ./build/dev",
@@ -25,8 +24,7 @@
           "panel": "new"
         },
         "problemMatcher": []
-      },
-      {
+      },{
         "label": "AA run dev addon",
         "type": "shell",
         "command": "docker run --rm -ti -v ${PWD}:/share --name local_act_assist -p 433:433 -p 8000:8000 local/amd64-addon-act_assist:dev",
@@ -36,8 +34,7 @@
           "panel": "new"
         },
         "problemMatcher": []
-      },
-      {
+      },{
         "label": "HA cp hass_config_mariadb into container",
         "type": "shell",
         "command": "${workspaceFolder}/.devcontainer/cp_hass_config_mdb.sh",
@@ -47,8 +44,7 @@
           "panel": "new"
         },
         "problemMatcher": []
-      },
-      {
+      },{
         "label": "HA cp hass_config into container",
         "type": "shell",
         "command": "${workspaceFolder}/.devcontainer/copy_hass_config.sh",
@@ -58,6 +54,57 @@
           "panel": "new"
         },
         "problemMatcher": []
-      }
-    ]
-  }
+      },{
+        "label": "HA print supervisor_token",
+        "type": "shell",
+        "command": "docker inspect addon_709d7dbe_act_assist_dev | grep SUPERVISOR_TOKEN",
+        "group": "test",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },{
+        "label": "AA build production amd",
+        "type": "shell",
+        "command": "docker build --no-cache -f build/prod/Dockerfile --build-arg BUILD_FROM=\"homeassistant/amd64-base:latest\" -t tchr157/activity-assistant-amd64:latest .",
+        "group": "test",
+        "presentation": {
+            "reveal": "always",
+            "panel": "new"
+        },
+        "problemMatcher": []
+    },{
+        "label": "AA build production i386",
+        "type": "shell",
+        "command": "docker build -f build/prod/Dockerfile --build-arg BUILD_FROM=\"homeassistant/i386-base:latest\" -t tchr157/activity-assistant-i386:latest .",
+        "group": "test",
+        "presentation": {
+            "reveal": "always",
+            "panel": "new"
+        },
+        "problemMatcher": []
+    },{
+      "label": "AA build production armv7 with BUILDER",
+      "type": "shell",
+      "command": "${workspaceFolder}/.devcontainer/build_armv7_prod.sh",
+      "group": "test",
+      "presentation": {
+          "reveal": "always",
+          "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "AA build production amd ubuntu",
+      "type": "shell",
+      "command": "docker build -f build/prod_ubuntu/Dockerfile --build-arg BUILD_FROM=\"homeassistant/amd64-base-ubuntu:18.04\" -t tchr157/activity-assistant-amd64-ubuntu:18.04 .",
+      "group": "test",
+      "presentation": {
+          "reveal": "always",
+          "panel": "new"
+      },
+      "problemMatcher": []
+  },
+  ]
+}

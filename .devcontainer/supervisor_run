@@ -18,7 +18,6 @@ function run_supervisor() {
         -v /run/docker.sock:/run/docker.sock:rw \
         -v /run/dbus:/run/dbus:ro \
         -v /run/udev:/run/udev:ro \
-        -v "${WORKSPACE_DIRECTORY}/build/dev/":/data/addons/local:ro \
         -v /workspaces/supervisor_data:/data:rw \
         -v /etc/machine-id:/etc/machine-id:ro \
         -e SUPERVISOR_SHARE="/workspaces/supervisor_data" \

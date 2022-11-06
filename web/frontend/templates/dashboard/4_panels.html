@@ -3,9 +3,22 @@
         <div class="col-sm">
             <div class="card border border-dark mb-3" style="max-width: 18rem">
                 <div class="card-body text-dark">
-                        <h5 class="card-title">{{ count_person }}</h5>
+                        <h6 class="card-title">{{ count_person }} Person {% if count_person > 1 %}s{% endif %}</h6>
                     <p class="card-text">
-                        Person{% if count_person > 1 %}s{% endif %} registered
+                        {% if count_person > 1 %}are{%else%} is{% endif %} tracked
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'config' %}">more info</a> 
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="card border border-dark mb-3" style="max-width: 18rem">
+                <div class="card-body text-dark">
+                        <h6 class="card-title">(x) Model{% if count_models > 1 %}s{% endif %}</h6>
+                    <p class="card-text">
+                        {% if count_models > 1 %}are {% else %} is {% endif %} registered
                     </p>
                 </div>
                 <div class="card-footer">
@@ -16,22 +29,9 @@
         <div class="col-sm">
             <div class="card border border-dark mb-3" style="max-width: 18rem">
                 <div class="card-body text-dark">
-                        <h5 class="card-title"> #x</h5>
+                        <h6 class="card-title">(x) Node{% if count_dask_runners > 1 %}s{% endif %}</h6>
                     <p class="card-text">
-                        Model{% if count_models > 1 %}s{% endif %} registered
-                    </p>
-                </div>
-                <div class="card-footer">
-                    <a href="{% url 'config' %}">more info</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm">
-            <div class="card border border-dark mb-3" style="max-width: 18rem">
-                <div class="card-body text-dark">
-                        <h5 class="card-title">#x</h5>
-                    <p class="card-text">
-                        Dask runner{% if count_dask_runners > 1 %}s{% endif %} connected
+                        are  connected
                     </p>
                 </div>
                 <div class="card-footer">
@@ -42,9 +42,9 @@
         <div class="col-sm">
         <div class="card border border-dark mb-3" style="max-width: 18rem">
             <div class="card-body text-dark">
-              <h5 class="card-title">{{ count_dataset }}</h5>
+              <h6 class="card-title">{{ count_dataset }} Dataset{% if count_dataset > 1 %}s{% endif %}</h6>
               <p class="card-text">
-                Dataset{% if count_dataset > 1 %}s{% endif %} created
+                {% if count_dataset == 1 %}was {% else %} were {% endif %} created
               </p>
             </div>
                 <div class="card-footer">

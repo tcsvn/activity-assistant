@@ -7,24 +7,18 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <title>Activity-assistant</title>
-    <link
-      rel="shortcut icon"
-      type="image/png"
-      href="{% static 'images/icon.svg' %}"/>
+    <title>Activity Assistant</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/icon.svg' %}"/>
     <!-- include bootstrap -->
-    <link
-      rel="stylesheet"
-      href="{% static 'mdbootstrap-5/mdb-v2.2.1.min.css'%}"/>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"/>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css'%}">
+    <link rel="stylesheet" href="{% static 'bootstrap-select.min.css'%}">
   </head>
 
   <body>
-    <script src="{% static 'mdbootstrap-5/mdb-v2.2.1.min.js' %}"></script>
-    <script src="{% static 'mdbootstrap-5/popper-v2.5.4.js' %}"></script>
-    <script src="{% static 'mdbootstrap-5/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'jquery-3.5.1.slim.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'bootstrap-select.min.js' %}"></script>
 
     <div class="container mt-2">
       <!-- progress bar -->
@@ -43,26 +37,26 @@
           </div>
         </div>
       </div>
-      
+
       <div class="card">
         <div class="card-body">
           {% if step == "initial" %}
-            {% include 'setup/0_initial.html' %}
+            {% include 'onboarding/0_initial.html' %}
 
           {% elif step == "data_collection" %}
-            {% include 'setup/1_data_collection.html' %}
+            {% include 'onboarding/1_data_collection.html' %}
 
           {% elif step == "conf_devices" %}
-            {% include 'setup/2_conf_devices.html' %}
+            {% include 'onboarding/2_conf_devices.html' %}
 
           {% elif step == "conf_activities" %}
-            {% include 'setup/3_conf_activities.html' %}
+            {% include 'onboarding/3_conf_activities.html' %}
 
           {% elif step == "conf_persons" %}
-            {% include 'setup/4_conf_persons.html' %}
+            {% include 'onboarding/4_conf_persons.html' %}
 
           {% elif step == "final" %}
-            {% include 'setup/5_final.html' %}
+            {% include 'onboarding/5_final.html' %}
 
           {% endif %}
         </div>

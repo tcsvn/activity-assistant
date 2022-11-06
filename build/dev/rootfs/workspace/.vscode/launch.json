@@ -5,12 +5,42 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Django",
+            "name": "runserver",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/web/manage.py",
             "args": [
                 "runserver"
+            ],
+            "django": true,
+            "justMyCode": false,
+            "python": "/usr/bin/python3",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "dashboard",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/pyadlml/examples/dash_board.py",
+            "args": [
+                "-d",
+                "amsterdam"
+            ],
+            "django": true,
+            "justMyCode": true,
+            "python": "/usr/bin/python3",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "service: ds_updater",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/services/dataset_updater_service.py",
+            "args": [
+                "--url",
+                "http://709d7dbe-act-assist-dev:8000/webhook",
+                "--poll_interval",
+                "8000"
             ],
             "django": true,
             "justMyCode": true,

@@ -1,0 +1,115 @@
+{% load qr_code %}
+<div class="row w-100">
+  <div class="col-3">
+    <!-- Tab navs -->
+    <div
+      class="nav flex-column nav-tabs text-center"
+      id="v-tabs-tab"
+      role="tablist"
+      aria-orientation="vertical"
+    >
+      <a
+        class="nav-link active"
+        id="v-tabs-home-tab"
+        data-bs-toggle="tab"
+        href="#v-tabs-home"
+        role="tab"
+        aria-controls="v-tabs-home"
+        aria-selected="true"
+        >Motivation</a
+      >
+      <a
+        class="nav-link"
+        id="v-tabs-profile-tab"
+        data-bs-toggle="tab"
+        href="#v-tabs-profile"
+        role="tab"
+        aria-controls="v-tabs-profile"
+        aria-selected="false"
+        >Get application</a
+      >
+      <a
+        class="nav-link"
+        id="v-tabs-messages-tab"
+        data-bs-toggle="tab"
+        href="#v-tabs-messages"
+        role="tab"
+        aria-controls="v-tabs-messages"
+        aria-selected="false"
+        >Establish Connection</a
+      >
+    </div>
+    <!-- Tab navs -->
+  </div>
+
+  <div class="col-9">
+    <!-- Tab content -->
+    <div class="tab-content" id="v-tabs-tabContent">
+      <div
+        class="tab-pane fade show active"
+        id="v-tabs-home"
+        role="tabpanel"
+        aria-labelledby="v-tabs-home-tab"
+      >
+        The <a href="#">android logger</a> is the recommended way to record ADLs. The applications offers
+        two main advantages over using the home assistant app. First, an ongoing connection to Home Assistant is not
+        required since the recorded activities are cached locally on the phone. Second, the ability to 
+        edit or correct activities while recording turns out to be very handy. 
+         
+      </div>
+      <div
+        class="tab-pane fade"
+        id="v-tabs-profile"
+        role="tabpanel"
+        aria-labelledby="v-tabs-profile-tab"
+      >
+          <div class="row d-flex align-items-center">
+            <div class="col">
+              <div class="media">
+                {% qr_from_text qr_code_sm_download size=6 version=6 error_correction=L %}
+
+              </div>
+            </div>
+            <div class="col">
+              <img
+                class="img-fluid col-10"
+                alt="Get it on F-Droid"
+                src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Get_it_on_F-Droid.svg"
+              />
+            </div>
+            <div class="col">
+              <img
+                class="img-fluid col-12"
+                alt="Get it on Google Play"
+                src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <p>Scan the qr-code with some barcodescanner to download the APK. Future me will 
+              publish the app on F-droid and the Google Play store.</p>
+          </div>
+      </div>
+      <div
+        class="tab-pane fade"
+        id="v-tabs-messages"
+        role="tabpanel"
+        aria-labelledby="v-tabs-messages-tab"
+      >
+          <div class="row">
+            <div class="col-6">
+              {% qr_from_text qr_code_data size=8 version=8 error_correction=L %}
+            </div>
+            <div class="col-6">
+              <p>
+                On your phone open the activity-assistant application. Click
+                the "scan" button and move the qr-code into focus. Pressing "decouple" automatically 
+                dissosiates the device and the person.
+              </p>
+            </div>
+          </div>
+      </div>
+    </div>
+    <!-- Tab content -->
+  </div>
+</div>

@@ -4,10 +4,13 @@ import sys
 import logging
 import socket
 from time import sleep
-
 import aiohttp
 import asyncio
 from datetime import timedelta
+"""
+This is just a simple server that makes a get request on the home assistant webhook
+
+"""
 
 def terminateProcess(signalNumber, frame):
     print ('(SIGTERM) terminating the process')
@@ -17,7 +20,7 @@ async def main(url, poll_int):
     async with aiohttp.ClientSession() as session:
         while True:
             async with session.get(url) as resp:
-                tmp = await resp.text()
+                await resp.text()
                 await asyncio.sleep(poll_int)
 
 

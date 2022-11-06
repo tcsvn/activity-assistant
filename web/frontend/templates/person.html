@@ -27,9 +27,9 @@
       {% include 'person/status.html' %} 
     </div>
 
-    {% if not smartphone %}
+    {% if not smartphone and not hatracker%}
       <div class="mb-2">
-        {% include 'person/register_smartphone.html' %}
+        {% include 'person/register_activity_tracker.html' %}
       </div>
     {% endif %}
 

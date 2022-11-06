@@ -1,0 +1,12 @@
+<h4 class="card-title">Setup complete</h4>
+<p class="card-text">
+    Congratulations, your finished! Remember to check out the configuration for the correct IP address assignment!
+</p>
+
+<form action="{% url 'setup' %}" method="POST" class="mb-0">
+    <input type="hidden" name="from" value="final" />
+    {% csrf_token %} {{ form }}
+    <button type="submit" class="btn btn-outline-danger float-right">
+        Finish Setup
+    </button>
+</form>

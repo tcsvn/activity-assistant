@@ -1,7 +1,7 @@
 name: activity-assistant
 version: dev
 slug: act_assist
-description: "Record, evaluate and predict Activities of Daily living (ADL)"
+description: "Recorda, evaluate and predict Activities of Daily living (ADL)"
 arch:
   - amd64
 startup: "application"
@@ -9,6 +9,7 @@ init: false
 webui: "http://[HOST]:[PORT:8000]"
 boot: "auto"
 image: "tchr157/activity-assistant-{arch}"
+hassio_role: default
 homeassistant_api: true
 hassio_api: true
 ingress: true
@@ -19,5 +20,6 @@ ports:
   433/tcp: 433
 map:
   - share:rw
+  - config:ro
 ports_description:
   8000/tcp: "Required for API access of mobile devices"

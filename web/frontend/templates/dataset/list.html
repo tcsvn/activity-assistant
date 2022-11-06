@@ -4,80 +4,66 @@
     {% if ds.name != dataset.name %}
       <!-- don't print the current experiment-->
       <!-- Single collapse -->
-      <div id="heading{{ds.id}}">
-        <div class="btn-toolbar justify-content-between" role="toolbar">
-          <h2>
-            <button
-              class="btn btn-link btn-block text-left pl-3"
-              type="button"
-              data-toggle="collapse"
-              data-target="#collapse{{ds.id}}"
-              aria-expanded="true"
-              aria-controls="collapse{{ds.id}}"
-            >
-              {{ds.name}}
-            </button>
-          </h2>
-          <div class="btn-group shadow-0">
-            <form class="form mr-1" action="{% url 'dataset' %}" method="POST">
-              {% csrf_token %}
-              <input type="hidden" name="dataset_name" value="{{ds.name}}" />
+        <div id="heading{{ds.id}}">
+          <div class="btn-toolbar justify-content-between" role="toolbar">
+            <h2>
               <button
-                type="submit"
-                class="btn btn-link"
-                name="intent"
-                value="export_dataset"
+                class="btn btn-link btn-block text-left pl-3"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapse{{ds.id}}"
+                aria-expanded="true"
+                aria-controls="collapse{{ds.id}}"
               >
-                export data
+                {{ds.name}}
               </button>
-            </form>
+            </h2>
+            <div class="btn-group shadow-0">
+              <form class="form mr-1" action="{% url 'dataset' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="dataset_name" value="{{ds.name}}" />
+                <button
+                  type="submit"
+                  class="btn btn-link"
+                  name="intent"
+                  value="export_dataset"
+                >
+                  export data
+                </button>
+              </form>
 
-            <form class="form" action="{% url 'dataset' %}" method="POST">
-              {% csrf_token %}
-
-              <input type="hidden" name="dataset_name" value="{{ds.name}}" />
-              <button
-                type="submit"
-                class="btn btn-outline-danger"
-                name="intent"
-                value="delete_dataset"
-              >
-                delete data
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <div
-        id="collapse{{ds.id}}"
-        class="collapse pl-3"
-        aria-labelledby="heading{{ds.id}}"
-        data-parent="#accordionExample"
-      >
-        <div class="col-6">
-          {% include 'dataset/dataset_statistic.html'%}
-          <div class="row">
-            <p>
-              For visualizations and details look <a href="../dataset/{{ ds.id }}">here</a>.
-            </p>
               <form class="form" action="{% url 'dataset' %}" method="POST">
                 {% csrf_token %}
 
                 <input type="hidden" name="dataset_name" value="{{ds.name}}" />
                 <button
                   type="submit"
-                  class="btn btn-dark float-right"
+                  class="btn btn-outline-danger"
                   name="intent"
-                  value="generate_analysis"
-                  {% if service_plot_gen %} disabled {% endif %}
+                  value="delete_dataset"
                 >
-                  reanalyse
+                  delete data
                 </button>
               </form>
             </div>
+          </div>
         </div>
-      </div>
+
+        <div
+          id="collapse{{ds.id}}"
+          class="collapse pl-3"
+          aria-labelledby="heading{{ds.id}}"
+          data-parent="#accordionExample"
+        >
+          <div class="col-6">
+            {% include 'dataset/dataset_statistic.html'%}
+            <div class="row">
+              <p>
+                Visit the interactive dashboard to gain more insights <a href="../dataset/{{ ds.id }}">here</a>.
+              </p>
+            </div>
+          </div>
+        </div>
     {% endif %} 
   {% endfor %}
 </div>

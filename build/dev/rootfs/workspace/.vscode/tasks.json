@@ -4,9 +4,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Migrate django",
+            "label": "makemigrations",
             "type": "shell",
-            "command": "bash -c \"export PYTHONPATH=/share/web/act_assist:/share/web; cd /share; python3 web/manage.py makemigrations; python3 web/manage.py migrate\"",
+            "command": "bash -c \"export PYTHONPATH=/workspace/web/act_assist:/workspace/web:/workspace; cd /workspace; python3 web/manage.py makemigrations; python3 web/manage.py makemigrations\"",
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -14,5 +14,28 @@
             },
             "problemMatcher": []
         },
+        {
+            "label": "migrate",
+            "type": "shell",
+            "command": "bash -c \"export PYTHONPATH=/workspace/web/act_assist:/workspace/web:/workspace; cd /workspace; python3 web/manage.py makemigrations; python3 web/manage.py migrate --run-syncdb\"",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "load fixture",
+            "type": "shell",
+            "command": "bash -c \"export PYTHONPATH=/workspace/web/act_assist:/workspace/web:/workspace; cd /workspace; python3 web/manage.py makemigrations; python3 web/manage.py loaddata initial_server.json\"",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+
     ]
 }

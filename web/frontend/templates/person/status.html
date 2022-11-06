@@ -2,9 +2,13 @@
     <h3 class="card-header"> {{ person.name | title }}</h3>
     <div class="card-body">
         <div class="card-title"> <h5>Status</h5></div>
-        <ul class="list-group list-group-flush col-6">
+        <ul class="list-group list-group-flush col-8">
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div> Real-time prediction</div>
+                <div class="d-flex align-self-center gap-2">
+                    <div> <i class="material-icons">developer_board</i> </div>
+                    <div> Compute Node x</div>
+                </div>
                 <div> {% if person.prediction %}
                         <p class="text-success mb-0">
                             running
@@ -15,44 +19,51 @@
                     </p>
                 </div>
             </li>
-            {% if smartphone and smartphone.logging %}
-                <li class="media list-group-item d-flex justify-content-between align-items-center">
-                    <i class="material-icons">smartphone</i>
-                    <div class="media-body"> 
-                        {{ smartphone.name }}
+
+            <li class="media list-group-item d-flex justify-content-between align-items-center">
+                <div> Activity tracker </div>
+                {% if smartphone %}
+                    <div class="d-flex align-self-center gap-2">
+                        <div><i class="material-icons">smartphone</i> </div>
+                        <div>{{ smartphone.name }} </div>
+                    {% if smartphone.logging %}
+                    <div>
+                        <p class="text-primary mb-0"> {{ smartphone.logged_activity.name }} </p>
                     </div>
-                    <p class="text-primary mb-0"> {{ smartphone.logged_activity.name }} </p>
-                </li>
-            {% endif %}
-            {% if smartphone and not smartphone.logging %}
-                <li class="media list-group-item d-flex justify-content-between align-items-center">
-                    <i class="material-icons">smartphone</i>
-                    <div class="media-body"> 
-                        {{ smartphone.name }}
+                    {% else %}
+                    <div>
+                        <p class="text-muted mb-0"> not logging </p>
                     </div>
-                    <p class="text-muted mb-0"> not logging </p>
-                </li>
-            {% endif %}
-            {% if not smartphone %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div> smartphone </div>
-                    <div> <p class="text-muted mb-0"> unregistered
-                                                                </p>
+                    {% endif %}
+                </div>
+
+
+                {% elif hatracker %}
+                    <div class="d-flex align-self-center gap-2">
+                        <div> <i class="material-icons">
+                        {% if hatracker.logging %}
+                            toggle_on
+                        {% else %}
+                            toggle_off
+                        {%endif %}
+                        </i> </div>
+                        <div>{{ hatracker.input_boolean }}</div>
                     </div>
-                </li>
-            {% endif %}
-            <!--
-            {% if smartphone %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Activities logged
-                    <span class="badge bg-info rounded-pill">11</span>
-                </li>
-            {% endif %}
-            -->
-            </ul>
+                    {% if hatracker.logging %}
+                    <div>
+                        <p class="text-primary mb-0"> {{hatracker.logged_activity.name}} </p>
+                    </div>
+                    {% else%}
+                    <div>
+                        <p class="text-muted mb-0"> not logging</p>
+                    </div>
+                    {% endif %}
+                {% else%}
+                    <div>
+                        <p class="text-muted mb-0"> not registered</p>
+                    </div>
+                {% endif %}
+            </li>
+        </ul>
     </div>
-    <!--
-    <div class="card-footer">
-    </div>
--->
 </div>

@@ -1,7 +1,9 @@
-from backend.models import *
+import imp
+from backend.models import Person, Device, Activity,  Server
+from backend.models.dataset import Dataset
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
-from frontend.util import *
+from frontend.util import collect_data_from_hass, get_server
 from pathlib import Path
 import frontend.experiment as experiment
 import os
@@ -23,6 +25,7 @@ class DashboardView(TemplateView):
         add_context : dict
             additional context to set to the normal one
         """
+
         person_list = Person.objects.all()
         device_list = Device.objects.all()
         activity_list = Activity.objects.all()
@@ -34,13 +37,14 @@ class DashboardView(TemplateView):
         count_device = len(device_list)
         srv = get_server()
         setup_complete = srv.setup == 'complete'
-        experiment_stat = experiment.get_status()
-        is_exp_active = experiment.is_active()
+        experiment_stat = srv.experiment_status()
+        is_exp_active = srv.is_experiment_running()
         #rt_node_running = self.is_rt_node_running()
         #rt_node = srv.realtime_node
         #model_list = Model.objects.all()
         context = {
             'person_list' : person_list,
+            'device_list' : device_list, 
             #'model_list' : model_list,
             'activity_list' : activity_list,
             'count_person' : count_person,
@@ -55,14 +59,36 @@ class DashboardView(TemplateView):
             #'rt_node' : rt_node
         }
         if is_exp_active:
+            collect_data_from_hass()
+            self.tmp(srv.dataset)
             context['dataset'] = srv.dataset
             context['num_persons'] = len(person_list)
             context['num_activities'] = len(activity_list)
             context['num_devices'] = len(device_list)
+            context['dash_context'] = dict(
+                act_assist_path=dict(value=srv.dataset.path_to_folder),
+                subject_names=dict(value=Person.get_all_names())
+            )
         if add_context is not None:
             context.update(add_context)
         return context
 
+    def tmp(self, ds):
+        import pandas as pd
+        # Create activity files from ha trackers and save to persons activity file
+        for person in Person.objects.all():
+            if hasattr(person, 'hatracker'):
+                person.hatracker.transform_activity_df()
+
+        # Substitute activity with mapping
+        mapping = pd.read_csv(ds.get_activity_map_fp())
+        mapping = {v: k for k, v  in mapping.set_index('id').to_dict()['activity'].items()}
+
+        for person in Person.objects.all():
+            person.remap_activity_file(mapping)
+
+        # copy stuff activity files persons to dataset folder
+        ds.copy_actfiles2dataset()
 
     def run(self, request):
         srv = Server.objects.all()[0]

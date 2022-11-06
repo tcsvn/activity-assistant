@@ -4,7 +4,8 @@ import os
 SECRET_KEY = 'mawcf9#i&c3cl#g47-oks8wio8%7205@0u_g4233$q30pcgzdn'
 #SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
-DEBUG = False
+# TODO for now
+DEBUG = True
 
 STATIC_ROOT = '/var/cache/activity_assistant/static/'
 STATICFILES_DIRS = ['/opt/activity_assistant/web/frontend/static']

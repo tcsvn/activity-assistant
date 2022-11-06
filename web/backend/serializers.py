@@ -1,3 +1,4 @@
+from asyncio import Handle
 from rest_framework import serializers
 from backend.models import *
 from django.contrib.auth.models import User
@@ -54,12 +55,8 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Dataset
         fields = ('id', 'name', 'path_to_folder', 'start_time', 'end_time', 
-            'num_devices',  
-            'num_recorded_events', 'data_size', 'person_statistics', 
-            'plot_hist_on_off','plot_boxplot_on_duration',
-            'plot_heatmap_trigger_one_day', 'plot_hist_trigger_time_diff',
-            'plot_heatmap_trigger_time',
-            'plot_heatmap_cross_correlation', 'plot_hist_counts'
+            'num_devices', 'num_recorded_events', 'num_persons', 'num_activities', 'num_recorded_activities', 
+            'data_size', 'person_statistics', 
         )
 
 
@@ -73,14 +70,15 @@ class ActivitySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Activity
-        fields = ('id', 'name')#, 'locations')
+        fields = ('id', 'name', 'areas')
 
 
-class LocationSerializer(serializers.HyperlinkedModelSerializer):
+class AreaSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Location
-        fields = ('id', 'name', 'x', 'y', 'node_id', 'activities')
+        model = Area
+        #fields = ['id', 'name', 'x', 'y', 'node_id', 'activities', 'devices']
+        fields = ['id', 'name', 'activities', 'devices']
 
 
 class EdgeSerializer(serializers.HyperlinkedModelSerializer):
@@ -107,7 +105,7 @@ class DeviceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Device
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'area']
 
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     #owner = serializers.ReadOnlyField(source='owner.username')

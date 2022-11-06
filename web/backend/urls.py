@@ -21,7 +21,7 @@ router.register(r'devices', views.DeviceViewSet)
 #router.register(r'models', views.ModelViewSet)
 router.register(r'datasets', views.DatasetViewSet)
 router.register(r'smartphones', views.SmartphoneViewSet)
-#router.register(r'locations', views.LocationViewSet)
+router.register(r'areas', views.AreaViewSet)
 #router.register(r'edges', views.EdgeViewSet)
 urlpatterns = []
 

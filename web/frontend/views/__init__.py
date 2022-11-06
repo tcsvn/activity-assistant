@@ -7,3 +7,5 @@ from .dataset import DatasetView
 from .config import ConfigView
 from .webhook import WebhookView
 from .datasetAnalytics import DatasetAnalyticsView
+from .deviceAssignment import AssignDeviceView
+from .dashboard_plotly import *

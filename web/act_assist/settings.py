@@ -23,6 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #ALLOWED_HOSTS += ['192.168.178.{}'.format(j) for j in range(256)]
 ALLOWED_HOSTS = ['*'] # TODO debug measure 
 
+# Allow to use dash application in the same HTML document 
+X_FRAME_OPTIONS='SAMEORIGIN'
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -30,8 +33,11 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles', 'rest_framework', 'qr_code',
+    'django.contrib.staticfiles', 
+    'rest_framework', 
+    'qr_code',
     'rest_framework.authtoken',
+    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'frontend.apps.FrontendConfig',
     'backend.apps.BackendConfig',
 ]
@@ -44,6 +50,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'django_plotly_dash.middleware.BaseMiddleware',
+    'django_plotly_dash.middleware.ExternalRedirectionMiddleware',
 ]
 
 ROOT_URLCONF = 'act_assist.urls'
@@ -67,6 +76,44 @@ TEMPLATES = [
 WSGI_APPLICATION = 'act_assist.wsgi.application'
 
 
+PLOTLY_DASH = {
+    "ws_route" : "ws/channel",
+
+    "insert_demo_migrations" : True,  # Insert model instances used by the demo
+
+    "http_poke_enabled" : True, # Flag controlling availability of direct-to-messaging http endpoint
+
+    "view_decorator" : None, # Specify a function to be used to wrap each of the dpd view functions
+
+    "cache_arguments" : True, # True for cache, False for session-based argument propagation
+
+    #"serve_locally" : True, # True to serve assets locally, False to use their unadulterated urls (eg a CDN)
+
+    "stateless_loader" : "demo.scaffold.stateless_app_loader",
+}
+
+# Staticfiles finders for locating dash app assets and related files
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+
+    'django_plotly_dash.finders.DashAssetFinder',
+    'django_plotly_dash.finders.DashComponentFinder',
+    #'django_plotly_dash.finders.DashAppDirectoryFinder',
+]
+
+# Plotly components containing static content that should
+# be handled by the Django staticfiles infrastructure
+
+PLOTLY_COMPONENTS = [
+    'dash_core_components',
+    'dash_html_components',
+    #'dash_renderer',
+    #'dash_bootstrap_components',
+    #'dpd_components',
+    #'dpd_static_support',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -106,7 +153,10 @@ STATIC_URL = '/static/'
 
 SERVE_MEDIA = True
 MEDIA_URL = '/media/'
+
+# The rest api can be called within supervisor
 HASS_API_URL = 'http://supervisor/core/api'
+HASS_SUP_URL = 'http://supervisor'
 
 DATA_ROOT = '/data/'
 MEDIA_ROOT = DATA_ROOT + 'media/'
@@ -126,12 +176,12 @@ REST_API_TITLE='Activity-assistant API'
 POLL_INTERVAL_LST = ['5s', '1m', '10m', '30m', '2h', '6h']
 DATASET_PATH = DATA_ROOT + 'datasets/' # path where all the datasets lie
 ACTIVITY_FILE_NAME="activities_subject_%s.csv"
-ACTIVITY_MAPPING_FILE_NAME="activity_mapping.csv"
+ACTIVITY_MAPPING_FILE_NAME="activity_map.csv"
 DATA_FILE_NAME='devices.csv'
-DATA_MAPPING_FILE_NAME='device_mapping.csv'
+DATA_MAPPING_FILE_NAME='device_map.csv'
 PRIOR_ACTIVITY_FILE_NAME = "prior_activities_subject_%s.csv"
-DEV_ROOM_ASSIGNMENT_FILE_NAME = "devices_and_areas.csv"
-ACT_ROOM_ASSIGNMENT_FILE_NAME = "activities_and_areas.csv"
+DEVICE_AREA_MAP_FN = "device_area_map.csv"
+ACTIVITY_AREA_MAP_FN = "activity_area_map.csv"
 
 HASS_CONFIG_URL = '/config/configuration.yaml'
 

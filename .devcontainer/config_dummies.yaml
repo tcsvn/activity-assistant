@@ -11,19 +11,37 @@ scene: !include scenes.yaml
 
 # from here on its different
 input_boolean:
-  light_01:
-    name: Light 1
-  light_02:
-    name: Light 2
-  light_03:
-    name: Light 3
-  light_04:
-    name: Light 4
-  motion_01:
-    name: Motion 1
-  motion_02:
-    name: Motion 2 
-  motion_03:
-    name: Motion 3
-  motion_04:
-    name: Motion 4
+  binary_01:
+    name: Bin 1
+  binary_02:
+    name: Bin 2
+  binary_03:
+    name: Bin 3
+  binary_04:
+    name: Bin 4
+input_select:
+  cat_1:
+    name: Cat 1
+    options:
+      - c11
+      - c12
+      - c13
+  cat_2:
+    name: Cat 2
+    options:
+      - c21
+      - c22
+      - c23
+      - c24
+
+input_number:
+  num_1:
+    name: Num 1
+    initial: 30
+    min: 0
+    max: 100
+  num_2:
+    name: Num 2
+    initial: 30
+    min: -100
+    max: 100

@@ -1,82 +1,81 @@
         <div class="card">
-            <div class="card-body">
                 <div class="card-header">
                     <div class="btn-toolbar justify-content-between" role="toolbar">
-                        <h5> Dataset: {{ dataset.name }}</h5>
-                        <form class="mr-2" action="{% url 'dataset' %}" method="POST">
-                                {% csrf_token %}
-                                <input type="hidden" name="dataset_name" value="{{dataset.name}}">
-                                <button type="submit" class="btn btn-dark" name="intent" 
-                                value="gen_analysis_for_experiment" {% if service_plot_gen %} disabled {% endif %}  >
-                                    Collect statistics 
-                                </button>
-                        </form>
+                        <h5> Experiment: {{ dataset.name }}</h5>
                     </div>
                 </div>
-
-                <div class="d-flex flex-column col-sm-12 col-md-10 col-lg-8 col-xl-6">
-                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
-                        <div class="p-2"> device recording</div>
-                        <div class="p-2">
-                            {% if polling %}
-                                <p class="text-success mb-0"> running
-                            {% else %}
-                                <p class="text-secondary mb-0"> offline
-                            {% endif %}
-                            </p>
+            <div class="card-body">
+                    <div class="vstack gy-1 gap-8 col-md-6 ">
+                        <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                            <div> Device recording</div>
+                            <div>
+                                {% if polling %}
+                                    <p class="text-success mb-0"> running
+                                {% else %}
+                                    <p class="text-secondary mb-0"> offline
+                                {% endif %}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
-                        <div class="p-2"> start time </div>
-                        <div class="p-2">
-                            <p class="text-muted mb-0">
-                                {{ dataset.start_time}} 
-                            </p>
+                        <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                            <div> Start time </div>
+                            <div>
+                                <p class="text-muted mb-0">
+                                    {{ dataset.start_time}} 
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
-                        <div class="p-2"> # persons </div>
-                        <div class="p-2">
-                             <p class="text-muted mb-0">
-                                 {{ num_persons }}
-                            </p>
+                        <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                            <div> #Persons </div>
+                            <div>
+                                <p class="text-muted mb-0">
+                                    {{ num_persons }}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
-                        <div class="p-2"> # activities </div>
-                        <div class="p-2">
-                             <p class="text-muted mb-0">
-                                 {{ num_activities}}
-                            </p>
+                        <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                            <div> #Activities </div>
+                            <div>
+                                <p class="text-muted mb-0">
+                                    {{ num_activities}}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
-                        <div class="p-2"> # devices </div>
-                        <div class="p-2">
-                             <p class="text-muted mb-0">
-                                 {{ dataset.num_devices }}
-                            </p>
+                        <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                            <div> #Activities recorded</div>
+                            <div>
+                                <p class="text-muted mb-0">
+                                    {{ num_activities}}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
-                        <div class="p-2"> # events </div>
-                        <div class="p-2">
-                             <p class="text-muted mb-0">
-                                 {{ dataset.num_recorded_events}}
-                            </p>
+                        <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                            <div> #Devices </div>
+                            <div>
+                                <p class="text-muted mb-0">
+                                    {{ dataset.num_devices }}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-flex flex-row p-2 justify-content-between align-items-center">
-                        <div class="p-2"> Datasize </div>
-                        <div class="p-2">
-                             <p class="text-muted mb-0">
-                                 {{ dataset.data_size | filesizeformat }}
-                            </p>
+                        <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                            <div> #Events </div>
+                            <div>
+                                <p class="text-muted mb-0">
+                                    {{ dataset.num_recorded_events}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-row p-2 justify-content-between align-items-center">
+                            <div> Datasetsize </div>
+                            <div>
+                                <p class="text-muted mb-0">
+                                    {{ dataset.data_size | filesizeformat }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             <div class="card-footer">
-                Intermediate <a href="../dataset/{{dataset.id}}">results</a>
+                Visit the <a href="../dataset/{{dataset.id}}">dashboard</a>
             </div>
         </div>

@@ -1,10 +1,54 @@
 <div class="card w-90 mb-2">
     <div class="card-body">
         <h5 class="card-title">Experiment</h5>
-            <p class="card-text"> Collect data for a fixed time interval with the current <a href="../dataset">setup</a>.
-                Notice the configuration is frozen to ensure consistency. This means it is not possible to change device 
-                or person assignments during an experiment. Furthermore the option to run predictions is not avaliable.
+            <p class="card-text"> Collect data for a fixed interval of time. While running an experiment 
+                the setup can not be altered and no model inference is possible.
             </p>
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingOne">
+                  <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#flush-collapseOne"
+                    aria-expanded="false"
+                    aria-controls="flush-collapseOne"
+                  >
+                    Current configuration:
+                  </button>
+                </h2>
+                <div
+                  id="flush-collapseOne"
+                  class="accordion-collapse collapse"
+                  aria-labelledby="flush-headingOne"
+                  data-bs-parent="#accordionFlushExample"
+                >
+                  <div class="accordion-body">
+                    <h6>{{ person_list | length }} Persons</h6>
+                    <ul>
+                    {%for person in person_list %}
+                    <li>{{ person.name }}</li>
+                    {% endfor %}
+                    </ul>
+                    <h6>{{ activity_list | length }} Activities</h6>
+                    <ul>
+                    {%for activity in activity_list %}
+                    <li>{{ activity.name }}</li>
+                    {% endfor %}
+                    </ul>
+                    <h6>{{ device_list | length }} Devices </h6>
+                    <ul>
+                    {%for device in device_list %}
+                    <li>{{ device.name }}</li>
+                    {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
             <form class="form row" action="{% url 'dashboard' %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="intent" value="start experiment">

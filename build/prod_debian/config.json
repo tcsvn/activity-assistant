@@ -1,0 +1,6 @@
+{
+  "name": "debian",
+  "version": "latest",
+  "arch": ["armv7", "aarch64", "armhf", "amd64"],
+  "image": "tchr157/activity-assistant-debian-{arch}"
+}

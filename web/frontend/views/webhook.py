@@ -1,10 +1,9 @@
 from backend.models import *
 from django.shortcuts import render, redirect
-from frontend.util import get_server, get_device_names
+from frontend.util import get_server
 from django.http import JsonResponse
 from django.views.generic import TemplateView
 from backend.serializers import DatasetSerializer
-from frontend.util import get_device_names
 from frontend.util import collect_data_from_hass
 import frontend.experiment as experiment
 

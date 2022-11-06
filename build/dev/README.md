@@ -10,7 +10,8 @@ Activity assistant provides a platform for logging and predicting Activities of 
 - Open the folder in vscode and type the command `Dev Containers: Open Folder in Container...`
 - Run the task `Start homeassistant`
 - Append your public-key (`~/.ssh/id_rsa.pub`) to the build/dev/rootfs/root/.ssh/authorized_keys file
-- Install the addon from the [addon store](https://my.home-assistant.io/redirect/supervisor_store/)
+- Add the [activity-assistant](https://github.com/tcsvn/hassio-activity-assistant) repo to the
+  [addon store](https://my.home-assistant.io/redirect/supervisor_store/) and install the dev addon
 - Add the following entry to your ssh config (`~/.ssh/config`):
   ```
     Host aa_dev

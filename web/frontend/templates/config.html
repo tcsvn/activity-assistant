@@ -21,12 +21,9 @@
   <div class='row'>
     <h4>Server</h4>
     <p>
-      Activity-assistant exposes a <a href="../api/">REST API</a>. 
-      The android logger needs the server address to connect to the API. Fill in 
-      an address where activity-assistant can be reached. The recommended way is to use the IP address of 
-      Home Assistant in your local network. If you access activity-assistant from the internet
-      make sure to set <a href="https://en.wikipedia.org/wiki/Port_forwarding">port forwarding</a>
-      to the respective address in your router. 
+      Activity-assistant exposes a <a href="../api/">REST API</a> for the android activity logger 
+      to connect to. Therefore it is necessary the logger uses the devices correct ip from to 
+      reach activity-assistant from within the local network. 
     </p>
     <div class="container">
       {% include "config/server.html" %}

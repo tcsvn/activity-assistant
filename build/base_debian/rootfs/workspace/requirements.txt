@@ -1,0 +1,8 @@
+mysqlclient
+
+# These do not run for armhf from pywheels
+pandas==1.5.0
+sklearn
+scipy
+
+#pyadlml

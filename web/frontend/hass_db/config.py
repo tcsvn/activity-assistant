@@ -114,7 +114,6 @@ def load_yaml(fname):
         # We convert that to an empty dict
         return yaml.load(conf_file) or {}
 
-
 def db_url_from_hass_config(path):
     """Find the recorder database url from a HASS config dir."""
     global _CONFIGURATION_PATH
@@ -126,7 +125,7 @@ def db_url_from_hass_config(path):
     config = load_hass_config(path)
     logger.error('successfully loaded config')
     default_path = os.path.join(path, "home-assistant_v2.db")
-    default_url = "sqlite:///{}".format(default_path)
+    default_url = f"sqlite:///{default_path}"
 
     recorder = config.get("recorder")
     logger.error('loaded recorder')
