@@ -11,7 +11,7 @@ RUN apt update && apt install -y --no-install-recommends \
     libssl-dev \
     libffi-dev \
     build-essential \
-    libfreetype6-dev \
+    libfreetype6 libfreetype6-dev \
     libjpeg62-turbo-dev \
     libmariadb-dev \
     libpng-dev \
@@ -22,7 +22,9 @@ RUN apt update && apt install -y --no-install-recommends \
     libxslt1-dev \
     libzmq3-dev \
     pkg-config \
+    zlib1g-dev \
     gcc \
+    libzbar-dev libzbar0 \
     openssl \
     build-essential \
     nginx \
