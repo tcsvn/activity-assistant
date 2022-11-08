@@ -1,0 +1,8 @@
+name: ubuntu-base
+version: latest
+image: tchr157/{arch}-base-debian
+arch:
+  - armv7
+  - aarch64
+  - armhf
+  - amd64

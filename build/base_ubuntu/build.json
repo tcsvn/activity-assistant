@@ -1,8 +1,0 @@
-{
-    "squash": true,
-    "build_from": {
-      "armv7": "homeassistant/armv7-base-ubuntu:20.04",
-      "aarch64": "homeassistant/aarch64-base-ubuntu:20.04",
-      "armhf": "homeassistant/armhf-base-ubuntu:20.04"
-    }
-}

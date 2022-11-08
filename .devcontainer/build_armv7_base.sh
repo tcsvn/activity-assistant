@@ -7,5 +7,4 @@ docker run --rm --privileged \
     -v $PWD/:/data tchr157/armv7-builder \
     --test \
     --file build/base_ubuntu/Dockerfile \
-    --armv7 --target /data/build/base_ubuntu
- 
+    --armv7 --target /data/build/base_debian

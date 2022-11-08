@@ -10,8 +10,9 @@ RUN apt update && apt install -y --no-install-recommends \
     default-libmysqlclient-dev \
     build-essential \
     nginx \
-    && python3 -m pip install --no-cache-dir --upgrade pip 
-RUN python3 -m pip install --no-cache-dir --only-binary=:all: -r requirements_binary.txt \
+    && python3 -m pip install --no-cache-dir --upgrade pip
+#RUN python3 -m pip install --no-cache-dir --only-binary=:all: -r requirements_binary.txt \
+RUN python3 -m pip install --no-cache-dir -r requirements_binary.txt \
     && python3 -m pip install --no-cache-dir -r requirements.txt \
     && apt clean  \
     && apt purge -y --auto-remove \

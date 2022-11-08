@@ -1,6 +1,0 @@
-{
-  "name": "ubuntu-base",
-  "version": "latest",
-  "arch": ["armv7", "aarch64", "armhf", "amd64"],
-  "image": "tchr157/{arch}-base-debian"
-}
