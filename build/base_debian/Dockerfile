@@ -8,6 +8,8 @@ COPY rootfs /
 RUN apt update && apt install -y --no-install-recommends \
     python3.10 python3-pip python3.10-dev \
     default-libmysqlclient-dev \
+    libssl-dev \
+    libffi-dev \
     build-essential \
     nginx \
     && python3 -m pip install --no-cache-dir --upgrade pip
