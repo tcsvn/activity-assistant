@@ -14,24 +14,23 @@ RUN apt update && apt install -y --no-install-recommends \
     build-essential \
     nginx \
     && python3 -m pip install --no-cache-dir --upgrade pip
-#RUN python3 -m pip install --no-cache-dir --only-binary=:all: -r requirements_binary.txt \
-#RUN python3 -m pip install --no-cache-dir -r requirements_binary.txt \
-#    && python3 -m pip install --no-cache-dir -r requirements.txt \
-#    && apt clean  \
-#    && apt purge -y --auto-remove \
-#    build-essential \
-#    python3.10-dev \
-#    && find /usr/local \
-#    \( -type d -a -name test -o -name tests -o -name '__pycache__' \) \
-#    -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
-#    -exec rm -rf '{}' + \
-#    \
-#    && rm -fr \
-#    /tmp/* \
-#    /root/{.cache,.config,.gnupg,.local,.log,.npm} \
-#    /usr/local/share/.cache \
-#    /var/{cache,log}/* \
-#    /var/lib/apt/lists/*
+RUN python3 -m pip install --no-cache-dir -r requirements_binary.txt \
+    && python3 -m pip install --no-cache-dir -r requirements.txt \
+    && apt clean  \
+    && apt purge -y --auto-remove \
+    build-essential \
+    python3.10-dev \
+    && find /usr/local \
+    \( -type d -a -name test -o -name tests -o -name '__pycache__' \) \
+    -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
+    -exec rm -rf '{}' + \
+    \
+    && rm -fr \
+    /tmp/* \
+    /root/{.cache,.config,.gnupg,.local,.log,.npm} \
+    /usr/local/share/.cache \
+    /var/{cache,log}/* \
+    /var/lib/apt/lists/*
 
 
 
