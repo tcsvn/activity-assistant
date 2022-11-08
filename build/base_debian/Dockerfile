@@ -10,7 +10,7 @@ RUN apt update && apt install -y --no-install-recommends \
     default-libmysqlclient-dev \
     libssl-dev \
     libffi-dev \
-    lib32z1-dev \
+
     build-essential \
     nginx \
     && python3 -m pip install --no-cache-dir --upgrade pip
@@ -19,6 +19,17 @@ RUN python3 -m pip install --no-cache-dir -r requirements_binary.txt \
     && apt clean  \
     && apt purge -y --auto-remove \
     build-essential \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libmariadb-dev \
+    libpng-dev \
+    libpq-dev \
+    libssl-dev \
+    libtiff5-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    libzmq3-dev \
+    pkg-config \
     python3.10-dev \
     && find /usr/local \
     \( -type d -a -name test -o -name tests -o -name '__pycache__' \) \
@@ -31,31 +42,6 @@ RUN python3 -m pip install --no-cache-dir -r requirements_binary.txt \
     /usr/local/share/.cache \
     /var/{cache,log}/* \
     /var/lib/apt/lists/*
-
-
-
-
-#RUN apt-get purge -y --auto-remove \
-#        build-essential \
-#        dirmngr \
-#        gpg \
-#        gpg-agent \
-#        libffi-dev \
-#        libfreetype6-dev \
-#        libjpeg62-turbo-dev \
-#        libmariadb-dev \
-#        libpng-dev \
-#        libpq-dev \
-#        libssl-dev \
-#        libtiff5-dev \
-#        libxml2-dev \
-#        libxslt1-dev \
-#        libzmq3-dev \
-#        pkg-config \
-#        python-dev \
-#        python3-dev \
-#        zlib1g-dev \
-#    \
 
 
 #RUN apt-get update && apt-get install -y --no-install-recommends \
