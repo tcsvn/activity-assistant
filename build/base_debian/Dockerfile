@@ -10,14 +10,6 @@ RUN apt update && apt install -y --no-install-recommends \
     default-libmysqlclient-dev \
     libssl-dev \
     libffi-dev \
-
-    build-essential \
-    nginx \
-    && python3 -m pip install --no-cache-dir --upgrade pip
-RUN python3 -m pip install --no-cache-dir -r requirements_binary.txt \
-    && python3 -m pip install --no-cache-dir -r requirements.txt \
-    && apt clean  \
-    && apt purge -y --auto-remove \
     build-essential \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
@@ -30,6 +22,17 @@ RUN python3 -m pip install --no-cache-dir -r requirements_binary.txt \
     libxslt1-dev \
     libzmq3-dev \
     pkg-config \
+    gcc \
+    openssl \
+    build-essential \
+    nginx \
+    && python3 -m pip install --no-cache-dir --upgrade pip \
+    && export CRYPTOGRAPHY_DONT_BUILD_RUST=1
+RUN python3 -m pip install --no-cache-dir -r requirements_binary.txt \
+    && python3 -m pip install --no-cache-dir -r requirements.txt \
+    && apt clean  \
+    && apt purge -y --auto-remove \
+ \
     python3.10-dev \
     && find /usr/local \
     \( -type d -a -name test -o -name tests -o -name '__pycache__' \) \
