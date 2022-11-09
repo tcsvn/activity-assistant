@@ -6,7 +6,7 @@ WORKDIR /workspace
 COPY rootfs /
 
 RUN apt update && apt install -y --no-install-recommends \
-    python3.10 python3-pip python3.10-dev \
+    python3.9 python3-pip python3.9-dev \
     default-libmysqlclient-dev \
     libssl-dev \
     python3-setuptools-rust \
