@@ -6,5 +6,5 @@ docker run --rm --privileged \
     -v /var/run/docker.sock:/var/run/docker.sock:ro \
     -v $PWD/:/data tchr157/armv7-builder \
     --test \
-    --file build/base_ubuntu/Dockerfile \
+    --file build/base_debian/Dockerfile \
     --armv7 --target /data/build/base_debian
