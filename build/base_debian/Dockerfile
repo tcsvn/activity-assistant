@@ -9,6 +9,8 @@ RUN apt update && apt install -y --no-install-recommends \
     python3.10 python3-pip python3.10-dev \
     default-libmysqlclient-dev \
     libssl-dev \
+    python3-setuptools-rust \
+    rust-all \
     libffi-dev \
     build-essential \
     libfreetype6 libfreetype6-dev \
@@ -34,7 +36,7 @@ RUN python3 -m pip install --no-cache-dir -r requirements_binary.txt \
     && python3 -m pip install --no-cache-dir -r requirements.txt \
     && apt clean  \
     && apt purge -y --auto-remove \
- \
+\
     python3.10-dev \
     && find /usr/local \
     \( -type d -a -name test -o -name tests -o -name '__pycache__' \) \
