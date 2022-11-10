@@ -10,7 +10,6 @@ coreapi
 
 # rt_node and data science stuff
 asyncws
-pyadlml
 ruamel.yaml
 #sqlalchemy
 #aiohttp
@@ -24,7 +23,3 @@ dash-html-components==2.0.0
 dash-table==5.0.0
 plotly==5.10.0
 dash_daq
-
-
-# Extra pyadlml installs
-mega.py
