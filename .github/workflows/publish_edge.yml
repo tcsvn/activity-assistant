@@ -49,7 +49,7 @@ jobs:
           args: |
             --armv7 \
             --aarch64 \
-            --file build/prod_debian/Dockerfile \
+            --file build/prod/Dockerfile_debian \
             --no-cache \
             --version latest \
             --target /data
