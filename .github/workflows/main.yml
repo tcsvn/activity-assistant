@@ -1,8 +1,5 @@
-name: 'Publish master CI'
+name: 'Publish major version'
 on:
-  push:
-    branches: 
-      - master
   workflow_dispatch:
 
 jobs:

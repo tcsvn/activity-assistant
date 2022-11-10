@@ -1,0 +1,8 @@
+name: all
+version: latest
+image: tchr157/activity-assistant-{arch}
+arch: 
+  - armv7
+  - aarch64
+  - i386
+  - amd64

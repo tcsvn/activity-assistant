@@ -1,9 +1,0 @@
-{
-    "squash": true,
-    "build_from": {
-      "amd64": "tchr157/amd64-base-debian:latest",
-      "armv7": "tchr157/armv7-base-debian:latest",
-      "aarch64": "tchr157/aarch64-base-debian:latest",
-      "armhf": "tchr157/armhf-base-debian:latest"
-    }
-}

@@ -1,0 +1,14 @@
+squash: true
+build_from: 
+  amd64: homeassistant/amd64-base:3.16
+  i386: homeassistant/i386-base:3.16
+  armv7: tchr157/armv7-base-debian:latest
+  aarch64: tchr157/aarch64-base-debian:latest
+
+labels:
+  io.hass.type: builder
+  org.opencontainers.image.title: "Activity assistant"
+  org.opencontainers.image.description: "Application todo"
+  org.opencontainers.image.source: "https://github.com/activity-assistant"
+  org.opencontainers.image.authors: "Christian Meier"
+  org.opencontainers.image.licenses: "MIT"

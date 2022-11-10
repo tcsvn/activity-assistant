@@ -1,10 +1,13 @@
 name: "Publish edge"
 on:
   workflow_dispatch:
+  push:
+    branches: 
+      - master
 
 jobs:
   build_alpine:
-    name: Publish alpine builds for amd64 and (i386)
+    name: Publish alpine builds for amd64 and i386
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
@@ -14,18 +17,21 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Link build and config.yaml
+        run: ln -s build/prod/build.yaml build.yaml && ln -s build/prod/config.yaml config.yaml
       - name: Publish
         uses: tcsvn/builder@master
         with:
           args: |
             --amd64 \
+            --i386 \
             --file build/prod/Dockerfile \
             --no-cache \
             --version latest \
             --target /data
 
-  build_ubuntu:
-    name: Publish ubuntu build for armv7, (armhf) and aarch64
+  build_debian:
+    name: Publish debian build for armv7, (armhf) and aarch64
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
@@ -35,8 +41,8 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Link build and config.json
-        run: ln -s build/prod_debian/build.json build.json && ln -s build/prod_debian/config.json config.json
+      - name: Link build and config.yaml
+        run: ln -s build/prod/build.yaml build.yaml && ln -s build/prod/config.yaml config.yaml
       - name: Publish
         uses: tcsvn/builder@master
         with:
