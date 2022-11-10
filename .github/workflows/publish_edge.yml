@@ -35,6 +35,8 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Link build and config.json
+        run: ln -s build/prod_debian/build.json build.json && ln -s build/prod_debian/config.json config.json
       - name: Publish
         uses: tcsvn/builder@master
         with:

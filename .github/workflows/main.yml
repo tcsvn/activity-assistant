@@ -27,7 +27,7 @@ jobs:
           --target /data
 
   build_ubuntu:
-    name: Publish ubuntu build for armv7, (armhf) and aarch64
+    name: Publish ubuntu build for armv7 and aarch64
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
@@ -43,6 +43,6 @@ jobs:
         args: |
           --armv7 \
           --aarch64 \
-          --file build/prod_ubuntu/Dockerfile \
+          --file build/prod_debian/Dockerfile \
           --no-cache \
           --target /data
