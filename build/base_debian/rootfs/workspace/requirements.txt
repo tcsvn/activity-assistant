@@ -20,6 +20,7 @@ dask
 dpd-components
 cryptography==38.0.1 
 django-plotly-dash
+requests
 
 pandas
 numpy
