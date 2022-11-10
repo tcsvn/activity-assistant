@@ -60,4 +60,10 @@ RUN apt update && apt install -y --no-install-recommends \
     /root/{.cache,.config,.gnupg,.local,.log,.npm} \
     /usr/local/share/.cache \
     /var/{cache,log}/* \
-    /var/lib/apt/lists/*
+    /var/lib/apt/lists/* \
+    \
+    # Do this for nginx to work
+    && adduser --system --no-create-home --shell /bin/false --group --disabled-login nginx \
+    && mkdir /var/log/nginx \
+    && chown -R nginx:nginx /var/log/nginx \
+    && chmod -R 755 /var/log/nginx
