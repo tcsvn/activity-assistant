@@ -13,4 +13,6 @@ RUN apk add --no-cache --update python3-dev py3-pip \
     py3-scipy py3-scikit-learn py3-matplotlib py3-mysqlclient \
     --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
     \
-    && python3 -m pip install --no-cache-dir -r requirements.txt
+    && python3 -m pip install --no-cache-dir -r requirements.txt \
+    && python3 test_import.py \
+    && rm /workspace/* 

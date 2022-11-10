@@ -5,7 +5,7 @@ ENV LANG C.UTF-8
 # Install relevant files
 WORKDIR /home
 COPY build/prod/rootfs /
-RUN pip install --no-cache pyadlml
+RUN python3 -m pip install --no-cache pyadlml
 
 
 ENV DJANGO_ENV='production'

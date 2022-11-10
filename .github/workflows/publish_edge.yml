@@ -5,8 +5,8 @@ on:
     branches: 
       - master
 jobs:
-  build_alpine:
-    name: Publish alpine builds for amd64 and i386
+  build_amd64:
+    name: Publish alpine builds for amd64
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
@@ -27,9 +27,31 @@ jobs:
             --no-cache \
             --version latest \
             --target /data
-          # --i386 \
-  build_debian:
-    name: Publish debian build for armv7, (armhf) and aarch64
+
+  build_i386:
+    name: Publish alpine builds for i386
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Link build and config.yaml
+        run: ln -s build/prod/build.yaml build.yaml && ln -s build/prod/config.yaml config.yaml
+      - name: Publish
+        uses: tcsvn/builder@master
+        with:
+          args: |
+            --i386 \
+            --file build/prod/Dockerfile \
+            --no-cache \
+            --version latest \
+            --target /data
+  build_armv7:
+    name: Publish debian build for armv7
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
@@ -46,8 +68,30 @@ jobs:
         with:
           args: |
             --armv7 \
+            --file build/prod/Dockerfile \
+            --no-cache \
+            --version latest \
+            --target /data
+
+  build_aarch64:
+    name: Publish debian build for aarch64
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Link build and config.yaml
+        run: ln -s build/prod/build.yaml build.yaml && ln -s build/prod/config.yaml config.yaml
+      - name: Publish
+        uses: tcsvn/builder@master
+        with:
+          args: |
             --aarch64 \
-            --file build/prod/Dockerfile_debian \
+            --file build/prod/Dockerfile \
             --no-cache \
             --version latest \
             --target /data
