@@ -3,8 +3,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_alpine:
-    name: Publish alpine builds for amd64 and (i386)
+  build_amd64:
+    name: Publish alpine builds for amd64
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
@@ -40,6 +40,6 @@ jobs:
         args: |
           --armv7 \
           --aarch64 \
-          --file build/prod_debian/Dockerfile \
+          --file build/prod/Dockerfile \
           --no-cache \
           --target /data
