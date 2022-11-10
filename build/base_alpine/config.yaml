@@ -1,0 +1,6 @@
+name: alpine-base
+version: latest
+image: tchr157/{arch}-base-alpine
+arch: 
+  - i386
+  - amd64

@@ -4,7 +4,6 @@ on:
   push:
     branches: 
       - master
-
 jobs:
   build_alpine:
     name: Publish alpine builds for amd64 and i386
@@ -24,12 +23,11 @@ jobs:
         with:
           args: |
             --amd64 \
-            --i386 \
             --file build/prod/Dockerfile \
             --no-cache \
             --version latest \
             --target /data
-
+          # --i386 \
   build_debian:
     name: Publish debian build for armv7, (armhf) and aarch64
     runs-on: ubuntu-latest

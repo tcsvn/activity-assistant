@@ -1,7 +1,7 @@
 squash: true
 build_from: 
-  amd64: homeassistant/amd64-base:3.16
-  i386: homeassistant/i386-base:3.16
+  amd64: tchr157/amd64-base-alpine:latest
+  i386: tchr157/i386-base-alpine:latest
   armv7: tchr157/armv7-base-debian:latest
   aarch64: tchr157/aarch64-base-debian:latest
 

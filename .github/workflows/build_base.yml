@@ -1,0 +1,81 @@
+name: 'Build debian base'
+on:
+  workflow_dispatch:
+
+jobs:
+  build_armv7:
+    name: Build debian base armv7
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v2
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Publish
+      uses: tcsvn/builder@master
+      with:
+        args: |
+          --armv7 \
+          --no-cache \
+          --file build/base_debian/Dockerfile \
+          --target /data/build/base_debian
+  build_aarch64:
+    name: Build debian base aarch64
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v2
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Publish
+      uses: tcsvn/builder@master
+      with:
+        args: |
+          --aarch64 \
+          --no-cache \
+          --file build/base_debian/Dockerfile \
+          --target /data/build/base_debian
+  build_i386:
+    name: Build alpine i386 base image
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v2
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Publish
+      uses: tcsvn/builder@master
+      with:
+        args: |
+          --i386 \
+          --no-cache \
+          --file build/base_alpine/Dockerfile \
+          --target /data/build/base_alpine
+  build_amd64:
+    name: Build alpine amd64 base image
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v2
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Publish
+      uses: tcsvn/builder@master
+      with:
+        args: |
+          --amd64 \
+          --no-cache \
+          --file build/base_alpine/Dockerfile \
+          --target /data/build/base_alpine
