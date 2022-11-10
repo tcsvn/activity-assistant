@@ -1,34 +1,32 @@
 ARG BUILD_FROM
 FROM $BUILD_FROM
-
-WORKDIR /home
-
 ENV LANG C.UTF-8
-ENV DJANGO_ENV='production'
-ENV PYTHONPATH=/etc/opt/activity_assistant:/opt/activity_assistant
 
-# install relevant files
+# Install relevant files
+WORKDIR /home
+COPY build/prod/rootfs /
 RUN pip install --no-cache pyadlml
 
-# copy program files
+
+ENV DJANGO_ENV='production'
+ENV PYTHONPATH=/etc/opt/activity_assistant:/opt/activity_assistant:/opt/activity_assistant/web:/etc/opt/activity_assistant/act_assist
+
+
+# Copy program files
 COPY web/ /opt/activity_assistant/web/
 COPY hass_api/ /opt/activity_assistant/hass_api/
 COPY services/* /opt/activity_assistant/
 
-# copy configuration files
+# Copy configuration files
 COPY web/act_assist/settings.py  /etc/opt/activity_assistant/
 COPY web/act_assist/local_settings/ /etc/opt/activity_assistant/local_settings/
 
-# configure nginx & gunicorn
-COPY build/prod_ubuntu/rootfs/ /
+# Copy static files
+RUN chmod a+x start.sh \
+    && mkdir -p /var/cache/activity_assistant/static/ \
+    && python3 /opt/activity_assistant/web/manage.py collectstatic
 
-RUN chmod a+x start.sh
-#
-## copy static files
-RUN mkdir -p /var/cache/activity_assistant/static/ \
- && python3.8 /opt/activity_assistant/web/manage.py collectstatic \
- && ln -sf /usr/bin/python3.8 /usr/bin/python3
-# link python3 to python3.8 because starting a python script in ubuntu
-# launches 3.6 system python and doesn't work
+ENTRYPOINT ["/bin/bash", "/home/entrypoint.sh"]
 
-CMD [ "./start.sh" ]
+CMD [ "/bin/bash", "/home/start.sh" ]
+

@@ -12,9 +12,6 @@ dash
 ruamel.yaml
 plotly
 dash-daq
-pandas
-numpy
-sklearn
 dash-html-components
 dash-core-components
 dash-bootstrap-components
@@ -23,3 +20,8 @@ dask
 dpd-components
 cryptography==38.0.1 
 django-plotly-dash
+
+pandas
+numpy
+scipy
+scikit-learn

@@ -11,9 +11,15 @@ RUN apt update && apt install -y --no-install-recommends \
     # mysqlclient
     default-libmysqlclient-dev libmariadb-dev \ 
     build-essential \
+    # Numpy/pandas
+    libopenblas-dev \
+    libatlas-base-dev \
     # Scipy
-    # libatlas3-base libgfortran5 \
-    # gfortran libopenblas-dev pkg-config \
+    python3-scipy \
+    #libatlas3-base libgfortran5 \
+    # 
+    #gfortran  pkg-config \
+    # pkg-config \
     \
     #libssl-dev \
     #libffi-dev \
@@ -25,7 +31,6 @@ RUN apt update && apt install -y --no-install-recommends \
     #libxml2-dev \
     #libxslt1-dev \
     #libzmq3-dev \
-    #pkg-config \
     #zlib1g-dev \
     #gcc \
     #libzbar-dev libzbar0 \
@@ -41,6 +46,10 @@ RUN apt update && apt install -y --no-install-recommends \
     && apt clean  \
     && apt purge -y --auto-remove \
     python3.9-dev \
+    \
+    #
+    && python3 test_import.py \
+    && rm /workspace/* \
     && find /usr/local \
     \( -type d -a -name test -o -name tests -o -name '__pycache__' \) \
     -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
