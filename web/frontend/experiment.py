@@ -11,15 +11,15 @@ logger = logging.getLogger(__name__)
 def start(request):
     """ creates a new dataset object and assigns it to the server
         that it knows an experiment is running. Also creates folders
-        like 
+        like
             /data/datasets/<datasetname>/activities_subject_<person>.csv>
             /data/datasets/<datasetname>/devices.csv
             /data/datasets/<datasetname>/device_mapping.csv
             ...
-        
+
     Parameters
     ----------
-    request : 
+    request :
 
     Returns
     -------
@@ -36,10 +36,10 @@ def start(request):
 
     srv = get_server()
 
-    # 1. create dataset 
+    # 1. create dataset
     dataset_folder = settings.DATASET_PATH + ds_name +'/'
-    ds = Dataset(name=ds_name, 
-                start_time=None, 
+    ds = Dataset(name=ds_name,
+                start_time=None,
                 path_to_folder=dataset_folder,
                 num_devices=len(Device.objects.all()),
                 num_recorded_events=0,
@@ -53,7 +53,7 @@ def start(request):
 
     # 3. Save room assignment
     ds.create_room_assignment()
-    
+
 
     # TODO save prior information about persons
 
@@ -63,29 +63,29 @@ def start(request):
         if hasattr(person, 'smartphone') and person.smartphone is not None:
             person.smartphone.synchronized = False
             person.smartphone.save()
-        
+
         # create new personstatistic
-        ps = PersonStatistic(name=person.name, 
-                            dataset=ds,
-                            num_activities=len(Activity.objects.all()),
-                            num_recorded_activities=0
-        )
-        person.person_statistic = ps
-        person.person_statistic.save()
+        #ps = PersonStatistic(name=person.name,
+        #                    dataset=ds,
+        #                    num_activities=len(Activity.objects.all()),
+        #                    num_recorded_activities=0
+        #)
+        #person.person_statistic = ps
+        #person.person_statistic.save()
         person.save()
-        
+
     # 4. start logging service that polls data from home assistant
     PollService(srv).start()
 
     # 5. Repopulate all input_selects for hatrackers, turn of input_booleans
-    #    for recording initialize activity file 
+    #    for recording initialize activity file
     for person in Person.objects.all():
         if hasattr(person, 'hatracker'):
             person.hatracker.populate_input_selects()
             person.hatracker.reset_activity_df()
             person.hatracker.turn_off_input_boolean()
 
-    # 6. If everything went well assign server the experiment 
+    # 6. If everything went well assign server the experiment
     ds.start_time = srv.get_current_time()
     ds.save()
     srv.dataset = ds
@@ -94,7 +94,7 @@ def start(request):
     return True
 
 def pause():
-    """ indicates to pause logging on AA level and send a message to 
+    """ indicates to pause logging on AA level and send a message to
         the HASS component to stop the webhook sendings
     """
     ds = get_server().dataset
@@ -105,7 +105,7 @@ def pause():
 def resume():
     ds = get_server().dataset
     ds.logging = True
-    ds.save()   
+    ds.save()
     PollService(srv).start()
 
 def finish():
@@ -126,7 +126,6 @@ def finish():
 
     # dissacosiate person statistics from persons
     for person in Person.objects.all():
-        person.person_statistic = None
         person.save()
 
 

@@ -8,4 +8,5 @@ from .config import ConfigView
 from .webhook import WebhookView
 from .datasetAnalytics import DatasetAnalyticsView
 from .deviceAssignment import AssignDeviceView
+from .activityAssignment import AssignActivityView
 from .dashboard_plotly import *

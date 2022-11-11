@@ -33,16 +33,6 @@
       </div>
     {% endif %}
 
-    {% if person.person_statistic %}
-      <div class="card mb-2">
-        <div class="card-body col-sm12 col-md12 col-lg-8 col-xl-6">
-          <h5 class="card-title">Current behavior</h5>
-          {% include 'person/person_statistics.html' %}
-          <a href="../dataset/{{ps.dataset.id}}" class="btn btn-link">go to analytics</a>
-        </div>
-      </div>
-    {% endif %}
-
     <!-- TODO include this when the feature is ready, also include person/calendar_script.html
 
               <div class="card-body col-sm-12 col-md-12 col-lg-9 col-xl-7">

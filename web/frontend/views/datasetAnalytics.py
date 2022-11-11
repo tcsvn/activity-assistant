@@ -24,8 +24,6 @@ class DatasetAnalyticsView(TemplateView):
         context['person_list'] = Person.objects.all()
         context['dataset'] = dataset
         context['ds'] = dataset
-        #context['person_statistics'] = dataset.person_statistics.all()    TODO refactor
-        #context['datasets_perstats'] = get_datasets_personal_statistics() TODO refactor
 
         context['service_plot_gen'] = (srv.plot_gen_service_pid is not None)
 

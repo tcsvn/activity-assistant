@@ -1,5 +1,5 @@
 from backend.models import *
-from backend.serializers import * 
+from backend.serializers import *
 from backend.permissions import IsOwnerOrReadOnly
 from rest_framework import generics
 from rest_framework import viewsets
@@ -97,26 +97,26 @@ class DatasetViewSet(viewsets.ModelViewSet):
     #def perform_create(self, serializer):
     #    serializer.save(owner=self.request.user)
 
-class ModelViewSet(viewsets.ModelViewSet):
-    """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
-    Additionally we also provide an extra `highlight` action.
-    """
-    queryset = Model.objects.all()
-    serializer_class = ModelSerializer
-    #permission_classes = (
-    #    permissions.IsAuthenticatedOrReadOnly,
-    #    IsOwnerOrReadOnly, )
-
-    def perform_destroy(self, instance):
-        """
-        also deletes the model file associated with the model
-        :param instance:
-        :return:
-        """
-        instance.file.delete()
-        instance.delete()
+#class ModelViewSet(viewsets.ModelViewSet):
+#    """
+#    This viewset automatically provides `list`, `create`, `retrieve`,
+#    `update` and `destroy` actions.
+#    Additionally we also provide an extra `highlight` action.
+#    """
+#    queryset = Model.objects.all()
+#    serializer_class = ModelSerializer
+#    #permission_classes = (
+#    #    permissions.IsAuthenticatedOrReadOnly,
+#    #    IsOwnerOrReadOnly, )
+#
+#    def perform_destroy(self, instance):
+#        """
+#        also deletes the model file associated with the model
+#        :param instance:
+#        :return:
+#        """
+#        instance.file.delete()
+#        instance.delete()
 
 
 #from django.db.models.signals import post_delete
@@ -290,14 +290,14 @@ class DeviceViewSet(viewsets.ModelViewSet):
         #serializer.save(owner=self.request.user)
         serializer.save()
 
-class PersonStatisticViewSet(viewsets.ModelViewSet):
-    """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
-    Additionally we also provide an extra `highlight` action.
-    """
-    queryset = PersonStatistic.objects.all()
-    serializer_class = PersonStatisticSerializer
+#class PersonStatisticViewSet(viewsets.ModelViewSet):
+#    """
+#    This viewset automatically provides `list`, `create`, `retrieve`,
+#    `update` and `destroy` actions.
+#    Additionally we also provide an extra `highlight` action.
+#    """
+#    queryset = PersonStatistic.objects.all()
+#    serializer_class = PersonStatisticSerializer
 
 
 class PersonViewSet(viewsets.ModelViewSet):

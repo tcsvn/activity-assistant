@@ -24,48 +24,51 @@ logger = logging.getLogger(__name__)
 #from django.dispatch import receiver
 #from rest_framework.authtoken.models import Token
 
+
 def person_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/activities_subject_<person.name>.csv
-    return settings.ACTIVITY_FILE_NAME%(instance.name)
+    return settings.ACTIVITY_FILE_NAME % (instance.name)
+
 
 class OverwriteStorage(FileSystemStorage):
     ''' this is used to overwrite existing files in a put request
         for FileField cases as in Person and model
     '''
+
     def get_available_name(self, name, max_length):
         if self.exists(name):
             os.remove(os.path.join(settings.MEDIA_ROOT, name))
         return name
 
 
-class PersonStatistic(models.Model):
-    from .dataset import Dataset
-    name = models.CharField(null=True, max_length=100)
-    dataset = models.ForeignKey(Dataset, related_name="person_statistics", on_delete=models.CASCADE)
-    activity_file = models.FileField(null=True)
-    num_activities = models.IntegerField(null=True)
-    num_recorded_activities = models.IntegerField(null=True)
-
-    plot_hist_counts = models.ImageField(null=True)
-    plot_hist_cum_duration = models.ImageField(null=True)
-    plot_boxplot_duration = models.ImageField(null=True)
-    plot_ridge_line = models.ImageField(null=True)
-    plot_heatmap_transitions = models.ImageField(null=True)
-
-    def get_activity_fp(self):
-        """ returns filepath to activity file
-        """
-        return os.path.join(self.dataset.path_to_folder,
-            settings.ACTIVITY_FILE_NAME%(self.name)
-        )
+# class PersonStatistic(models.Model):
+#    from .dataset import Dataset
+#    name = models.CharField(null=True, max_length=100)
+#    dataset = models.ForeignKey(Dataset, related_name="person_statistics", on_delete=models.CASCADE)
+#    activity_file = models.FileField(null=True)
+#    num_activities = models.IntegerField(null=True)
+#    num_recorded_activities = models.IntegerField(null=True)
+#
+#    plot_hist_counts = models.ImageField(null=True)
+#    plot_hist_cum_duration = models.ImageField(null=True)
+#    plot_boxplot_duration = models.ImageField(null=True)
+#    plot_ridge_line = models.ImageField(null=True)
+#    plot_heatmap_transitions = models.ImageField(null=True)
+#
+#    def get_activity_fp(self):
+#        """ returns filepath to activity file
+#        """
+#        return os.path.join(self.dataset.path_to_folder,
+#            settings.ACTIVITY_FILE_NAME%(self.name)
+#        )
 
 class Person(models.Model):
     name = models.CharField(max_length=20, blank=True, default='')
     hass_name = models.CharField(max_length=20, blank=True, default='')
-    person_statistic = models.OneToOneField(PersonStatistic, null=True, on_delete=models.SET_NULL, related_name='person')
+    #person_statistic = models.OneToOneField(PersonStatistic, null=True, on_delete=models.SET_NULL, related_name='person')
     prediction = models.BooleanField(default=False, blank=True)
     activity_file = models.FileField(null=True,
-        upload_to=person_path, storage=OverwriteStorage())
+                                     upload_to=person_path, storage=OverwriteStorage())
 
     @classmethod
     def get_all_names(cls):
@@ -74,8 +77,6 @@ class Person(models.Model):
     @classmethod
     def get_all_ha_names(cls):
         return list(Person.objects.all().values_list('hass_name', flat=True))
-
-
 
     def save(self, *args, **kwargs):
         # create additional user with one to one relationship so that
@@ -94,7 +95,7 @@ class Person(models.Model):
         File looks like this
             start_time, end_time, activity
         """
-        fp = settings.MEDIA_ROOT + settings.ACTIVITY_FILE_NAME%(self.name)
+        fp = settings.MEDIA_ROOT + settings.ACTIVITY_FILE_NAME % (self.name)
         output_dir = Path(settings.MEDIA_ROOT)
         output_dir.mkdir(parents=True, exist_ok=True)
         tmp = _create_activity_df()
@@ -112,7 +113,6 @@ class Person(models.Model):
         df_acts = pd.read_csv(fp, sep=',')
         df_acts[ACTIVITY] = df_acts[ACTIVITY].map(mapping)
         df_acts.to_csv(fp, sep=',', index=False)
-
 
 
 # A Location presents a vertice in a Graph
@@ -145,9 +145,12 @@ class Area(models.Model):
 
 # an edge connects to locations with each other
 # e  = (v,w) | v,w \in G
+
+
 class Edge(models.Model):
     # if a node is deleted, the edge is also deleted
-    source = models.ForeignKey(Area, on_delete=models.CASCADE, related_name='source')
+    source = models.ForeignKey(
+        Area, on_delete=models.CASCADE, related_name='source')
     sink = models.ForeignKey(Area, on_delete=models.CASCADE)
     distance = models.IntegerField(default=0)
 
@@ -157,17 +160,16 @@ class Edge(models.Model):
 
 class Device(models.Model):
     name = models.CharField(max_length=40)
-    area = models.ForeignKey(Area, null=True, on_delete=models.SET_NULL, related_name='devices')
+    area = models.ForeignKey(
+        Area, null=True, on_delete=models.SET_NULL, related_name='devices')
 
     @classmethod
     def get_all_names(cls):
         return list(Device.objects.all().values_list('name', flat=True))
 
-
     @classmethod
     def by_name(cls, name):
         return Device.objects.get(name=name)
-
 
     @classmethod
     def getCountAssignedDevices(cls):
@@ -179,7 +181,6 @@ class Device(models.Model):
             if device.location != None:
                 counter += 1
         return counter
-
 
 
 # Many to one relation with person
@@ -195,15 +196,21 @@ class Activity(models.Model):
     def get_all_names(cls):
         return list(Activity.objects.all().values_list('name', flat=True))
 
+
 class ActivityPrediction(models.Model):
-    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.CASCADE, related_name='predicted_activities')
-    predicted_activity = models.ForeignKey(Activity, null=True, blank=True, on_delete=models.SET_NULL, related_name='%(class)s_predicted')
+    person = models.ForeignKey(Person, null=True, blank=True,
+                               on_delete=models.CASCADE, related_name='predicted_activities')
+    predicted_activity = models.ForeignKey(
+        Activity, null=True, blank=True, on_delete=models.SET_NULL, related_name='%(class)s_predicted')
     score = models.FloatField()
 
+
 class SyntheticActivity(models.Model):
-    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.CASCADE, related_name='synthetic_activities')
+    person = models.ForeignKey(Person, null=True, blank=True,
+                               on_delete=models.CASCADE, related_name='synthetic_activities')
     #synthetic_activity = models.ForeignKey(Activity, null=True, blank=True, on_delete=models.SET_NULL, related_name='%(class)s_predicted')
-    synthetic_activity = models.ForeignKey(Activity, null=False, blank=False, on_delete=models.CASCADE, related_name='%(class)s_predicted')
+    synthetic_activity = models.ForeignKey(
+        Activity, null=False, blank=False, on_delete=models.CASCADE, related_name='%(class)s_predicted')
     # day of week (0 - 6) Sunday - Saturday
     day_of_week = models.IntegerField()
     start = models.TimeField()
@@ -218,29 +225,32 @@ class Smartphone(models.Model):
     #owner = models.ForeignKey('auth.User', related_name='smartphones', on_delete=models.CASCADE)
     name = models.CharField(max_length=40)
     # if a person is deleted so should the smartphone
-    person = models.OneToOneField(Person, blank=True, on_delete=models.CASCADE)#, primary_key=True)
+    person = models.OneToOneField(
+        Person, blank=True, on_delete=models.CASCADE)  # , primary_key=True)
     logging = models.BooleanField(default=False)
     synchronized = models.BooleanField(default=False)
-    logged_activity = models.ForeignKey(Activity, null=True, on_delete=models.SET_NULL, related_name='%(class)s_logged')
+    logged_activity = models.ForeignKey(
+        Activity, null=True, on_delete=models.SET_NULL, related_name='%(class)s_logged')
+
 
 class Model(models.Model):
     person = models.ForeignKey(Person, null=True, on_delete=models.CASCADE)
-
-    # TODO rename file to sth more accurate
     file = models.FileField(null=True)
-    visualization = models.ImageField(null=True)
-    train_loss = models.FileField(null=True)
-    train_loss_graph = models.ImageField(null=True)
+
 
 class RealTimeNode(models.Model):
     pid = models.IntegerField(default=0, primary_key=True)
     model = models.ForeignKey(Model, on_delete=models.CASCADE)
     status = models.CharField(max_length=10, null=True)
 
+
 class DevicePrediction(models.Model):
-    rt_node = models.ForeignKey(RealTimeNode, blank=True, on_delete=models.CASCADE, related_name='predicted_devices')
-    predicted_state = models.ForeignKey(Device, null=True, blank=True, on_delete=models.CASCADE, related_name='%(class)s_predicted')
+    rt_node = models.ForeignKey(
+        RealTimeNode, blank=True, on_delete=models.CASCADE, related_name='predicted_devices')
+    predicted_state = models.ForeignKey(
+        Device, null=True, blank=True, on_delete=models.CASCADE, related_name='%(class)s_predicted')
     score = models.FloatField()
+
 
 class Server(models.Model):
     from .dataset import Dataset
@@ -249,18 +259,20 @@ class Server(models.Model):
     hass_api_token = models.CharField(max_length=200, null=True)
     hass_comp_installed = models.BooleanField(default=False)
     hass_db_url = models.CharField(max_length=200, null=True)
-    selected_model = models.ForeignKey(Model, null=True, on_delete=models.SET_NULL, related_name='model')
-    realtime_node = models.ForeignKey(RealTimeNode, null=True, on_delete=models.SET_NULL)
+    selected_model = models.ForeignKey(
+        Model, null=True, on_delete=models.SET_NULL, related_name='model')
+    realtime_node = models.ForeignKey(
+        RealTimeNode, null=True, on_delete=models.SET_NULL)
     setup = models.CharField(max_length=10, null=True, default='step 0')
     is_polling = models.BooleanField(default=False)
     poll_interval = models.CharField(max_length=10, default='10m')
-    dataset = models.ForeignKey(Dataset, null=True, blank=True, on_delete=models.CASCADE, related_name='synthetic_activities')
+    dataset = models.ForeignKey(Dataset, null=True, blank=True,
+                                on_delete=models.CASCADE, related_name='synthetic_activities')
     zero_conf_pid = models.IntegerField(null=True)
     poll_service_pid = models.IntegerField(null=True)
     plot_gen_service_pid = models.IntegerField(null=True)
     time_zone = models.CharField(max_length=20, null=True)
     webhook_count = models.IntegerField(default=0)
-
 
     def is_experiment_running(self):
         return not (self.dataset is None)

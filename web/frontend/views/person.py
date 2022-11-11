@@ -58,8 +58,6 @@ class PersonView(TemplateView):
                 'ha_input_select_list': ha_input_selects,
                 'ha_input_boolean_list': ha_input_booleans,
                 }
-        if person.person_statistic is not None:
-            context['ps'] = person.person_statistic
         if pred_acts is not None:
             context['predicted_activities'] = pred_acts
         return context
