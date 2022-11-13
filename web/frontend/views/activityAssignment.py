@@ -2,47 +2,55 @@ from django.views.generic import TemplateView
 from backend.models.models import Person, Area, Activity
 from django.shortcuts import render, redirect
 
+from frontend.util import get_server
+
 
 class AssignActivityView(TemplateView):
     # list all persons and render them into the frontend
 
+    TEMPLATE_PATH = 'config/assign_activity.html'
+
     def get_context(self):
+        srv = get_server()
         person_list = Person.objects.all()
-        location_list = Area.objects.all()
+        area_list = Area.objects.all()
         activity_list = Activity.objects.all()
-        return { 'location_list': location_list,
+        
+        return { 'area_list': area_list,
                  'person_list' : person_list,
-                 'activity_list' : activity_list
+                 'activity_list' : activity_list,
+                 'experiment_active': srv.is_experiment_running
                  }
 
     def get(self, request, *args, **kwargs):
-        context = self.get_context()
-        return render(request, 'config/assign_activity.html', context)
+        return render(request, self.TEMPLATE_PATH, self.get_context())
 
-    def getLocationByName(self, name):
-        location_list = Area.objects.all()
-        for location in location_list:
-            if location.name == name:
-                return location
+    def assign_activity(self, request):
 
-    def _get_activity_by_name(self, name):
-        act_list = Activity.objects.all()
-        for act in act_list:
-            if act.name == name:
-                return act
+        # Retrieve names
+        activity_name = request.POST.get("activity_name","")
+        area_name = request.POST.get("area_name","")
 
-    def assign_activity(self, activity_name, location_name):
-        location = self.getLocationByName(location_name)
-        activity = self._get_activity_by_name(activity_name)
-        #activity.locations.add(location)
+        # Get objects
+        area = Area.objects.get(name=area_name)
+        activity = Activity.objects.get(name=activity_name)
 
+        # Add area to activity
+        activity.areas.add(area)
         activity.save()
 
 
-    def unassign_device(self, activity_name, location_name):
-        location = self.getLocationByName(location_name)
-        activity = self._get_activity_by_name(activity_name)
-        #activity.area.remove(location)
+    def unassign_device(self, request):
+        # Retrieve names
+        activity_name = request.POST.get("activity_name","")
+        area_name = request.POST.get("area_name","")
+
+        # Get objects
+        area = Area.objects.get(name=area_name)
+        activity = Activity.objects.get(name=activity_name)
+
+        # Remove area from activity
+        activity.areas.remove(area)
         activity.save()
 
 
@@ -50,19 +58,9 @@ class AssignActivityView(TemplateView):
         intent = request.POST.get("intent","")
 
         if (intent == "assign_activity"):
-            activity_name = request.POST.get("activity_name","")
-            location_name = request.POST.get("location_name","")
-            self.assign_activity(activity_name, location_name)
+            self.assign_activity(request)
 
         elif (intent == "unassign_activity"):
-            print('*'*100)
-            activity_name = request.POST.get("activity_name","")
-            location_name = request.POST.get("location_name","")
-            print(location_name)
-            print(activity_name)
-            print('*'*100)
-            self.unassign_device(activity_name, location_name)
+            self.unassign_device(request)
 
-        context = self.get_context()
-        return render(request, 'assign_activity_location.html', context)
-
+        return render(request, self.TEMPLATE_PATH, self.get_context())

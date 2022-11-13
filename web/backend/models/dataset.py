@@ -73,7 +73,7 @@ class Dataset(models.Model):
         self.create_activity_mapping_file()
 
 
-    def create_room_assignment(self):
+    def create_dev2room_assignment(self):
         from backend.models import Device
         data = []
         for device in Device.objects.all():
@@ -84,6 +84,19 @@ class Dataset(models.Model):
 
         path_to_folder = self.path_to_folder
         fp = path_to_folder + settings.DEVICE_AREA_MAP_FN
+        df.to_csv(fp, sep=',', index=False)       
+
+    def create_act2room_assignment(self):
+        from backend.models import Activity
+        data = []
+        for act in Activity.objects.all():
+            for area in act.areas.all():
+                data.append([act.name, area.name])
+
+        df = pd.DataFrame(data=data, columns=[ACTIVITY, 'area'])
+
+        path_to_folder = self.path_to_folder
+        fp = path_to_folder + settings.ACTIVITY_AREA_MAP_FN
         df.to_csv(fp, sep=',', index=False)       
 
     def get_device_fp(self):

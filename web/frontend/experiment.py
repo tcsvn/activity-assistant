@@ -51,8 +51,9 @@ def start(request):
     ds.setup_experiment_folder()
 
 
-    # 3. Save room assignment
-    ds.create_room_assignment()
+    # 3. Save room assignments
+    ds.create_dev2room_assignment()
+    ds.create_act2room_assignment()
 
 
     # TODO save prior information about persons
@@ -60,18 +61,7 @@ def start(request):
     # 3. mark all smartphone dirty and delete existing activity files
     for person in Person.objects.all():
         person.reset_activity_file()
-        if hasattr(person, 'smartphone') and person.smartphone is not None:
-            person.smartphone.synchronized = False
-            person.smartphone.save()
-
-        # create new personstatistic
-        #ps = PersonStatistic(name=person.name,
-        #                    dataset=ds,
-        #                    num_activities=len(Activity.objects.all()),
-        #                    num_recorded_activities=0
-        #)
-        #person.person_statistic = ps
-        #person.person_statistic.save()
+        person.reset_smartphone()
         person.save()
 
     # 4. start logging service that polls data from home assistant
@@ -124,15 +114,15 @@ def finish():
     ds.end_time = srv.get_current_time()
     ds.save()
 
-    # dissacosiate person statistics from persons
-    for person in Person.objects.all():
-        person.save()
-
-
     # Create activity files from ha trackers and save to persons activity file
     for person in Person.objects.all():
         if hasattr(person, 'hatracker'):
             person.hatracker.transform_activity_df()
+
+
+    # TODO Create activities from pause and resume experiment and add to all activity files
+
+
 
     # Substitute activity with mapping
     mapping = pd.read_csv(ds.get_activity_map_fp())

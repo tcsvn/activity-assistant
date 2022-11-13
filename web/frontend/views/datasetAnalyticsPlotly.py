@@ -8,8 +8,8 @@ import pandas as pd
 import plotly.express as px
 import dash_bootstrap_components as dbc
 from pyadlml.dataset.plotly.acts_and_devs import activities_and_devices
-from pyadlml.dataset.plotly.layout import _buttons_to_use
-from pyadlml.dataset.plotly.dashboard import dashboard
+from pyadlml.dataset.plotly.dashboard.layout import _buttons_to_use
+from pyadlml.dataset.plotly.dashboard.dashboard import dashboard
 import plotly.graph_objs as go
 
 from pyadlml.dataset import load_act_assist

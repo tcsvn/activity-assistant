@@ -90,6 +90,14 @@ class Person(models.Model):
         except ValueError:
             self.reset_activity_file()
 
+    def reset_smartphone(self):
+        """ Mark smartphone if connected to person dirty
+        """
+        if hasattr(self, 'smartphone') and self.smartphone is not None:
+            self.smartphone.synchronized = False
+            self.smartphone.save()
+
+
     def reset_activity_file(self):
         """ creates inital and assigns activity file
         File looks like this
@@ -254,20 +262,25 @@ class DevicePrediction(models.Model):
 
 class Server(models.Model):
     from .dataset import Dataset
+    #from .experiment import Experiment
+
     id = models.AutoField(primary_key=True)
     server_address = models.CharField(max_length=40, null=True)
     hass_api_token = models.CharField(max_length=200, null=True)
     hass_comp_installed = models.BooleanField(default=False)
     hass_db_url = models.CharField(max_length=200, null=True)
+
     selected_model = models.ForeignKey(
         Model, null=True, on_delete=models.SET_NULL, related_name='model')
     realtime_node = models.ForeignKey(
         RealTimeNode, null=True, on_delete=models.SET_NULL)
+
     setup = models.CharField(max_length=10, null=True, default='step 0')
     is_polling = models.BooleanField(default=False)
     poll_interval = models.CharField(max_length=10, default='10m')
     dataset = models.ForeignKey(Dataset, null=True, blank=True,
                                 on_delete=models.CASCADE, related_name='synthetic_activities')
+    #experiment = models.ForeignKey(Experiment, null=True, blank=True, on_delete=models.CASCADE)
     zero_conf_pid = models.IntegerField(null=True)
     poll_service_pid = models.IntegerField(null=True)
     plot_gen_service_pid = models.IntegerField(null=True)
@@ -288,10 +301,6 @@ class Server(models.Model):
     def refresh_hass_token(self):
         """ Saves the current env variable SUPERVISOR_TOKEN into
         """
-        # TODO debug
-        print('#'*100)
-        print(os.environ)
-        print('#'*100)
         self.hass_api_token = os.environ.get('SUPERVISOR_TOKEN')
         self.save()
 
