@@ -1,8 +1,10 @@
-from django.db import models
 import shutil
+import pathlib
+import pandas as pd
+from pathlib import Path
+from django.db import models
 from pygments.lexers import get_all_lexers
 from pyadlml.constants import TIME, DEVICE, VALUE, START_TIME, END_TIME, ACTIVITY
-import pandas as pd
 from pygments.styles import get_all_styles
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters.html import HtmlFormatter
@@ -10,15 +12,10 @@ from pygments import highlight
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
-import os
-import logging
-from pathlib import Path
-import pathlib
 from pyadlml.dataset._core.activities import _create_activity_df
 from django.core.files import File
 from django.http import FileResponse
 from backend.util import create_zip
-
 
 
 
@@ -37,13 +34,22 @@ class Dataset(models.Model):
     data_size = models.IntegerField(null=True)
 
 
-    def copy_actfiles2dataset(self):
-        """
+
+    def collect_activity_files(self):
+        """ Get the activity files from a person. Apply optional mapping 
+            and overwrite the files from the dataset.
         """
         from backend.models import Person
+        # Substitute activity with mapping
+        act_map = self.load_activity_mapping(as_dict=True)
         for person in Person.objects.all():
-            src = settings.MEDIA_ROOT + person.activity_file.name
-            dest = self.path_to_folder + settings.ACTIVITY_FILE_NAME%(person.name)
+            fn = person.get_activity_file_fp().name
+            src = Path('/tmp').joinpath(fn)
+            df = person.remap_activity_file(act_map, inplace=False)
+            df.to_csv(str(src), sep=',', index=False)       
+
+            # copy stuff activity files persons to dataset folder
+            dest = Path(self.path_to_folder).joinpath(src.name)
             shutil.copyfile(src, dest) 
 
     def update_statistics(self):
@@ -154,6 +160,14 @@ class Dataset(models.Model):
             self.path_to_folder + settings.DATA_FILE_NAME,
             self.path_to_folder + settings.DATA_MAPPING_FILE_NAME
         )
+
+    def load_activity_mapping(self, as_dict=False):
+        mapping = pd.read_csv(self.get_activity_map_fp())
+        if not as_dict:
+            return mapping
+        else:
+            return {v: k for k, v  in mapping.set_index('id').to_dict()[ACTIVITY].items()}
+
 
 
 

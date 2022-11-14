@@ -121,18 +121,7 @@ def finish():
 
 
     # TODO Create activities from pause and resume experiment and add to all activity files
-
-
-
-    # Substitute activity with mapping
-    mapping = pd.read_csv(ds.get_activity_map_fp())
-    mapping = {v: k for k, v  in mapping.set_index('id').to_dict()['activity'].items()}
-
-    for person in Person.objects.all():
-        person.remap_activity_file(mapping)
-
-    # copy stuff activity files persons to dataset folder
-    ds.copy_actfiles2dataset()
+    ds.collect_activity_files()
 
 
 

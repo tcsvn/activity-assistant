@@ -19,7 +19,7 @@ class DatasetAnalyticsView(TemplateView):
         from pyadlml.dataset import load_act_assist
         data = load_act_assist(dataset.path_to_folder)
 
-        build_app(data['df_activities_admin'], data['df_devices'], name=dataset.name)
+        build_app(data['df_activities'], data['df_devices'], name=dataset.name)
 
         context['person_list'] = Person.objects.all()
         context['dataset'] = dataset

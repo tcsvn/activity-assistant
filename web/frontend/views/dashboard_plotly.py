@@ -16,7 +16,7 @@ from pyadlml.dataset import load_act_assist
 
 
 def build_app():
-    name = 'initial' 
+    name = 'initial'
     app = DjangoDash('experiment', external_stylesheets=[dbc.themes.BOOTSTRAP])
 
     layout = dbc.Container(fluid=True,
@@ -61,11 +61,10 @@ def build_app():
     def update_acts_n_devs(dev_type_trigger, act_assist_path, subject_names):
         data = load_act_assist(act_assist_path, subjects=subject_names)
 
-        df_acts = [data[f'df_activities_{sub}'] for sub in subject_names]
         df_devs = data['df_devices']
-
+        df_acts = data['df_activities']
         states = (dev_type_trigger == 'state')
-        fig_and = activities_and_devices(df_acts[0], df_devs, states=states)
+        fig_and = activities_and_devices(df_acts, df_devs, states=states)
         return fig_and
 
 app_dashboard = build_app()

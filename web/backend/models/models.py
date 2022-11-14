@@ -111,16 +111,22 @@ class Person(models.Model):
         self.activity_file = File(open(fp))
         self.save()
 
+    def get_activity_file_fp(self) -> Path:
+        return Path(settings.MEDIA_ROOT).joinpath(self.activity_file.name)
+
     def collect_from_ha_tracker(self):
         if hasattr(self, 'hatracker'):
             self.hatracker.transform_activity_df()
 
-    def remap_activity_file(self, mapping):
+    def remap_activity_file(self, mapping, inplace=True):
         self.activity_file.close()
         fp = self.activity_file.path
         df_acts = pd.read_csv(fp, sep=',')
         df_acts[ACTIVITY] = df_acts[ACTIVITY].map(mapping)
-        df_acts.to_csv(fp, sep=',', index=False)
+        if inplace:
+            df_acts.to_csv(fp, sep=',', index=False)
+        else:
+            return df_acts
 
 
 # A Location presents a vertice in a Graph

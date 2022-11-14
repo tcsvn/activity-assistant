@@ -60,7 +60,17 @@ class DashboardView(TemplateView):
         }
         if is_exp_active:
             collect_data_from_hass()
-            self.tmp(srv.dataset)
+
+            # Create activity files from ha trackers and save to persons activity file
+            import pandas as pd
+            for person in Person.objects.all():
+                if hasattr(person, 'hatracker'):
+                    person.hatracker.transform_activity_df()
+
+            srv.dataset.collect_activity_files()
+
+
+
             context['dataset'] = srv.dataset
             context['num_persons'] = len(person_list)
             context['num_activities'] = len(activity_list)
@@ -73,22 +83,6 @@ class DashboardView(TemplateView):
             context.update(add_context)
         return context
 
-    def tmp(self, ds):
-        import pandas as pd
-        # Create activity files from ha trackers and save to persons activity file
-        for person in Person.objects.all():
-            if hasattr(person, 'hatracker'):
-                person.hatracker.transform_activity_df()
-
-        # Substitute activity with mapping
-        mapping = pd.read_csv(ds.get_activity_map_fp())
-        mapping = {v: k for k, v  in mapping.set_index('id').to_dict()['activity'].items()}
-
-        for person in Person.objects.all():
-            person.remap_activity_file(mapping)
-
-        # copy stuff activity files persons to dataset folder
-        ds.copy_actfiles2dataset()
 
     def run(self, request):
         srv = Server.objects.all()[0]
