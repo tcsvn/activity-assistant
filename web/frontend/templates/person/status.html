@@ -26,6 +26,7 @@
                     <div class="d-flex align-self-center gap-2">
                         <div><i class="material-icons">smartphone</i> </div>
                         <div>{{ smartphone.name }} </div>
+                    </div>
                     {% if smartphone.logging %}
                     <div>
                         <p class="text-primary mb-0"> {{ smartphone.logged_activity.name }} </p>
@@ -35,8 +36,6 @@
                         <p class="text-muted mb-0"> not logging </p>
                     </div>
                     {% endif %}
-                </div>
-
 
                 {% elif hatracker %}
                     <div class="d-flex align-self-center gap-2">

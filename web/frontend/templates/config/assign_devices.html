@@ -59,7 +59,7 @@
                 </div>
                 <!-- Simple List -->
                 <ul id="unassigned" class="list-group" style="min-height: 2.5em">
-                    {% for device in device_list %} 
+                    {% for device in device_list.all|dictsort:"name" %} 
                         {% if not device.area %}
                             <li class="list-group-item">
                                 {% if sensor  in device.name %}
@@ -104,7 +104,7 @@
                             <div class="card-body">
                                 <!-- Simple List -->
                                 <ul id="{{ area.name }}" class="list-group list-group-flush" style="min-height: 1em">
-                                    {% for device in device_list %}
+                                    {% for device in device_list.all|dictsort:"name" %} 
                                         <!-- check if device is bound to area -->
                                         {% if device.area %}
                                             {% if device.area.name == area.name %}

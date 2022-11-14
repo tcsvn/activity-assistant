@@ -27,9 +27,8 @@ class ConfigView(TemplateView):
         # get hass devices
         hass_devices = hass_rest.get_device_list(
             settings.HASS_API_URL , srv.hass_api_token)
-        dev_list = Device.get_all_names()
-        hass_devices = list(set(hass_devices).difference(set(dev_list)))
-
+        dev_list = sorted(Device.get_all_names())
+        hass_devices = sorted(list(set(hass_devices).difference(set(dev_list))))
 
         # get hass users
         hass_users = hass_rest.get_user_names(
