@@ -129,6 +129,15 @@ def get_state(url, token, entity_id):
     resp = get(url, token)
     return resp['state']
 
+def get_friendly_name(url, token, entity_id):
+    url = url + "/states/" + entity_id
+    resp = get(url, token)
+    try:
+        return resp['attributes']['friendly_name']
+    except:
+        return None
+
+
 """
 Object oriented interfaces for the rest and the supervisor api
 """
@@ -166,6 +175,12 @@ class HARest():
     def get_state(self, entity_id):
         return get_state(self.url, self.token, entity_id)
 
+
+    def get_friendly_names(self, entity_ids: list) -> dict:
+        return {eid: self.get_friendly_name(eid) for eid in entity_ids} 
+
+    def get_friendly_name(self, entity_id):
+        return get_friendly_name(self.url, self.token, entity_id)
 
     def get_time_zone(self):
         return get_time_zone(self.url, self.token)

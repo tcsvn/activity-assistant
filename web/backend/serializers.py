@@ -105,7 +105,7 @@ class DeviceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Device
-        fields = ['id', 'name', 'area']
+        fields = ['id', 'name', 'friendly_name', 'area']
 
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     #owner = serializers.ReadOnlyField(source='owner.username')

@@ -14,7 +14,10 @@ class AssignDeviceView(TemplateView):
         person_list = Person.objects.all()
         area_list = Area.objects.all()
         device_list = Device.objects.all()
-        
+
+        [dev.update_friendly_name() for dev in device_list]
+
+
         return dict(
             area_list=area_list,
             device_list=device_list,

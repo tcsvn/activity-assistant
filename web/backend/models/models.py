@@ -1,5 +1,6 @@
 from django.db import models
 import shutil
+from hass_api.rest import HARest
 from pygments.lexers import get_all_lexers
 from pyadlml.constants import TIME, DEVICE, VALUE, START_TIME, END_TIME, ACTIVITY
 import pandas as pd
@@ -173,7 +174,8 @@ class Edge(models.Model):
 
 
 class Device(models.Model):
-    name = models.CharField(max_length=40)
+    name = models.CharField(max_length=100)
+    friendly_name = models.CharField(max_length=20)
     area = models.ForeignKey(
         Area, null=True, on_delete=models.SET_NULL, related_name='devices')
 
@@ -186,15 +188,36 @@ class Device(models.Model):
         return Device.objects.get(name=name)
 
     @classmethod
+    def get_friendly_name_mapping(cls, name_list=[], names_as_key=False) -> dict:
+        """ Create a map of either device or device name to friendly name from HA.
+            If no friendly name exists the device name is substituted
+        """
+        if (isinstance(name_list, list) and not name_list):
+            name_list = Device.get_all_names()
+        mapping = HARest().get_friendly_names(name_list)
+        res_map = {}
+        for name, frname in mapping.items():
+            new_key = name if names_as_key else Device.by_name(name)
+            frname = name if frname is None else frname 
+            res_map[new_key] = frname
+
+        return mapping
+
+    @classmethod
     def getCountAssignedDevices(cls):
         device_list = Device.objects.all()
         if device_list == []:
             return 0
         counter = 0
         for device in device_list:
-            if device.location != None:
+            if device.area != None:
                 counter += 1
         return counter
+
+    def update_friendly_name(self):
+        frname = HARest().get_friendly_name(self.name)
+        self.friendly_name = frname if frname is not None else self.name
+        self.save()
 
 
 # Many to one relation with person

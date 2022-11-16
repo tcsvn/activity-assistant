@@ -13,6 +13,8 @@ from pyadlml.dataset.plotly.dashboard.layout import _buttons_to_use
 import plotly.graph_objs as go
 
 from pyadlml.dataset import load_act_assist
+from pyadlml.constants import DEVICE
+from hass_api.rest import HARest
 
 
 def build_app():
@@ -64,6 +66,13 @@ def build_app():
         df_devs = data['df_devices']
         df_acts = data['df_activities']
         states = (dev_type_trigger == 'state')
+
+        # Replace long names with friendly names
+        har = HARest() 
+        mapping = har.get_friendly_names(df_devs[DEVICE].unique())
+        mapping  = {k: k if v is None else v for k, v in mapping.items()}
+        df_devs[DEVICE] = df_devs[DEVICE].map(mapping)
+
         fig_and = activities_and_devices(df_acts, df_devs, states=states)
         return fig_and
 

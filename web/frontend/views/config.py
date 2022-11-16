@@ -159,7 +159,10 @@ def conf_devices(request):
         if len(lst) == 1 and input_is_empty(lst[0]):
             return
         for name in lst:
-            Device(name=name).save()
+            dev = Device(name=name)
+            dev.update_friendly_name()
+            dev.save()
+
     else:
         lst = request.POST.getlist('act_assist_select')
         if len(lst) == 1 and input_is_empty(lst[0]):

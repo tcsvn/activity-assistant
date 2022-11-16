@@ -27,7 +27,7 @@ input_boolean:
     name: Bin 7
   binary_08:
     name: Bin 8
-  binary_09:
+  binary_09_very_long_unecessary_entity_id_that_is_be_automatically_assigned:
     name: Bin 9
   binary_10:
     name: Bin 10

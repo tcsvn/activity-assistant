@@ -21,6 +21,8 @@ def input_is_empty(input):
 
 
 def get_server():
+
+    from backend.models import Server
     return Server.objects.get(id=1)
 
 
