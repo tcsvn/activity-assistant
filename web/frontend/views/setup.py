@@ -2,7 +2,7 @@ from backend.models import *
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 
-import os 
+import os
 import hass_api.rest as hass_rest
 from hass_api.rest import HARest, HASup
 from frontend.util import get_server, ping_db
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 """
-this view connects to homeassistant and gets all the relevant data to 
+this view connects to homeassistant and gets all the relevant data to
 setup activity assistant
 """
 SETUP_STEPS = ["initial", "data_collection", "conf_devices", "conf_activities",
@@ -62,14 +62,14 @@ class SetupView(TemplateView):
 
     def get_step0(self, context):
         pass
-        
- 
+
+
     def get_step1(self, context):
         srv = get_server()
         context['poll_int_list'] = settings.POLL_INTERVAL_LST
         # mysql-client
         from frontend.hass_db import url_from_hass_config
-        try: 
+        try:
             url, db_type = url_from_hass_config('/config')
             logger.error('url: ' + str(url) )
             ping_db(url)
@@ -83,13 +83,13 @@ class SetupView(TemplateView):
         context['db_type'] = db_type
 
 
-    
+
     def get_step2(self, context):
         hres = HARest()
         hass_devices = hres.get_device_list()
 
-        dev_list = Device.get_all_names()
-        hass_devices = list(set(hass_devices).difference(set(dev_list)))
+        dev_list = sorted(Device.get_all_names())
+        hass_devices = sorted(list(set(hass_devices).difference(set(dev_list))))
 
         context['hass_dev_list'] = hass_devices
         context['aa_dev_list'] = dev_list
@@ -109,8 +109,8 @@ class SetupView(TemplateView):
 
 
     def post_step0(self, request):
-        """ reads api key from environment 
-            gets outside url 
+        """ reads api key from environment
+            gets outside url
             gets path to database
             and pings the activity assistant component
         """
@@ -125,7 +125,7 @@ class SetupView(TemplateView):
             srv.server_address = HASup().get_interface_ip(0)
         except:
             pass
-        
+
         srv.time_zone = HARest().get_time_zone()
 
         srv.save()
@@ -202,7 +202,7 @@ class SetupView(TemplateView):
             self._increment_one_step()
             return redirect('/dashboard/')
         else:
-            return return_var(str(request.POST)) 
+            return return_var(str(request.POST))
         context = self.create_context()
         return render(request, 'setup.html', context)
 
