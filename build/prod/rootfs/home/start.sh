@@ -13,6 +13,7 @@ export DJANGO_SETTINGS_MODULE=settings
 gunicorn act_assist.wsgi:application --bind unix:/run/gunicorn.sock \
 --keep-alive 300 \
 --timeout 300 \
+--workers 4 \
 -e PYTHONPATH=/etc/opt/activity_assistant:/opt/activity_assistant:/opt/activity_assistant/web:/etc/opt/activity_assistant/act_assist \
 -e SUPERVISOR_TOKEN=$SUPERVISOR_TOKEN \
 -e DJANGO_ENV=production \
