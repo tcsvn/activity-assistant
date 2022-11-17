@@ -29,19 +29,19 @@
         {% endif %}
 
         <div class="col">
-            <div class="card bg-secondary mb-3 text-white overflow-scroll" style="max-height: 450px">
+            <div class="card bg-secondary mb-3 text-white">
                 <div class="card-header">
                     <h5 class="card-title"> Pool </h5>
                     <div class="card-subtitle"> For each unassigned activity a kitten dies :/</div>
                 </div>
-                <!-- Simple List -->
-                <ul id="unassigned" class="list-group" style="min-height: 2.5em">
-                    {% for activity in activity_list.all|dictsort:"name" %}
-                        <li class="list-group-item">
-                            {{ activity.name }}
-                        </li>
-                    {% endfor %}
-                </ul>
+                    <!-- Simple List -->
+                    <ul id="unassigned" class="list-group overflow-scroll" style="min-height: 2.5em; max-height: 450px">
+                        {% for activity in activity_list.all|dictsort:"name" %}
+                            <li class="list-group-item">
+                                {{ activity.name }}
+                            </li>
+                        {% endfor %}
+                    </ul>
             </div>
         </div>
     </div>
@@ -55,7 +55,7 @@
                             <div class="card-header d-flex justify-content-between">
                                 <h5 > {{ area.name }}</h5>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body overflow-scroll" style="max-height: 350px;">
                                 <!-- Simple List -->
                                 <ul id="{{ area.name }}" class="list-group list-group-flush" style="min-height: 1em">
                                     {% for activity in area.activities.all %}

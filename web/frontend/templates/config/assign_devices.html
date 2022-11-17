@@ -52,13 +52,13 @@
         {% endif %}
 
         <div class="col">
-            <div class="card bg-secondary mb-3 text-white overflow-scroll" style="max-height: 450px">
+            <div class="card bg-secondary mb-3 text-white">
                 <div class="card-header">
                     <h5 class="card-title"> Unassigned </h5>
                     <div class="card-subtitle"> For each unassigned device a kitten dies :/</div>
                 </div>
                 <!-- Simple List -->
-                <ul id="unassigned" class="list-group" style="min-height: 2.5em">
+                <ul id="unassigned" class="list-group overflow-scroll" style="min-height: 2.5em; max-height: 450px">
                     {% for device in device_list.all|dictsort:"name" %} 
                         {% if not device.area %}
                             <li class="list-group-item">
@@ -101,7 +101,7 @@
                                     <button type="submit" class="btn-close" aria-label="Close"></button>
                                 </form>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body overflow-scroll" style="max-height: 350px;">
                                 <!-- Simple List -->
                                 <ul id="{{ area.name }}" class="list-group list-group-flush" style="min-height: 1em">
                                     {% for device in device_list.all|dictsort:"name" %} 
