@@ -20,7 +20,8 @@
         {% endif %} {% endfor %}
       </select>
       Time zone
-      <select class="form-control selectpicker" data-live-search="true" id="asdf2" name="time_zone">
+      <select class="form-control selectpicker" data-live-search="true" id="asdf2" 
+              name="time_zone" {% if experiment_active %} disabled {% endif %}>
         {% for tz in time_zones%} {% if tz == server.time_zone %}
           <option selected>{{ tz }}</option>
         {% else %}

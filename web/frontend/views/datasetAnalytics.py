@@ -21,7 +21,7 @@ class DatasetAnalyticsView(TemplateView):
         from .datasetAnalyticsPlotly import build_app
         data = load_act_assist(dataset.path_to_folder)
 
-        df_devs = data['df_devices']
+        df_devs = data['devices']
 
         # Replace device names with friendly names from Home Assistant
         mapping = Device.get_friendly_name_mapping(
@@ -30,7 +30,7 @@ class DatasetAnalyticsView(TemplateView):
         ) 
         df_devs[DEVICE] = df_devs[DEVICE].map(mapping)
 
-        build_app(data['df_activities'], df_devs, name=dataset.name)
+        build_app(data['activities'], df_devs, name=dataset.name)
 
         context['person_list'] = Person.objects.all()
         context['dataset'] = dataset

@@ -15,7 +15,7 @@ import os
 import logging
 from pathlib import Path
 import pathlib
-from pyadlml.dataset._core.activities import _create_activity_df
+from pyadlml.dataset._core.activities import create_empty_activity_df
 from django.core.files import File
 from django.http import FileResponse
 from backend.util import create_zip
@@ -107,7 +107,7 @@ class Person(models.Model):
         fp = settings.MEDIA_ROOT + settings.ACTIVITY_FILE_NAME % (self.name)
         output_dir = Path(settings.MEDIA_ROOT)
         output_dir.mkdir(parents=True, exist_ok=True)
-        tmp = _create_activity_df()
+        tmp = create_empty_activity_df()
         tmp.to_csv(fp, sep=',', index=False)
         self.activity_file = File(open(fp))
         self.save()

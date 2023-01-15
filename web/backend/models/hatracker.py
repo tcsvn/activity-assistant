@@ -14,7 +14,6 @@ import os
 import logging
 from pathlib import Path
 import pathlib
-from pyadlml.dataset._core.activities import _create_activity_df
 from django.core.files import File
 from django.http import FileResponse
 from backend.util import create_zip
@@ -136,7 +135,7 @@ class HATracker(models.Model):
         #                                  experiment creation)
         from .models import Activity
         from pyadlml.dataset._core.devices import correct_on_off_inconsistency
-        from pyadlml.dataset._core.activities import _create_activity_df
+        from pyadlml.dataset._core.activities import create_empty_activity_df
 
         df = df[df[VALUE].isin(Activity.get_all_names())]
 
@@ -154,7 +153,7 @@ class HATracker(models.Model):
                   df_recs.loc[df_recs[VALUE] == False, TIME].values)
         df.at[df.index[-1], END_TIME] = str(pd.Timestamp(df_recs[TIME].iloc[-1]) + pd.Timedelta('1s'))
 
-        df_acts = _create_activity_df()
+        df_acts = create_empty_activity_df()
 
         for st, et in tmp:
             # Get activity ending inside and overlapping start time
