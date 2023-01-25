@@ -72,6 +72,17 @@ class DatasetView(TemplateView):
     def export_dataset(self, request):
         name = request.POST.get("dataset_name","")
         ds = Dataset.objects.get(name=name)
+        srv = get_server()
+
+        if srv.is_experiment_running() and srv.dataset.name == name:
+            # If dataset to export is the active experiment gather all data 
+            # first
+            collect_data_from_hass()
+            for person in Person.objects.all():
+                if hasattr(person, 'hatracker'):
+                    person.hatracker.transform_activity_df()
+            ds.collect_activity_files()
+
         return ds.get_fileResponse()
 
 

@@ -2,6 +2,21 @@
                 <div class="card-header">
                     <div class="btn-toolbar justify-content-between" role="toolbar">
                         <h5> Experiment: {{ dataset.name }}</h5>
+
+                        <form class="form mr-1" action="{% url 'dataset' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="dataset_name" value="{{dataset.name}}" />
+                            <button
+                            type="submit"
+                            class="btn btn-link"
+                            name="intent"
+                            value="export_dataset"
+                            >
+                            export data
+                            </button>
+                        </form>
+
+
                     </div>
                 </div>
             <div class="card-body">
