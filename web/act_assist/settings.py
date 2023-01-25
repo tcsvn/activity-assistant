@@ -21,9 +21,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # allow hosts for the home net
 #ALLOWED_HOSTS += ['192.168.178.{}'.format(j) for j in range(256)]
-ALLOWED_HOSTS = ['*'] # TODO debug measure 
+ALLOWED_HOSTS = ['*'] # TODO debug measure
 
-# Allow to use dash application in the same HTML document 
+# Allow to use dash application in the same HTML document
 X_FRAME_OPTIONS='SAMEORIGIN'
 
 # Application definition
@@ -33,8 +33,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles', 
-    'rest_framework', 
+    'django.contrib.staticfiles',
+    'rest_framework',
     'qr_code',
     'rest_framework.authtoken',
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
@@ -89,7 +89,7 @@ PLOTLY_DASH = {
 
     #"serve_locally" : True, # True to serve assets locally, False to use their unadulterated urls (eg a CDN)
 
-    "stateless_loader" : "demo.scaffold.stateless_app_loader",
+    #"stateless_loader" : "demo.scaffold.stateless_app_loader",
 }
 
 # Staticfiles finders for locating dash app assets and related files
@@ -240,4 +240,4 @@ elif ENV_SETTINGS == 'production':
         from local_settings.production import *
     except ImportError:
         logger.error('couldn\'t import production settings')
-        raise 
+        raise

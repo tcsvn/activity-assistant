@@ -12,6 +12,7 @@ from pyadlml.dataset.plot.plotly.acts_and_devs import activities_and_devices
 from pyadlml.dataset.plot.plotly.dashboard.layout import _buttons_to_use
 import plotly.graph_objs as go
 
+from frontend.util import get_server
 from pyadlml.dataset import load_act_assist
 from pyadlml.constants import DEVICE
 from hass_api.rest import HARest
@@ -23,8 +24,8 @@ def build_app():
 
     layout = dbc.Container(fluid=True,
         children=[
-            dcc.Input(id='act_assist_path', type='hidden', value='filler text'),
-            dcc.Input(id='subject_names', type='hidden', value='filler text'),
+            dcc.Input(id='act_assist_path', type='hidden', value='not_set'),
+            dcc.Input(id='subject_names', type='hidden', value='not_set'),
             html.Div(children=[
                     dcc.Graph(id='graph-acts_n_devs',
                                 figure=go.Figure(),
@@ -61,6 +62,8 @@ def build_app():
         State('act_assist_path', 'value'),
     )
     def update_acts_n_devs(dev_type_trigger, act_assist_path):
+        if act_assist_path == 'not_set':
+            act_assist_path = get_server().dataset.path_to_folder
         data = load_act_assist(act_assist_path)
 
         df_devs = data['devices']
