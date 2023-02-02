@@ -41,7 +41,6 @@ class PersonView(TemplateView):
 
 
         qr_code_data = self.generate_qr_code_data(person)
-        sm_download_link = settings.ACT_ASSIST_RELEASE_LINK
 
         ha_input_selects = self.get_input_selects()
         ha_input_booleans = self.get_input_booleans()
@@ -54,7 +53,7 @@ class PersonView(TemplateView):
                 'activity_list' : activity_list,
                 'synthetic_activity_list':  syn_act_list,
                 'qr_code_data' : qr_code_data,
-                'qr_code_sm_download' : sm_download_link,
+                'qr_code_sm_download' : settings.LOGGER_RELEASE_LINK,
                 'ha_input_select_list': ha_input_selects,
                 'ha_input_boolean_list': ha_input_booleans,
                 }

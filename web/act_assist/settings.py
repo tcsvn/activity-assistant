@@ -185,8 +185,10 @@ ACTIVITY_AREA_MAP_FN = "activity_area_map.csv"
 
 HASS_CONFIG_URL = '/config/configuration.yaml'
 
-ACT_ASSIST_VERSION = "v0.0.1-alpha"
-ACT_ASSIST_RELEASE_LINK = "https://github.com/tcsvn/activity-assistant-logger/releases/download/{}/activity-assistant.apk".format(ACT_ASSIST_VERSION)
+ACT_ASSIST_VERSION = "v0.0.3-alpha"
+
+LOGGER_VERSION = "v0.0.2-alpha"
+LOGGER_RELEASE_LINK = f"https://github.com/tcsvn/activity-assistant-logger/releases/download/{LOGGER_VERSION}/activity-assistant-logger.apk"
 
 # API URLS
 URL_SERVER = r'server'
