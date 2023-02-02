@@ -2,13 +2,13 @@
 
 {% if hass_db_success %}
 <p>
-    Activity-assistant updates a local dataset with relevant entries
-    from the Home Assistant database. A {{ db_type }} database was successfully detected.
+    Activity Assistant updates a local dataset with relevant entries
+    from the Home Assistant database. Parsing the config, a database of type <i>{{ db_type }}</i> was detected.
 </p>
     <hr>
 
     <p class="card-text">
-        Set the interval the data is being polled. 2 hours are recommended.
+        Set the polling interval for Activity Assistant to collect events. Two hours are recommended.
     </p>
 
     <form action="{% url 'setup' %}" method="POST" class="mb-0 mt-3">

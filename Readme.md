@@ -2,7 +2,7 @@
 
 > Collect, evaluate and predict Activities of Daily Living from within Home Assistant.
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/tcsvn/activity-assistant/Publish%20master%20CI?style=flat-square)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/tcsvn/activity-assistant/.github/workflows/main.yml?style=flat-square)
 ![Supports amd64 Architecture](https://img.shields.io/badge/amd64-yes-green?style=flat-square)
 ![Supports i386 Architecture](https://img.shields.io/badge/i386-no-orange?style=flat-square)
 ![Supports aarch64 Architecture](https://img.shields.io/badge/aarch64-yes-green?style=flat-square)
@@ -11,7 +11,7 @@
 ![License](https://img.shields.io/pypi/l/pyadlml?style=flat-square)
 
 Activities of Daily living (ADLs) such as eating, working, sleeping and Smart Home device readings are recorded by inhabitants. Predicting resident activity from the device event stream enables a variety of
-applications. Activity Assistant is a platform that streamlines the data collection process. Multiple devices and subjects are tracked using an additional Android or the Home Assistants companion app. Furthermore, Activity Assistant (will) support the deployment of trained models and running ADL predictions in real-time. A (future) Home Assistant integration offers users a novel activity based abstraction to automate their homes upon.
+applications. Activity Assistant is a platform that streamlines the data collection process. Multiple devices or subjects are tracked using an additional [Android](https://github.com/tcsvn/activity-assistant-logger) or the Home Assistants companion app. Furthermore, Activity Assistant (will) support the deployment of trained models and running ADL predictions in real-time. A (future) Home Assistant integration offers users a novel activity based abstraction to automate their homes upon.
 
 <p align="center">
   <img width="80%"  src=media/showreal.gif?raw=true>
@@ -22,8 +22,8 @@ applications. Activity Assistant is a platform that streamlines the data collect
 The installation of this add-on is pretty straightforward and not different to installing any other Hass.io add-on.
 
 1. Add the repository to the addon-store by pasting `https://github.com/tcsvn/hassio-activity-assistant` into the manage add-on repositories dialog
-2. Ensure that Home Assistant is using the [recorder](https://www.home-assistant.io/integrations/recorder/) integration for Activity Assistant to successfully query data
-3. Search for the "Activity Assistant" addon-on in the Hass.io add-on store and install the latest release (not edge or development).
+2. Ensure that Home Assistant is using the [recorder](https://www.home-assistant.io/integrations/recorder/) integration for Activity Assistant to successfully connect to the database and query devices
+3. Search for the "Activity Assistant" addon-on in the Hass.io add-on store and install the latest release (NOT edge or development).
 4. Start the "Activity Assistant" add-on.
 5. Check the logs of the add-on to see if everything went well.
 6. Ready to go!

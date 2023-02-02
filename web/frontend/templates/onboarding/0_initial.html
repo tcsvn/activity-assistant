@@ -1,9 +1,10 @@
 <h4 class="card-title">Connect to Home Assistant</h4>
 <p class="card-text">
-    By clicking the connect button activity-assistant collects 
-    relevant data from Home Assistant. Furthermore, the process fetches Home Assistants Ip address 
-    of the interfaces. Sometimes the interfaces ip address does not match the real one. 
-    Therefore, make sure to validate the setup later inside the config.
+    By clicking the connect button, Activity Assistant collects 
+    relevant data from Home Assistant (HA). For example, the IP address of the device running
+    Home- and Activity assistant is read from the HA interfaces. However, the interfaces 
+    IP address may not match the devices true address. Therefore, make sure to validate the setup 
+    later under the 'config' tab for everything to function as intended.
 </p>
 
 <form action="{% url 'setup' %}" method="POST" class="mb-0">
