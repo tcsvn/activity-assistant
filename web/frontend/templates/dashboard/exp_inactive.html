@@ -1,7 +1,7 @@
 <div class="card w-90 mb-2">
     <div class="card-body">
         <h5 class="card-title">Experiment</h5>
-            <p class="card-text"> Collect data for a fixed interval of time. While running an experiment 
+            <p class="card-text"> Collect and annotate data for a fixed time interval. While running an experiment 
                 the setup can not be altered and no model inference is possible.
             </p>
             <div class="accordion accordion-flush" id="accordionFlushExample">
@@ -53,7 +53,7 @@
                 {% csrf_token %}
                 <input type="hidden" name="intent" value="start experiment">
                 <div class="col">
-                    <input class="form-control form-control-sm" name="name", type="text" placeholder="Experiment name. e.g Tuebingen 2019">
+                    <input class="form-control form-control-sm" name="name", type="text" placeholder="Experiment name: e.g. tuebingen_2023">
                 </div>
                 <div class="col">
                     <button type="submit" class="btn btn-primary">Start experiment</a>
