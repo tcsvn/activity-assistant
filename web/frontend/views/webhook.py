@@ -20,7 +20,7 @@ class WebhookView(TemplateView):
         if not srv.hass_comp_installed:
             self.enable_hass_comp()
             resp = {'state':'success'}
-        elif experiment.get_status() == "running":
+        elif srv.experiment_status() == "running":
             collect_data_from_hass()
             resp = {'state':''}
         else:

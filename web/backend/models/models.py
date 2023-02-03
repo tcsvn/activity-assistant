@@ -320,12 +320,13 @@ class Server(models.Model):
         return not (self.dataset is None)
 
     def experiment_status(self):
+        # TODO refactor, set condition to return 'paused'
         if self.dataset is None:
             return 'not_running'
-        elif self.is_polling:
-            return 'running'
+        #elif self.is_polling:
+        #    return 'running'
         else:
-            return 'paused'
+            return 'running'
 
     def refresh_hass_token(self):
         """ Saves the current env variable SUPERVISOR_TOKEN into
