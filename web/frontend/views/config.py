@@ -102,7 +102,7 @@ def debug(request):
 def conf_server(request):
     """ sets server related stuff
     """
-    logger.error('test')
+    #logger.error('test')
     srv = get_server()
     poll_int_changed = False
     try:
@@ -111,12 +111,15 @@ def conf_server(request):
         srv.poll_interval = poll_int
     except: 
         pass
+    srv.save()
 
+    srv.time_zone = request.POST.get("time_zone", "")
     srv.save()
 
     # Restart the poll service if the intervall changed
     if poll_int_changed and srv.poll_service_pid:
         pass
+
     try:
         address = request.POST.get("address", "")
         if input_is_valid_address(address):

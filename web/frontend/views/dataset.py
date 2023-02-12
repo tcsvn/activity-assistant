@@ -8,37 +8,10 @@ import logging
 from frontend.util import collect_data_from_hass, get_line_numbers_file, get_folder_size
 logger = logging.getLogger(__name__)
 
-def get_datasets_personal_statistics():
-    """ creates a dictionary for every dataset with statistics like
-        number of persons, total number of recorded activities
-        and number of activities. This is used for display in templates
-    """
-    srv = get_server()
-    hackdct = []
-    for ds in Dataset.objects.all():
-        if srv.dataset is not None and srv.dataset.name == ds.name:
-            continue
-        tmp = {}
-        tmp['ds_name'] = ds.name
-        tmp['num_persons'] = len(ds.person_statistics.all())
-        for ps in ds.person_statistics.all():
-            tmp['num_activities']  = ps.num_activities
-        try:
-            num_rec_acts = 0
-            for ps in ds.person_statistics.all():
-                tmp['num_activities']  = ps.num_activities
-                num_rec_acts += ps.num_recorded_activities
-            tmp['num_recorded_activities'] = num_rec_acts
-        except TypeError:
-            # this is catches the case when somebody has not evaluated the statistic
-            # and therefore this quantitiy shouldn't be set
-            tmp['num_recorded_activities'] = None
-        hackdct.append(tmp)
-    return hackdct
 
-# css frontend
+
 class DatasetView(TemplateView):
-    # list all persons and render them into the frontend
+
     def create_context(self, request):
         context = {}
         context['person_list'] = Person.objects.all()
@@ -46,18 +19,12 @@ class DatasetView(TemplateView):
         context['activity_list'] = Activity.objects.all()
 
         srv = get_server()
-        try:
-            context['datasets_perstats'] = get_datasets_personal_statistics()
-        except:
-            pass
         ds = srv.dataset
         if ds is not None:
             ds.update_statistics()
             context['dataset'] = ds
             context['experiment_running'] = True
             context['polling'] = srv.is_polling
-            context['num_persons'] = len(context['person_list'])
-            context['num_activities'] = len(context['activity_list'])
         else:
             context['experiment_running'] = False
             dev_lst = Device.get_all_names()
@@ -75,7 +42,7 @@ class DatasetView(TemplateView):
         srv = get_server()
 
         if srv.is_experiment_running() and srv.dataset.name == name:
-            # If dataset to export is the active experiment gather all data 
+            # If dataset to export is the active experiment gather all data
             # first
             collect_data_from_hass()
             for person in Person.objects.all():
@@ -115,7 +82,7 @@ def collect_person_statistics(ps):
 
 #def collect_dataset_statistics(dataset):
 #    for ps in dataset.person_statistics.all():
-#        num_acts, num_rec_acts, act_data_size = collect_person_statistics(ps) 
+#        num_acts, num_rec_acts, act_data_size = collect_person_statistics(ps)
 #        ps.num_activities = num_acts
 #        ps.num_recorded_activities = num_rec_acts
 #        ps.save()

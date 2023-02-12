@@ -71,7 +71,9 @@ class PollService(Service):
         if self.srv.is_polling:
             try:
                 os.kill(self.pid, signal.SIGTERM)
-            except ProcessLookupError or TypeError:
+            except ProcessLookupError:
+                print('process allready deleted')
+            except TypeError:
                 print('process allready deleted')
             self.pid = None
             self.srv.poll_service_pid = None
