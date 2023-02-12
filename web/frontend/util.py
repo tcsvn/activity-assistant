@@ -10,6 +10,7 @@ import os
 import pandas as pd
 import pytz
 from datetime import datetime
+from pyadlml.dataset.act_assist import write_devices
 from pathlib import Path
 
 # Get an instance of a logger
@@ -31,7 +32,7 @@ def collect_data_from_hass():
     srv = get_server()
     ds = srv.dataset
 
-    df_cur = ds.load_data_file()
+    df_cur = ds.load_devices()
 
     # use either the last timestamp from the dataframe or if it doesn't
     # exist the start timestamp of the dataset
@@ -43,7 +44,7 @@ def collect_data_from_hass():
 
     # Home Assistant stores values in utc, therefore before querying convert the timestamps
     last_ts_utc = format_timestamp(localtime_to_utc(last_ts, srv.time_zone))
-    now_ts_utc = format_timestamp(datetime.utcnow()) 
+    now_ts_utc = format_timestamp(datetime.utcnow())
 
     device_lst = Device.get_all_names()
 
@@ -60,24 +61,24 @@ def collect_data_from_hass():
         last_ts_utc, now_ts_utc
     ).drop_duplicates()
 
-    # Convert the utc timestamps back to the local time_zone 
+    # Convert the utc timestamps back to the local time_zone
     df_new[TIME] = pd.to_datetime(df_new[TIME].apply(utc_to_localtime, args=(srv.time_zone,)))
 
     # For every ha tracker collect timestamps
     hat_tracker_mask = df_new[DEVICE].isin(ha_dev_list)
     df_hatr = df_new[hat_tracker_mask]
     df_new = df_new[~hat_tracker_mask]
-        
+
     for hatr in ha_trackers:
         df_hat_new = df_hatr[df_hatr[DEVICE].isin([hatr.input_boolean, hatr.input_select])]
         hatr.update_activity_df(df_hat_new)
     df = pd.concat([df_cur, df_new], ignore_index=True)
 
     # save df
-    dev_map = ds.load_device_mapping(as_dict=True)
+    dev_map = ds.load_device_mapping(dev2int=True)
     df[DEVICE] = df[DEVICE].map(dev_map)
     df = df.drop_duplicates().sort_values(by=TIME, ascending=True)
-    df.to_csv(ds.path_to_folder + 'devices.csv', sep=',', index=False)
+    write_devices(df, ds.path_to_folder)
 
 
 def create_django_file(self, file_path, folder_name, file_name):

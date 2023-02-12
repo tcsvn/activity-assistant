@@ -19,6 +19,8 @@ from django.http import FileResponse
 from backend.util import create_zip
 from hass_api.rest import HARest
 
+from pyadlml.dataset.act_assist import read_devices, write_devices, write_activities
+
 def hatracker_fp(instance, filename):
     # file will be uploaded to MEDIA_ROOT/activities_subject_<person.name>.csv
     return 'ha_tracker_' + instance.person.name + '_' + instance.ACTIVITY_FN
@@ -63,8 +65,8 @@ class HATracker(models.Model):
         #fp = 'ha_tracker_admin/activities.csv'
         self.activity_file.delete()
 
-        pd.DataFrame(columns=[TIME, DEVICE, VALUE])\
-          .to_csv(str(fp), sep=',', index=False)
+        df_empty = pd.DataFrame(columns=[TIME, DEVICE, VALUE])
+        write_activities(df_empty, fp)
 
         self.activity_file = File(open(fp))
         self.save()
@@ -74,10 +76,10 @@ class HATracker(models.Model):
         """ Append new activity recordings to existing activity dataframe
         """
         fp = self.activity_file.path
-        df_hat = pd.read_csv(fp)
-        pd.concat([df_hat, df])\
-          .drop_duplicates()\
-          .to_csv(fp, sep=',', index=False)
+
+        df_hat = read_devices(fp)
+        df = pd.concat([df_hat, df]).drop_duplicates()
+        write_devices(df, fp)
 
     def populate_input_selects(self) -> None:
         """ Set the input selects to the given activities
@@ -118,7 +120,8 @@ class HATracker(models.Model):
             create an activity dataframe [START_TIME, END_TIME, ACTIVITY]
         """
         out_path = self.person.activity_file.path
-        df = pd.read_csv(self.activity_file.path)\
+        
+        df = read_devices(self.activity_file.path)\
                .drop_duplicates()\
                .sort_values(by=TIME)
 
@@ -127,9 +130,10 @@ class HATracker(models.Model):
             return
 
         # Split into input_select and input_boolean 
-        select_mask = (df[VALUE] != '0') & (df[VALUE] != '1')
-        df_recs = df[~select_mask].copy().reset_index(drop=True)
-        df = df[select_mask].copy().reset_index(drop=True)
+        mask_rec_device = (df[VALUE] == True) | (df[VALUE] == False)
+        df_recs = df[mask_rec_device].copy().reset_index(drop=True)
+        df_recs[VALUE] = df_recs[VALUE].astype(bool)
+        df = df[~mask_rec_device].copy().reset_index(drop=True)
         
         # Remove all non valid activities (if user added categories to helper on HA after 
         #                                  experiment creation)
@@ -146,11 +150,12 @@ class HATracker(models.Model):
 
         # Create start_time, end_time tuples and start with first true value
         # otherwise the tuples ordering is wrong
-        df_recs[VALUE] = df_recs[VALUE].map({'0':False, '1': True})
         df_recs = df_recs.loc[df_recs[VALUE].idxmax():df_recs[VALUE].where(~df_recs[VALUE]).last_valid_index()]
         df_recs = correct_on_off_inconsistency(df_recs)
         tmp = zip(df_recs.loc[df_recs[VALUE] == True, TIME].values,
                   df_recs.loc[df_recs[VALUE] == False, TIME].values)
+
+        # End last activity (NaT) a bit later then the last device event
         df.at[df.index[-1], END_TIME] = str(pd.Timestamp(df_recs[TIME].iloc[-1]) + pd.Timedelta('1s'))
 
         df_acts = create_empty_activity_df()
@@ -181,6 +186,6 @@ class HATracker(models.Model):
 
         df_acts = df_acts.reset_index(drop=True)\
                          .sort_values(by=START_TIME)
-        
-        df_acts.to_csv(out_path, sep=',', index=False)
+
+        write_activities(df_acts, out_path) 
 

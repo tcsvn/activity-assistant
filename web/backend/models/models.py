@@ -19,6 +19,7 @@ from pyadlml.dataset._core.activities import create_empty_activity_df
 from django.core.files import File
 from django.http import FileResponse
 from backend.util import create_zip
+from pyadlml.dataset.act_assist import write_activities, read_activities
 
 logger = logging.getLogger(__name__)
 #from django.db.models.signals import post_save
@@ -107,8 +108,9 @@ class Person(models.Model):
         fp = settings.MEDIA_ROOT + settings.ACTIVITY_FILE_NAME % (self.name)
         output_dir = Path(settings.MEDIA_ROOT)
         output_dir.mkdir(parents=True, exist_ok=True)
-        tmp = create_empty_activity_df()
-        tmp.to_csv(fp, sep=',', index=False)
+        df_empty = create_empty_activity_df()
+        write_activities(df_empty, fp)
+
         self.activity_file = File(open(fp))
         self.save()
 
@@ -122,10 +124,10 @@ class Person(models.Model):
     def remap_activity_file(self, mapping, inplace=True):
         self.activity_file.close()
         fp = self.activity_file.path
-        df_acts = pd.read_csv(fp, sep=',')
+        df_acts = read_activities(fp)
         df_acts[ACTIVITY] = df_acts[ACTIVITY].map(mapping)
         if inplace:
-            df_acts.to_csv(fp, sep=',', index=False)
+            write_activities(df_acts, fp)
         else:
             return df_acts
 

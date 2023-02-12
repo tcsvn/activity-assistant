@@ -4,7 +4,6 @@ import pandas as pd
 from pathlib import Path
 from django.db import models
 from pygments.lexers import get_all_lexers
-from pyadlml.constants import TIME, DEVICE, VALUE, START_TIME, END_TIME, ACTIVITY
 from pygments.styles import get_all_styles
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters.html import HtmlFormatter
@@ -18,6 +17,14 @@ from django.http import FileResponse
 from backend.util import create_zip
 
 
+from pyadlml.constants import TIME, DEVICE, VALUE, START_TIME, END_TIME, ACTIVITY, AREA
+from pyadlml.dataset.act_assist import \
+    read_activities, write_activities, \
+    read_devices, write_devices, \
+    read_activity2area, write_activity2area, \
+    read_device2area, write_device2area, \
+    read_activity_map, write_activity_map, \
+    read_device_map, write_device_map
 
 class Dataset(models.Model):
     # todo mark for deletion line below
@@ -36,35 +43,37 @@ class Dataset(models.Model):
 
 
     def collect_activity_files(self):
-        """ Get the activity files from a person. Apply optional mapping 
+        """ Get the activity files from a person. Apply optional mapping
             and overwrite the files from the dataset.
         """
         from backend.models import Person
         # Substitute activity with mapping
-        act_map = self.load_activity_mapping(as_dict=True)
+
+        act_map = self.load_activity_mapping(dev2int=True)
+
         for person in Person.objects.all():
             fn = person.get_activity_file_fp().name
             src = Path('/tmp').joinpath(fn)
             df = person.remap_activity_file(act_map, inplace=False)
-            df.to_csv(str(src), sep=',', index=False)       
+            write_activities(df, src)
 
             # copy stuff activity files persons to dataset folder
             dest = Path(self.path_to_folder).joinpath(src.name)
-            shutil.copyfile(src, dest) 
+            shutil.copyfile(src, dest)
 
     def update_statistics(self):
         from frontend.util import get_line_numbers_file, get_folder_size
-        dsfp = self.path_to_folder
+        fp_ds = self.path_to_folder
         self.num_recorded_events = get_line_numbers_file(
-                                dsfp + settings.DATA_FILE_NAME) -1
+                                fp_ds + settings.DATA_FILE_NAME) -1
         self.data_size = get_folder_size(
-                                dsfp + settings.DATA_FILE_NAME)
-        self.num_activities = get_line_numbers_file(dsfp + settings.ACTIVITY_MAPPING_FILE_NAME) - 1
-        self.num_devices = get_line_numbers_file(dsfp + settings.DATA_MAPPING_FILE_NAME) - 1
+                                fp_ds + settings.DATA_FILE_NAME)
+        self.num_activities = get_line_numbers_file(fp_ds + settings.ACTIVITY_MAPPING_FILE_NAME) - 1
+        self.num_devices = get_line_numbers_file(fp_ds + settings.DATA_MAPPING_FILE_NAME) - 1
 
         total_activities = 0
         person_count = 0
-        for fp in Path(dsfp).iterdir():
+        for fp in Path(fp_ds).iterdir():
             if 'activities_subject_' in str(fp):
                 person_count += 1
                 total_activities += get_line_numbers_file(str(fp)) -1
@@ -74,9 +83,7 @@ class Dataset(models.Model):
 
     def setup_experiment_folder(self):
         Path(self.path_to_folder).mkdir(mode=0o777, parents=True, exist_ok=False)
-        self.create_data_file()
-        self.create_device_mapping_file()
-        self.create_activity_mapping_file()
+
 
 
     def create_dev2room_assignment(self):
@@ -85,12 +92,13 @@ class Dataset(models.Model):
         for device in Device.objects.all():
             area = device.area.name if device.area is not None else None
             data.append([device.name, area])
+        dev_map = read_device_map(self.path_to_folder)
 
-        df = pd.DataFrame(data=data, columns=[DEVICE, 'area'])
+        write_device2area(
+            pd.DataFrame(data=data, columns=[DEVICE, AREA]),
+            self.path_to_folder
+        )
 
-        path_to_folder = self.path_to_folder
-        fp = path_to_folder + settings.DEVICE_AREA_MAP_FN
-        df.to_csv(fp, sep=',', index=False)       
 
     def create_act2room_assignment(self):
         from backend.models import Activity
@@ -99,11 +107,11 @@ class Dataset(models.Model):
             for area in act.areas.all():
                 data.append([act.name, area.name])
 
-        df = pd.DataFrame(data=data, columns=[ACTIVITY, 'area'])
+        write_activity2area(
+            pd.DataFrame(data=data, columns=[ACTIVITY, AREA]),
+            self.path_to_folder
+        )
 
-        path_to_folder = self.path_to_folder
-        fp = path_to_folder + settings.ACTIVITY_AREA_MAP_FN
-        df.to_csv(fp, sep=',', index=False)       
 
     def get_device_fp(self):
         return self.path_to_folder + settings.DATA_FILE_NAME
@@ -111,22 +119,17 @@ class Dataset(models.Model):
     def get_activity_fp(self, person_name):
         return self.path_to_folder + settings.ACTIVITY_FILE_NAME%(person_name)
 
-    def get_activity_map_fp(self):
-        return self.path_to_folder + settings.ACTIVITY_MAPPING_FILE_NAME
-
-    def create_data_file(self):
-        """ creates inital device file 
+    def create_devices(self):
+        """ creates inital device file
         Example
             time,device,val
         """
-        path_to_folder = self.path_to_folder
-        fp = path_to_folder + settings.DATA_FILE_NAME
-        pd.DataFrame(columns=[TIME, DEVICE, VALUE])\
-            .to_csv(fp, sep=',', index=False)
+        df = pd.DataFrame(columns=[TIME, DEVICE, VALUE])
+        write_devices(df, self.path_to_folder)
 
     def create_device_mapping_file(self):
         """ creates a device mapping file with the current devices selected
-            for logging. 
+            for logging.
 
         Example
             id,devices
@@ -134,56 +137,41 @@ class Dataset(models.Model):
             1,binary_sensor.ping_chris_pc
         """
         from backend.models import Device
-        file_path = self.path_to_folder + settings.DATA_MAPPING_FILE_NAME 
         df = pd.DataFrame(data=Device.get_all_names(), columns=[DEVICE])
-        df.to_csv(file_path, sep=',', index_label='id') 
+        df['id'] = df.index
+        write_device_map(df[['id', DEVICE]].reset_index(drop=True), self.path_to_folder)
 
     def create_activity_mapping_file(self):
         """ creates an activity mapping file with the current selected activities
-            for logging. 
+            for logging.
 
         Example
             id,activities
             0,eat
             1,sleep
         """
-
         from backend.models import Activity
-        file_path = self.path_to_folder + settings.ACTIVITY_MAPPING_FILE_NAME
         df = pd.DataFrame(data=Activity.get_all_names(), columns=[ACTIVITY])
-        df.to_csv(file_path, sep=',', index_label='id')
-
+        df['id'] = df.index
+        write_activity_map(df[['id', ACTIVITY]].reset_index(drop=True), self.path_to_folder)
 
     def load_devices(self):
-        from pyadlml.dataset._datasets.activity_assistant import _read_devices
-        return _read_devices(
-            self.path_to_folder + settings.DATA_FILE_NAME,
-            self.path_to_folder + settings.DATA_MAPPING_FILE_NAME
-        )
+        dev_map = read_device_map(self.path_to_folder)
+        return read_devices(self.path_to_folder, dev_map)
 
-    def load_activity_mapping(self, as_dict=False):
-        mapping = pd.read_csv(self.get_activity_map_fp())
-        if not as_dict:
-            return mapping
+    def load_activity_mapping(self, dev2int=False):
+        mp = read_activity_map(self.path_to_folder)
+        if dev2int:
+            return {v:k for k, v in mp.items()}
         else:
-            return {v: k for k, v  in mapping.set_index('id').to_dict()[ACTIVITY].items()}
+            return mp
 
-
-
-
-    def load_data_file(self):
-        from pyadlml.dataset._datasets.activity_assistant import _read_devices
-        return _read_devices(
-            self.path_to_folder + settings.DATA_FILE_NAME,
-            self.path_to_folder + settings.DATA_MAPPING_FILE_NAME
-        )
-
-    def load_device_mapping(self, as_dict=False):
-        fp = self.path_to_folder + settings.DATA_MAPPING_FILE_NAME
-        if as_dict:
-            return pd.read_csv(fp, index_col=DEVICE).to_dict()['id']
+    def load_device_mapping(self, dev2int=False):
+        mp = read_device_map(self.path_to_folder)
+        if dev2int:
+            return {v:k for k, v in mp.items()}
         else:
-            return pd.read_csv(fp, index_col='id').to_dict()[DEVICE]
+            return mp
 
     def get_persons_from_folder(self) -> list:
         person_list = []
@@ -192,13 +180,13 @@ class Dataset(models.Model):
                 person_list.append(str(fn).split('activities_subject_')[1][:-4])
         return person_list
 
-        
+
 
 
     def delete(self, *args, **kwargs):
         """ perform additional cleanup when deleting a dataset
         """
-        import shutil 
+        import shutil
         # cleanup the mediafiles/plots associated with the person statistics and dataset
         try:
             shutil.rmtree(settings.MEDIA_ROOT + self.name)
@@ -209,8 +197,8 @@ class Dataset(models.Model):
             shutil.rmtree(self.path_to_folder)
         except FileNotFoundError:
             pass
-                       
-        super().delete(*args, **kwargs) 
+
+        super().delete(*args, **kwargs)
 
     def get_fileResponse(self):
         """ zips the dataset and returns a fileResponse object that is served to the user

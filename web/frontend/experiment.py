@@ -49,7 +49,10 @@ def start(request):
 
     # 2. create folders and inital files
     ds.setup_experiment_folder()
-
+    ds.create_devices()
+    ds.create_device_mapping_file()
+    ds.create_activity_mapping_file()
+    # TODO refactor, create initial activity file
 
     # 3. Save room assignments
     ds.create_dev2room_assignment()
@@ -101,7 +104,10 @@ def resume():
 def finish():
     # get one last pull from homeassistant
     from frontend.util import collect_data_from_hass
-    collect_data_from_hass()
+    try:
+        collect_data_from_hass()
+    except:
+        return
 
     # deassociate dataset
     srv = get_server()
