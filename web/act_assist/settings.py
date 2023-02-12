@@ -170,10 +170,10 @@ DATABASES = {
 
 # REST API
 REST_API_URL='api'
-REST_API_TITLE='Activity-assistant API'
+REST_API_TITLE='Activity Assistant API'
 
 # experiment
-POLL_INTERVAL_LST = ['5m', '10m', '30m', '2h', '6h']
+POLL_INTERVAL_LST = ['5m', '10m', '30m', '2h']
 DATASET_PATH = DATA_ROOT + 'datasets/' # path where all the datasets lie
 ACTIVITY_FILE_NAME="activities_subject_%s.csv"
 ACTIVITY_MAPPING_FILE_NAME="activity_map.csv"

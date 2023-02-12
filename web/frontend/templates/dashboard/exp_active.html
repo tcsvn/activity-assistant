@@ -5,8 +5,8 @@
         <h5 class="card-title">Experiment: {{ dataset.name | title}} </h5>
             <p class="card-text">
                 An experiment is currently conducted. Pausing the experiment adds a device
-                in the data that marks the beginning and end of the time interval not ment to be include in 
-                the data analysis (not implemented yet). Head over to experiments 
+                to the data marking the beginning and end of the duration not ment to be include in 
+                the data analysis (not implemented yet). Head over to the experiments 
                 <a href="{% url 'dataset' %}{{ dataset.id }}">dashboard</a>
                 for further analysis.  
             </p>
@@ -25,7 +25,7 @@
                     <form class="form mr-1" action="{% url 'dashboard' %}" method="POST">
                             {% csrf_token %}
                         <input type="hidden" name="intent" value="continue experiment">
-                        <button type="submit" class="btn btn-outline-primary">continue experiment</button>
+                        <button type="submit" class="btn btn-outline-primary">Continue experiment</button>
                     </form>
                 {% endif %}
                 <form class="form" action="{% url 'dashboard' %}" method="POST">

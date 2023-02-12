@@ -56,7 +56,7 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
         model = Dataset
         fields = ('id', 'name', 'path_to_folder', 'start_time', 'end_time',
             'num_devices', 'num_recorded_events', 'num_persons', 'num_activities', 'num_recorded_activities',
-            'data_size', 'person_statistics',
+            'data_size',
         )
 
 
