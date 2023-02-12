@@ -23,7 +23,7 @@ jobs:
             --amd64 \
             --file build/prod/Dockerfile \
             --no-cache \
-            --version v0.0.3-alpha \
+            --version v0.0.4-alpha \
             --target /data
 
   build_ubuntu:
