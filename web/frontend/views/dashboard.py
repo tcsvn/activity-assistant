@@ -5,9 +5,11 @@ from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 from frontend.util import collect_data_from_hass, get_server
 from pathlib import Path
+import pandas as pd
 import frontend.experiment as experiment
 import os
 import signal
+import subprocess
 
 class DashboardView(TemplateView):
 
@@ -44,7 +46,7 @@ class DashboardView(TemplateView):
         #model_list = Model.objects.all()
         context = {
             'person_list' : person_list,
-            'device_list' : device_list, 
+            'device_list' : device_list,
             #'model_list' : model_list,
             'activity_list' : activity_list,
             'count_person' : count_person,
@@ -59,10 +61,13 @@ class DashboardView(TemplateView):
             #'rt_node' : rt_node
         }
         if is_exp_active:
-            collect_data_from_hass()
+            try:
+                collect_data_from_hass()
+            except Exception as e:
+                print('Could not collect data from Home Assistant...')
+                print(f'{e}')
 
             # Create activity files from ha trackers and save to persons activity file
-            import pandas as pd
             for person in Person.objects.all():
                 if hasattr(person, 'hatracker'):
                     person.hatracker.transform_activity_df()
@@ -95,7 +100,6 @@ class DashboardView(TemplateView):
         HASSBRAIN_USER = "admin"
         HASSBRAIN_PW = "asdf"
 
-        import subprocess
         proc = subprocess.Popen([
             "python", settings.HASSBRAIN_PATH_TO_RT_MAIN,
             "--host", hassbrain_url,
