@@ -12,17 +12,17 @@ class WebhookView(TemplateView):
         srv = get_server()
         srv.hass_comp_installed = True
         srv.save()
-        
+
     def get(self, request):
         srv = get_server()
         srv.webhook_count += 1
         srv.save()
         if not srv.hass_comp_installed:
             self.enable_hass_comp()
-            resp = {'state':'success'}
+            resp = {'state':'enabled hass-comp'}
         elif srv.experiment_status() == "running":
             collect_data_from_hass()
-            resp = {'state':''}
+            resp = {'state':'success'}
         else:
             resp = {}
         return JsonResponse(resp)

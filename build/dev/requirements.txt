@@ -6,6 +6,7 @@ djangorestframework
 pygments
 Pillow
 zeroconf
+requests
 
 # rt_node and data science stuff
 asyncws

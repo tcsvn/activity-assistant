@@ -10,8 +10,7 @@
 ![Supports armhf Architecture](https://img.shields.io/badge/armhf-no-orange?style=flat-square)
 ![License](https://img.shields.io/pypi/l/pyadlml?style=flat-square)
 
-Activities of Daily living (ADLs) such as eating, working, sleeping and Smart Home device readings are recorded by inhabitants. Predicting resident activity from the device event stream enables a variety of
-applications. Activity Assistant is a platform that streamlines the data collection process. Multiple devices or subjects are tracked using an additional [Android](https://github.com/tcsvn/activity-assistant-logger) or the Home Assistants companion app. Furthermore, Activity Assistant (will) support the deployment of trained models and running ADL predictions in real-time. A (future) Home Assistant integration offers users a novel activity based abstraction to automate their homes upon.
+Activities of Daily living (ADLs) such as eating, working, sleeping and Smart Home device readings are recorded by inhabitants. Predicting the activities of residents based on the device event-stream allows for a range of applications, including automation, action recommendation and abnormal activity detection in the context of assisted living for elderly inhabitants. Activity Assistant is a platform that streamlines the data collection process. The plugin extracts device readings from Home Assistant and tracks residents using an additional [Android](https://github.com/tcsvn/activity-assistant-logger) or the Home Assistant companion app. Moreover, Activity Assistant (will) support the deployment of trained models and running ADL predictions in real-time. A (future) Home Assistant integration provides users with a novel activity-based abstraction for automating their homes.
 
 <p align="center">
   <img width="80%"  src=media/showreal.gif?raw=true>
@@ -37,7 +36,7 @@ _For a guide on how to use please refer to the Documentation (tbd)_
 - [x] Activity annotation using Home Assistant input_selects and input_booleans
 - [x] Device or activity to room assignment
 - [x] Interactive dashboard for the running experiment and previously recorded datasets
-- [ ] Generate prior activity distributions with a "typical week" calendar widget
+- [ ] Prior activity distributions with a "typical week" calendar widget
 - [ ] Dask nodes for distributed computation
 - [ ] Upload and deployment of trained models via the web interface
 - [ ] Home Assistant integration + custom entity card displaying per person activity predictions
@@ -69,8 +68,8 @@ If you are using Activity Assistant for puplications please consider citing the 
   author = {Christian Meier},
   title = {Activty Assistant},
   url = {https://github.com/tcsvn/activity-assistant},
-  version = {0.0.4-alpha},
-  date = {2023-01-02}
+  version = {0.0.4.1-alpha},
+  date = {16-02-2023}
 }
 ```
 
