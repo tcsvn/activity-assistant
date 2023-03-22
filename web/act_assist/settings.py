@@ -187,7 +187,7 @@ HASS_CONFIG_URL = '/config/configuration.yaml'
 
 ACT_ASSIST_VERSION = "v0.0.3-alpha"
 
-LOGGER_VERSION = "v0.0.2-alpha"
+LOGGER_VERSION = "v0.0.3-alpha"
 LOGGER_RELEASE_LINK = f"https://github.com/tcsvn/activity-assistant-logger/releases/download/{LOGGER_VERSION}/activity-assistant-logger.apk"
 
 # API URLS
